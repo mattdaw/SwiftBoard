@@ -70,8 +70,13 @@ class CollectionViewLayout: UICollectionViewLayout {
     
     override func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes! {
         let sectionAttributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
-        let sectionFrame = sectionFrames[indexPath.section]
-        sectionAttributes.frame = sectionFrame
+        
+        if (indexPath.item > 0) {
+            sectionAttributes.hidden = true
+        } else {
+            let sectionFrame = sectionFrames[indexPath.section]
+            sectionAttributes.frame = sectionFrame
+        }
         
         return sectionAttributes
     }

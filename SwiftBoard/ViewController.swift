@@ -25,11 +25,13 @@ class ViewController: UICollectionViewController {
             App(name: "App 1", color: UIColor.greenColor()),
             App(name: "App 2", color: UIColor.blueColor()),
             App(name: "App 3", color: UIColor.redColor()),
-            Folder(name: "Folder 2", apps: []),
+            Folder(name: "Folder 2", apps: [
+                App(name: "App 4", color: UIColor.darkGrayColor())
+            ]),
             Folder(name: "Folder 1", apps: [
-                App(name: "App 4", color: UIColor.purpleColor()),
-                App(name: "App 5", color: UIColor.grayColor()),
-                App(name: "App 6", color: UIColor.yellowColor()),
+                App(name: "App 5", color: UIColor.purpleColor()),
+                App(name: "App 6", color: UIColor.grayColor()),
+                App(name: "App 7", color: UIColor.yellowColor()),
             ])
         ]
     }
