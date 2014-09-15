@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C9981F7119C7765900804558 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9981F7019C7765900804558 /* App.swift */; };
 		C9DAE69C19C73EC0007CF518 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DAE69B19C73EC0007CF518 /* AppDelegate.swift */; };
 		C9DAE69E19C73EC0007CF518 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DAE69D19C73EC0007CF518 /* ViewController.swift */; };
 		C9DAE6A119C73EC0007CF518 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9DAE69F19C73EC0007CF518 /* Main.storyboard */; };
@@ -26,6 +27,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C9981F7019C7765900804558 /* App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		C9DAE69619C73EC0007CF518 /* SwiftBoard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftBoard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9DAE69A19C73EC0007CF518 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C9DAE69B19C73EC0007CF518 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 			children = (
 				C9DAE69B19C73EC0007CF518 /* AppDelegate.swift */,
 				C9DAE69D19C73EC0007CF518 /* ViewController.swift */,
+				C9981F7019C7765900804558 /* App.swift */,
 				C9DAE69F19C73EC0007CF518 /* Main.storyboard */,
 				C9DAE6A219C73EC0007CF518 /* Images.xcassets */,
 				C9DAE6A419C73EC0007CF518 /* LaunchScreen.xib */,
@@ -212,6 +215,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9981F7119C7765900804558 /* App.swift in Sources */,
 				C9DAE69E19C73EC0007CF518 /* ViewController.swift in Sources */,
 				C9DAE69C19C73EC0007CF518 /* AppDelegate.swift in Sources */,
 			);
@@ -339,6 +343,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = SwiftBoard/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -349,6 +354,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = SwiftBoard/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -407,6 +413,7 @@
 				C9DAE6B719C73EC0007CF518 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C9DAE6B819C73EC0007CF518 /* Build configuration list for PBXNativeTarget "SwiftBoardTests" */ = {
 			isa = XCConfigurationList;
@@ -415,6 +422,7 @@
 				C9DAE6BA19C73EC0007CF518 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
