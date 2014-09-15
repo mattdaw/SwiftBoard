@@ -10,7 +10,7 @@ import UIKit
 
 class CollectionViewLayout: UICollectionViewLayout {
     
-    let sectionSize = CGFloat(128)
+    let sectionSize = CGFloat(64)
     var sectionFrames: [CGRect] = []
     var numberOfSections = 0
     
