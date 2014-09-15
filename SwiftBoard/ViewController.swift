@@ -23,12 +23,12 @@ class ViewController: UICollectionViewController {
             App(name: "App 1", color: UIColor.greenColor()),
             App(name: "App 2", color: UIColor.blueColor()),
             App(name: "App 3", color: UIColor.redColor()),
+            Folder(name: "Folder 2", apps: []),
             Folder(name: "Folder 1", apps: [
                 App(name: "App 4", color: UIColor.purpleColor()),
                 App(name: "App 5", color: UIColor.grayColor()),
                 App(name: "App 6", color: UIColor.yellowColor()),
-            ]),
-            Folder(name: "Folder 2", apps: [])
+            ])
         ]
     }
 
@@ -38,7 +38,16 @@ class ViewController: UICollectionViewController {
     }
     
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1;
+        var item: AnyObject = items[section]
+        
+        switch item {
+        case let app as App:
+            return 1
+        case let folder as Folder:
+            return folder.apps.count
+        default:
+            return 0
+        }
     }
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -50,11 +59,7 @@ class ViewController: UICollectionViewController {
         case let app as App:
             cell.backgroundColor = app.color
         case let folder as Folder:
-            if (!folder.apps.isEmpty) {
-                cell.backgroundColor = folder.apps[0].color
-            } else {
-                cell.backgroundColor = UIColor.whiteColor()
-            }
+            cell.backgroundColor = folder.apps[indexPath.row].color
         default:
             cell.backgroundColor = UIColor.whiteColor()
         }
