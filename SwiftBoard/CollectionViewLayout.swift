@@ -32,7 +32,7 @@ class CollectionViewLayout: UICollectionViewLayout {
         let itemsPerRow = Int(floor(availableWidth / sectionSize))
         var top = CGFloat(0)
         var left = CGFloat(0)
-        var column = 0
+        var column = 1
         
         sectionFrames = []
         numberOfSections = myCollectionView.numberOfSections()
@@ -43,7 +43,7 @@ class CollectionViewLayout: UICollectionViewLayout {
             
             column += 1
             if column > itemsPerRow {
-                column = 0
+                column = 1
                 left = CGFloat(0)
                 top += sectionSize
             } else {
