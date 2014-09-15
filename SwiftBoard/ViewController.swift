@@ -15,6 +15,8 @@ class ViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        collectionView?.collectionViewLayout = CollectionViewLayout();
+        
         seedData();
     }
     
