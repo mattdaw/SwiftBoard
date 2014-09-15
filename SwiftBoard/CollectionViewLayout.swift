@@ -12,6 +12,7 @@ class CollectionViewLayout: UICollectionViewLayout {
     
     let sectionSize = CGFloat(128)
     var sectionFrames: [CGRect] = []
+    var numberOfSections = 0
     
     override func collectionViewContentSize() -> CGSize {
         if let cv = collectionView {
@@ -27,7 +28,6 @@ class CollectionViewLayout: UICollectionViewLayout {
         }
         
         let myCollectionView = collectionView!
-        let numberOfSections = myCollectionView.numberOfSections()
         let availableWidth = myCollectionView.bounds.size.width
         let itemsPerRow = Int(floor(availableWidth / sectionSize))
         var top = CGFloat(0)
@@ -35,6 +35,8 @@ class CollectionViewLayout: UICollectionViewLayout {
         var column = 0
         
         sectionFrames = []
+        numberOfSections = myCollectionView.numberOfSections()
+        
         for sectionIndex in 0..<numberOfSections {
             let sectionFrame = CGRect(x: left, y: top, width: sectionSize, height: sectionSize)
             sectionFrames.append(sectionFrame)
@@ -51,11 +53,27 @@ class CollectionViewLayout: UICollectionViewLayout {
     }
     
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]? {
-        return []
+        var attributes: [UICollectionViewLayoutAttributes] = []
+        
+        if let myCollectionView = collectionView {
+            for sectionIndex in 0..<numberOfSections {
+                let numberOfItems = myCollectionView.numberOfItemsInSection(sectionIndex)
+                for itemIndex in 0..<numberOfItems {
+                    let indexPath = NSIndexPath(forItem: itemIndex, inSection: sectionIndex)
+                    attributes.append(layoutAttributesForItemAtIndexPath(indexPath))
+                }
+            }
+        }
+        
+        return attributes;
     }
     
     override func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes! {
-        return UICollectionViewLayoutAttributes()
+        let sectionAttributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
+        let sectionFrame = sectionFrames[indexPath.section]
+        sectionAttributes.frame = sectionFrame
+        
+        return sectionAttributes
     }
     
 }
