@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UICollectionViewController {
 
-    var apps: [App] = [];
+    var items: [AnyObject] = [];
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,7 +19,7 @@ class ViewController: UICollectionViewController {
     }
     
     func seedData() {
-        apps = [
+        items = [
             App(name: "App 1", color: UIColor.greenColor()),
             App(name: "App 2", color: UIColor.blueColor()),
             App(name: "App 3", color: UIColor.redColor())
@@ -28,7 +28,7 @@ class ViewController: UICollectionViewController {
 
 
     override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        return apps.count
+        return items.count
     }
     
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -39,8 +39,13 @@ class ViewController: UICollectionViewController {
         var cell:UICollectionViewCell
         cell = collectionView.dequeueReusableCellWithReuseIdentifier("SwiftBoardApp", forIndexPath: indexPath) as UICollectionViewCell
         
-        var app = apps[indexPath.section]
-        cell.backgroundColor = app.color
+        var item: AnyObject = items[indexPath.section]
+        switch item {
+        case let app as App:
+            cell.backgroundColor = app.color
+        default:
+            cell.backgroundColor = UIColor.whiteColor()
+        }
         
         return cell
     }
