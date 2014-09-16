@@ -9,9 +9,7 @@
 import UIKit
 
 protocol CollectionViewLayoutDelegate {
-
     func sectionAtIndex(section: Int) -> AnyObject?
-    
 }
 
 class CollectionViewLayout: UICollectionViewLayout {
@@ -21,10 +19,11 @@ class CollectionViewLayout: UICollectionViewLayout {
     let sectionSize = CGFloat(96)
     var sectionFrames: [CGRect] = []
     var numberOfSections = 0
+    var zoomScale = CGFloat(1)
     
     override func collectionViewContentSize() -> CGSize {
         if let cv = collectionView {
-            return cv.frame.size
+            return CGSize(width: cv.bounds.size.width * zoomScale, height: cv.bounds.size.height * zoomScale)
         } else {
             return CGSizeZero
         }
@@ -38,6 +37,8 @@ class CollectionViewLayout: UICollectionViewLayout {
         let myCollectionView = collectionView!
         let availableWidth = myCollectionView.bounds.size.width
         let itemsPerRow = Int(floor(availableWidth / sectionSize))
+        let zoomedSize = sectionSize * zoomScale
+        
         var top = CGFloat(0)
         var left = CGFloat(0)
         var column = 1
@@ -46,16 +47,16 @@ class CollectionViewLayout: UICollectionViewLayout {
         numberOfSections = myCollectionView.numberOfSections()
         
         for sectionIndex in 0..<numberOfSections {
-            let sectionFrame = CGRect(x: left, y: top, width: sectionSize, height: sectionSize)
+            let sectionFrame = CGRect(x: left, y: top, width: zoomedSize, height: zoomedSize)
             sectionFrames.append(sectionFrame)
             
             column += 1
             if column > itemsPerRow {
                 column = 1
                 left = CGFloat(0)
-                top += sectionSize
+                top += zoomedSize
             } else {
-                left += sectionSize
+                left += zoomedSize
             }
         }
     }
@@ -89,7 +90,7 @@ class CollectionViewLayout: UICollectionViewLayout {
                 let row = floor(CGFloat(indexPath.item / 3))
                 let column = CGFloat(indexPath.item % 3)
                 let sectionFrame = sectionFrames[sectionIndex]
-                let appSize = sectionSize / 3;
+                let appSize = sectionSize * zoomScale / 3;
                 
                 let left = sectionFrame.origin.x + column * appSize
                 let top = sectionFrame.origin.y + row * appSize;
@@ -98,7 +99,6 @@ class CollectionViewLayout: UICollectionViewLayout {
             } else {
                 sectionAttributes.hidden = true
             }
-
         }
         
         return sectionAttributes

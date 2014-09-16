@@ -19,6 +19,10 @@ class ViewController: UICollectionViewController, CollectionViewLayoutDelegate {
         layout.delegate = self
         collectionView?.collectionViewLayout = layout;
         
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: "zoomMe")
+        collectionView?.addGestureRecognizer(tapRecognizer)
+        collectionView?.scrollEnabled = false
+        
         seedData();
     }
     
@@ -41,8 +45,7 @@ class ViewController: UICollectionViewController, CollectionViewLayoutDelegate {
             ])
         ]
     }
-
-
+    
     override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return items.count
     }
@@ -80,5 +83,30 @@ class ViewController: UICollectionViewController, CollectionViewLayoutDelegate {
     func sectionAtIndex(section: Int) -> AnyObject? {
         return items[section]
     }
+    
+    func zoomMe() {
+        if let layout = collectionView?.collectionViewLayout as? CollectionViewLayout {
+            if (layout.zoomScale == 1) {
+                layout.zoomScale = 5
+            } else {
+                layout.zoomScale = 1
+            }
+            
+            collectionView?.performBatchUpdates(nil, completion: nil)
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
