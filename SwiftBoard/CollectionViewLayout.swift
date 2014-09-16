@@ -8,9 +8,17 @@
 
 import UIKit
 
+protocol CollectionViewLayoutDelegate {
+
+    func sectionAtIndex(section: Int) -> AnyObject?
+    
+}
+
 class CollectionViewLayout: UICollectionViewLayout {
     
-    let sectionSize = CGFloat(64)
+    var delegate: CollectionViewLayoutDelegate?
+    
+    let sectionSize = CGFloat(96)
     var sectionFrames: [CGRect] = []
     var numberOfSections = 0
     
@@ -70,12 +78,27 @@ class CollectionViewLayout: UICollectionViewLayout {
     
     override func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes! {
         let sectionAttributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
+        let sectionIndex = indexPath.section;
+        let section: AnyObject? = delegate?.sectionAtIndex(sectionIndex);
         
-        if (indexPath.item > 0) {
-            sectionAttributes.hidden = true
-        } else {
-            let sectionFrame = sectionFrames[indexPath.section]
+        if let app = section as? App {
+            let sectionFrame = sectionFrames[sectionIndex]
             sectionAttributes.frame = sectionFrame
+        } else if let folder = section as? Folder {
+            if indexPath.item < 9 {
+                let row = floor(CGFloat(indexPath.item / 3))
+                let column = CGFloat(indexPath.item % 3)
+                let sectionFrame = sectionFrames[sectionIndex]
+                let appSize = sectionSize / 3;
+                
+                let left = sectionFrame.origin.x + column * appSize
+                let top = sectionFrame.origin.y + row * appSize;
+                
+                sectionAttributes.frame = CGRect(x: left, y: top, width: appSize, height: appSize)
+            } else {
+                sectionAttributes.hidden = true
+            }
+
         }
         
         return sectionAttributes

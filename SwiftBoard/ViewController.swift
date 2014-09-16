@@ -8,14 +8,16 @@
 
 import UIKit
 
-class ViewController: UICollectionViewController {
+class ViewController: UICollectionViewController, CollectionViewLayoutDelegate {
 
     var items: [AnyObject] = [];
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectionView?.collectionViewLayout = CollectionViewLayout();
+        let layout = CollectionViewLayout();
+        layout.delegate = self
+        collectionView?.collectionViewLayout = layout;
         
         seedData();
     }
@@ -32,6 +34,10 @@ class ViewController: UICollectionViewController {
                 App(name: "App 5", color: UIColor.purpleColor()),
                 App(name: "App 6", color: UIColor.grayColor()),
                 App(name: "App 7", color: UIColor.yellowColor()),
+                App(name: "App 8", color: UIColor.yellowColor()),
+                App(name: "App 9", color: UIColor.redColor()),
+                App(name: "App 10", color: UIColor.purpleColor()),
+                App(name: "App 11", color: UIColor.blueColor()),
             ])
         ]
     }
@@ -63,7 +69,7 @@ class ViewController: UICollectionViewController {
         case let app as App:
             cell.backgroundColor = app.color
         case let folder as Folder:
-            cell.backgroundColor = folder.apps[indexPath.row].color
+            cell.backgroundColor = folder.apps[indexPath.item].color
         default:
             cell.backgroundColor = UIColor.whiteColor()
         }
@@ -71,5 +77,8 @@ class ViewController: UICollectionViewController {
         return cell
     }
     
+    func sectionAtIndex(section: Int) -> AnyObject? {
+        return items[section]
+    }
 }
 
