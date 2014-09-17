@@ -15,6 +15,7 @@ class ViewController: UICollectionViewController, CollectionViewLayoutDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        /*
         let layout = CollectionViewLayout();
         layout.delegate = self
         collectionView?.collectionViewLayout = layout;
@@ -22,6 +23,12 @@ class ViewController: UICollectionViewController, CollectionViewLayoutDelegate {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: "zoomMe:")
         collectionView?.addGestureRecognizer(tapRecognizer)
         collectionView?.scrollEnabled = false
+        */
+        
+        if let myCollectionView = collectionView? {
+            myCollectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
+            myCollectionView.registerNib(UINib(nibName: "FolderCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "Folder")
+        }
         
         seedData();
     }
@@ -47,34 +54,26 @@ class ViewController: UICollectionViewController, CollectionViewLayoutDelegate {
     }
     
     override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        return items.count
+        return 1
     }
     
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        var item: AnyObject = items[section]
-        
-        switch item {
-        case let app as App:
-            return 1
-        case let folder as Folder:
-            return folder.apps.count
-        default:
-            return 0
-        }
+        return items.count
     }
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         var cell:UICollectionViewCell
-        cell = collectionView.dequeueReusableCellWithReuseIdentifier("SwiftBoardApp", forIndexPath: indexPath) as UICollectionViewCell
         
-        var item: AnyObject = items[indexPath.section]
-        switch item {
-        case let app as App:
+        var item: AnyObject = items[indexPath.item]
+        
+        if let app = item as? App {
+            cell = collectionView.dequeueReusableCellWithReuseIdentifier("App", forIndexPath: indexPath) as UICollectionViewCell
             cell.backgroundColor = app.color
-        case let folder as Folder:
-            cell.backgroundColor = folder.apps[indexPath.item].color
-        default:
-            cell.backgroundColor = UIColor.whiteColor()
+        } else if let folder = item as? Folder {
+            cell = collectionView.dequeueReusableCellWithReuseIdentifier("Folder", forIndexPath: indexPath) as UICollectionViewCell
+            cell.backgroundColor = folder.apps[0].color
+        } else {
+            cell = UICollectionViewCell()
         }
         
         return cell

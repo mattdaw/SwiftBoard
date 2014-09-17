@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C96A381219CA0F650069F5D9 /* AppCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C96A381119CA0F650069F5D9 /* AppCollectionViewCell.xib */; };
+		C96A381419CA10120069F5D9 /* FolderCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C96A381319CA10120069F5D9 /* FolderCollectionViewCell.xib */; };
 		C9981F7119C7765900804558 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9981F7019C7765900804558 /* App.swift */; };
 		C9981F7519C7814300804558 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9981F7419C7814300804558 /* Folder.swift */; };
 		C9981F7719C798C600804558 /* CollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9981F7619C798C600804558 /* CollectionViewLayout.swift */; };
@@ -29,6 +31,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C96A381119CA0F650069F5D9 /* AppCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AppCollectionViewCell.xib; sourceTree = "<group>"; };
+		C96A381319CA10120069F5D9 /* FolderCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FolderCollectionViewCell.xib; sourceTree = "<group>"; };
 		C9981F7019C7765900804558 /* App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		C9981F7419C7814300804558 /* Folder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		C9981F7619C798C600804558 /* CollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewLayout.swift; sourceTree = "<group>"; };
@@ -89,6 +93,8 @@
 				C9981F7019C7765900804558 /* App.swift */,
 				C9981F7419C7814300804558 /* Folder.swift */,
 				C9DAE69F19C73EC0007CF518 /* Main.storyboard */,
+				C96A381119CA0F650069F5D9 /* AppCollectionViewCell.xib */,
+				C96A381319CA10120069F5D9 /* FolderCollectionViewCell.xib */,
 				C9DAE6A219C73EC0007CF518 /* Images.xcassets */,
 				C9DAE6A419C73EC0007CF518 /* LaunchScreen.xib */,
 				C9DAE69919C73EC0007CF518 /* Supporting Files */,
@@ -202,7 +208,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9DAE6A119C73EC0007CF518 /* Main.storyboard in Resources */,
+				C96A381419CA10120069F5D9 /* FolderCollectionViewCell.xib in Resources */,
 				C9DAE6A619C73EC0007CF518 /* LaunchScreen.xib in Resources */,
+				C96A381219CA0F650069F5D9 /* AppCollectionViewCell.xib in Resources */,
 				C9DAE6A319C73EC0007CF518 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -354,6 +362,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -365,6 +374,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
