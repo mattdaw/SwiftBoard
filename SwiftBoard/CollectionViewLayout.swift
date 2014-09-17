@@ -74,9 +74,6 @@ class CollectionViewLayout: UICollectionViewLayout {
                 sectionFrames[sectionIndex] = CGRectApplyAffineTransform(sectionFrames[sectionIndex], transform)
             }
         }
-        
-        
-        println(sectionFrames);
     }
     
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]? {
@@ -122,4 +119,7 @@ class CollectionViewLayout: UICollectionViewLayout {
         return sectionAttributes
     }
     
+    override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
+        return true
+    }
 }

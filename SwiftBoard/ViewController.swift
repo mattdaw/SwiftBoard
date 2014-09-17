@@ -19,7 +19,7 @@ class ViewController: UICollectionViewController, CollectionViewLayoutDelegate {
         layout.delegate = self
         collectionView?.collectionViewLayout = layout;
         
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: "zoomMe")
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: "zoomMe:")
         collectionView?.addGestureRecognizer(tapRecognizer)
         collectionView?.scrollEnabled = false
         
@@ -84,10 +84,13 @@ class ViewController: UICollectionViewController, CollectionViewLayoutDelegate {
         return items[section]
     }
     
-    func zoomMe() {
+    func zoomMe(recognizer:UITapGestureRecognizer) {
         if let layout = collectionView?.collectionViewLayout as? CollectionViewLayout {
             if (layout.zoomToSectionIndex == nil) {
-                layout.zoomToSectionIndex = 1
+                let point = recognizer.locationInView(collectionView)
+                if let indexPath = collectionView?.indexPathForItemAtPoint(point) {
+                    layout.zoomToSectionIndex = indexPath.section
+                }
             } else {
                 layout.zoomToSectionIndex = nil
             }
