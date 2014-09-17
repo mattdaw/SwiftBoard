@@ -32,10 +32,6 @@ class ViewController: UICollectionViewController {
         items = [
             App(name: "App 1", color: UIColor.greenColor()),
             App(name: "App 2", color: UIColor.blueColor()),
-            App(name: "App 3", color: UIColor.redColor()),
-            Folder(name: "Folder 2", apps: [
-                App(name: "App 4", color: UIColor.darkGrayColor())
-            ]),
             Folder(name: "Folder 1", apps: [
                 App(name: "App 5", color: UIColor.purpleColor()),
                 App(name: "App 6", color: UIColor.grayColor()),
@@ -44,7 +40,11 @@ class ViewController: UICollectionViewController {
                 App(name: "App 9", color: UIColor.redColor()),
                 App(name: "App 10", color: UIColor.purpleColor()),
                 App(name: "App 11", color: UIColor.blueColor()),
-            ])
+            ]),
+            Folder(name: "Folder 2", apps: [
+                App(name: "App 4", color: UIColor.darkGrayColor())
+            ]),
+            App(name: "App 3", color: UIColor.redColor()),
         ]
     }
     
@@ -79,7 +79,12 @@ class ViewController: UICollectionViewController {
             if (layout.zoomToIndexPath == nil) {
                 let point = recognizer.locationInView(collectionView)
                 if let indexPath = collectionView?.indexPathForItemAtPoint(point) {
-                    layout.zoomToIndexPath = indexPath
+                    let item: AnyObject = items[indexPath.item]
+                    if let folder = item as? Folder {
+                        layout.zoomToIndexPath = indexPath
+                    } else {
+                        layout.zoomToIndexPath = nil
+                    }
                 }
             } else {
                 layout.zoomToIndexPath = nil
