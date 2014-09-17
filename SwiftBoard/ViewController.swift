@@ -16,7 +16,6 @@ class ViewController: UICollectionViewController {
         super.viewDidLoad()
         
         if let myCollectionView = collectionView? {
-            myCollectionView.collectionViewLayout = CollectionViewLayout();
             myCollectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
             myCollectionView.registerNib(UINib(nibName: "FolderCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "Folder")
             
