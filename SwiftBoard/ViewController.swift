@@ -8,26 +8,21 @@
 
 import UIKit
 
-class ViewController: UICollectionViewController, CollectionViewLayoutDelegate {
+class ViewController: UICollectionViewController {
 
     var items: [AnyObject] = [];
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        /*
-        let layout = CollectionViewLayout();
-        layout.delegate = self
-        collectionView?.collectionViewLayout = layout;
-        
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: "zoomMe:")
-        collectionView?.addGestureRecognizer(tapRecognizer)
-        collectionView?.scrollEnabled = false
-        */
-        
         if let myCollectionView = collectionView? {
+            myCollectionView.collectionViewLayout = CollectionViewLayout();
             myCollectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
             myCollectionView.registerNib(UINib(nibName: "FolderCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "Folder")
+            
+            let tapRecognizer = UITapGestureRecognizer(target: self, action: "zoomMe:")
+            myCollectionView.addGestureRecognizer(tapRecognizer)
+            myCollectionView.scrollEnabled = false
         }
         
         seedData();
@@ -65,36 +60,32 @@ class ViewController: UICollectionViewController, CollectionViewLayoutDelegate {
         var cell:UICollectionViewCell
         
         var item: AnyObject = items[indexPath.item]
-        
-        if let app = item as? App {
+        switch item {
+        case let app as App:
             cell = collectionView.dequeueReusableCellWithReuseIdentifier("App", forIndexPath: indexPath) as UICollectionViewCell
             cell.backgroundColor = app.color
-        } else if let folder = item as? Folder {
+        case let folder as Folder:
             cell = collectionView.dequeueReusableCellWithReuseIdentifier("Folder", forIndexPath: indexPath) as UICollectionViewCell
-            cell.backgroundColor = folder.apps[0].color
-        } else {
+            cell.backgroundColor = UIColor.whiteColor()
+        default:
             cell = UICollectionViewCell()
         }
         
         return cell
     }
     
-    func sectionAtIndex(section: Int) -> AnyObject? {
-        return items[section]
-    }
-    
     func zoomMe(recognizer:UITapGestureRecognizer) {
         if let layout = collectionView?.collectionViewLayout as? CollectionViewLayout {
-            if (layout.zoomToSectionIndex == nil) {
+            if (layout.zoomToIndexPath == nil) {
                 let point = recognizer.locationInView(collectionView)
                 if let indexPath = collectionView?.indexPathForItemAtPoint(point) {
-                    layout.zoomToSectionIndex = indexPath.section
+                    layout.zoomToIndexPath = indexPath
                 }
             } else {
-                layout.zoomToSectionIndex = nil
+                layout.zoomToIndexPath = nil
             }
             
-            collectionView?.performBatchUpdates(nil, completion: nil)
+            collectionView?.performBatchUpdates(nil, completion:nil)
         }
     }
 }
