@@ -86,10 +86,10 @@ class ViewController: UICollectionViewController, CollectionViewLayoutDelegate {
     
     func zoomMe() {
         if let layout = collectionView?.collectionViewLayout as? CollectionViewLayout {
-            if (layout.zoomScale == 1) {
-                layout.zoomScale = 5
+            if (layout.zoomToSectionIndex == nil) {
+                layout.zoomToSectionIndex = 1
             } else {
-                layout.zoomScale = 1
+                layout.zoomToSectionIndex = nil
             }
             
             collectionView?.performBatchUpdates(nil, completion: nil)

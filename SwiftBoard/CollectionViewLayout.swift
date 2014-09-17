@@ -19,11 +19,11 @@ class CollectionViewLayout: UICollectionViewLayout {
     let sectionSize = CGFloat(96)
     var sectionFrames: [CGRect] = []
     var numberOfSections = 0
-    var zoomScale = CGFloat(1)
+    var zoomToSectionIndex: Int?
     
     override func collectionViewContentSize() -> CGSize {
         if let cv = collectionView {
-            return CGSize(width: cv.bounds.size.width * zoomScale, height: cv.bounds.size.height * zoomScale)
+            return cv.bounds.size
         } else {
             return CGSizeZero
         }
@@ -37,12 +37,17 @@ class CollectionViewLayout: UICollectionViewLayout {
         let myCollectionView = collectionView!
         let availableWidth = myCollectionView.bounds.size.width
         let itemsPerRow = Int(floor(availableWidth / sectionSize))
-        let zoomedSize = sectionSize * zoomScale
         
         var top = CGFloat(0)
         var left = CGFloat(0)
         var column = 1
+        var zoomedSize = sectionSize
+        var leftOffset = CGFloat(0)
         
+        if let zoomSectionIndex = zoomToSectionIndex {
+            zoomedSize = myCollectionView.bounds.width - 100
+        }
+
         sectionFrames = []
         numberOfSections = myCollectionView.numberOfSections()
         
@@ -59,6 +64,19 @@ class CollectionViewLayout: UICollectionViewLayout {
                 left += zoomedSize
             }
         }
+        
+        if let zoomSectionIndex = zoomToSectionIndex {
+            var frame = sectionFrames[zoomSectionIndex]
+            var transform = CGAffineTransformMakeTranslation(-frame.origin.x, -frame.origin.y)
+            transform = CGAffineTransformTranslate(transform, 50, 50)
+            
+            for sectionIndex in 0..<numberOfSections {
+                sectionFrames[sectionIndex] = CGRectApplyAffineTransform(sectionFrames[sectionIndex], transform)
+            }
+        }
+        
+        
+        println(sectionFrames);
     }
     
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]? {
@@ -90,7 +108,7 @@ class CollectionViewLayout: UICollectionViewLayout {
                 let row = floor(CGFloat(indexPath.item / 3))
                 let column = CGFloat(indexPath.item % 3)
                 let sectionFrame = sectionFrames[sectionIndex]
-                let appSize = sectionSize * zoomScale / 3;
+                let appSize = sectionFrame.width / 3;
                 
                 let left = sectionFrame.origin.x + column * appSize
                 let top = sectionFrame.origin.y + row * appSize;
