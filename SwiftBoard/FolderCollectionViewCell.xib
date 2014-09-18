@@ -7,23 +7,35 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Folder" id="k2r-z4-Cw9" customClass="FolderCollectionViewCell" customModule="SwiftBoard" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+            <rect key="frame" x="0.0" y="0.0" width="96" height="96"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+                <rect key="frame" x="0.0" y="0.0" width="96" height="96"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ja0-Wk-6Wl">
+                        <rect key="frame" x="10" y="0.0" width="76" height="76"/>
                         <color key="backgroundColor" red="1" green="0.0" blue="0.1001500993" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5ti-SB-GRc">
+                        <rect key="frame" x="27" y="75" width="42" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="Bqc-5x-dGz"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
             <constraints>
                 <constraint firstItem="Ja0-Wk-6Wl" firstAttribute="top" secondItem="k2r-z4-Cw9" secondAttribute="top" id="3VY-fh-6Mc"/>
-                <constraint firstItem="Ja0-Wk-6Wl" firstAttribute="leading" secondItem="k2r-z4-Cw9" secondAttribute="leading" constant="40" id="6L5-yB-uoH"/>
-                <constraint firstAttribute="trailing" secondItem="Ja0-Wk-6Wl" secondAttribute="trailing" constant="40" id="A1Y-29-qVi"/>
-                <constraint firstAttribute="bottom" secondItem="Ja0-Wk-6Wl" secondAttribute="bottom" constant="20" id="rOy-yK-6W1"/>
+                <constraint firstItem="Ja0-Wk-6Wl" firstAttribute="leading" secondItem="k2r-z4-Cw9" secondAttribute="leading" constant="10" id="6L5-yB-uoH"/>
+                <constraint firstAttribute="trailing" secondItem="Ja0-Wk-6Wl" secondAttribute="trailing" constant="10" id="A1Y-29-qVi"/>
+                <constraint firstAttribute="centerX" secondItem="5ti-SB-GRc" secondAttribute="centerX" id="bmm-W0-rAo"/>
+                <constraint firstAttribute="bottom" secondItem="5ti-SB-GRc" secondAttribute="bottom" id="br6-jM-GP0"/>
+                <constraint firstAttribute="bottom" secondItem="Ja0-Wk-6Wl" secondAttribute="bottom" constant="20" id="mrw-SI-mHb"/>
             </constraints>
             <connections>
                 <outlet property="containerView" destination="Ja0-Wk-6Wl" id="L3t-9d-xt7"/>
