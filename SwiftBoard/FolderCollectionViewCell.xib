@@ -13,10 +13,6 @@
                 <rect key="frame" x="0.0" y="0.0" width="96" height="96"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ja0-Wk-6Wl">
-                        <rect key="frame" x="10" y="0.0" width="76" height="76"/>
-                        <color key="backgroundColor" red="1" green="0.0" blue="0.1001500993" alpha="1" colorSpace="calibratedRGB"/>
-                    </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5ti-SB-GRc">
                         <rect key="frame" x="27" y="75" width="42" height="21"/>
                         <constraints>
@@ -26,20 +22,32 @@
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="UW6-Dw-6xo">
+                        <rect key="frame" x="18" y="8" width="60" height="60"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Bos-kW-bvO">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                    </collectionView>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
             <constraints>
-                <constraint firstItem="Ja0-Wk-6Wl" firstAttribute="top" secondItem="k2r-z4-Cw9" secondAttribute="top" id="3VY-fh-6Mc"/>
-                <constraint firstItem="Ja0-Wk-6Wl" firstAttribute="leading" secondItem="k2r-z4-Cw9" secondAttribute="leading" constant="10" id="6L5-yB-uoH"/>
-                <constraint firstAttribute="trailing" secondItem="Ja0-Wk-6Wl" secondAttribute="trailing" constant="10" id="A1Y-29-qVi"/>
+                <constraint firstAttribute="bottom" secondItem="UW6-Dw-6xo" secondAttribute="bottom" constant="28" id="XTy-3k-AT0"/>
                 <constraint firstAttribute="centerX" secondItem="5ti-SB-GRc" secondAttribute="centerX" id="bmm-W0-rAo"/>
                 <constraint firstAttribute="bottom" secondItem="5ti-SB-GRc" secondAttribute="bottom" id="br6-jM-GP0"/>
-                <constraint firstAttribute="bottom" secondItem="Ja0-Wk-6Wl" secondAttribute="bottom" constant="20" id="mrw-SI-mHb"/>
+                <constraint firstItem="UW6-Dw-6xo" firstAttribute="top" secondItem="k2r-z4-Cw9" secondAttribute="top" constant="8" id="nAl-bO-uHM"/>
+                <constraint firstAttribute="trailing" secondItem="UW6-Dw-6xo" secondAttribute="trailing" constant="18" id="skZ-Ho-hvr"/>
+                <constraint firstItem="UW6-Dw-6xo" firstAttribute="leading" secondItem="k2r-z4-Cw9" secondAttribute="leading" constant="18" id="xOd-GY-kgy"/>
             </constraints>
             <connections>
-                <outlet property="containerView" destination="Ja0-Wk-6Wl" id="L3t-9d-xt7"/>
+                <outlet property="containerView" destination="UW6-Dw-6xo" id="0Lh-dh-dIl"/>
+                <outlet property="label" destination="5ti-SB-GRc" id="Sb6-4e-7Zg"/>
             </connections>
+            <point key="canvasLocation" x="69" y="332"/>
         </collectionViewCell>
     </objects>
 </document>

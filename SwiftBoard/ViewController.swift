@@ -65,7 +65,8 @@ class ViewController: UICollectionViewController {
             cell.backgroundColor = app.color
         case let folder as Folder:
             cell = collectionView.dequeueReusableCellWithReuseIdentifier("Folder", forIndexPath: indexPath) as UICollectionViewCell
-            cell.backgroundColor = UIColor.whiteColor()
+            let myCell = cell as FolderCollectionViewCell
+            myCell.label.text = folder.name
         default:
             cell = UICollectionViewCell()
         }
