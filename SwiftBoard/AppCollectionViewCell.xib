@@ -6,20 +6,43 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="App" id="L0q-fh-fem">
-            <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="App" id="L0q-fh-fem" customClass="AppCollectionViewCell" customModule="SwiftBoard" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="96" height="96"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+                <rect key="frame" x="0.0" y="0.0" width="96" height="96"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Nv-jZ-ncV">
-                        <rect key="frame" x="10" y="10" width="60" height="60"/>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Nv-jZ-ncV">
+                        <rect key="frame" x="18" y="8" width="60" height="60"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rC8-b4-RiH">
+                        <rect key="frame" x="28" y="75" width="40" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="4uC-zJ-Uph"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="rC8-b4-RiH" secondAttribute="bottom" id="U8O-qZ-z42"/>
+                <constraint firstAttribute="bottom" secondItem="4Nv-jZ-ncV" secondAttribute="bottom" constant="28" id="bdM-Aw-K8J"/>
+                <constraint firstItem="4Nv-jZ-ncV" firstAttribute="leading" secondItem="L0q-fh-fem" secondAttribute="leading" constant="18" id="iDb-EF-4Q6"/>
+                <constraint firstItem="4Nv-jZ-ncV" firstAttribute="top" secondItem="L0q-fh-fem" secondAttribute="top" constant="8" id="nwe-Sz-t8x"/>
+                <constraint firstAttribute="centerX" secondItem="rC8-b4-RiH" secondAttribute="centerX" id="wIo-JQ-1Br"/>
+                <constraint firstAttribute="trailing" secondItem="4Nv-jZ-ncV" secondAttribute="trailing" constant="18" id="yEY-ZK-q3o"/>
+            </constraints>
+            <size key="customSize" width="80" height="118"/>
+            <connections>
+                <outlet property="containerView" destination="4Nv-jZ-ncV" id="E4w-7k-Mc4"/>
+                <outlet property="label" destination="rC8-b4-RiH" id="ByD-Lx-nVd"/>
+            </connections>
+            <point key="canvasLocation" x="181" y="422"/>
         </collectionViewCell>
     </objects>
 </document>

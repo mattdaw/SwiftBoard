@@ -62,7 +62,9 @@ class ViewController: UICollectionViewController {
         switch item {
         case let app as App:
             cell = collectionView.dequeueReusableCellWithReuseIdentifier("App", forIndexPath: indexPath) as UICollectionViewCell
-            cell.backgroundColor = app.color
+            let myCell = cell as AppCollectionViewCell
+            myCell.label.text = app.name
+            myCell.containerView.backgroundColor = app.color
         case let folder as Folder:
             cell = collectionView.dequeueReusableCellWithReuseIdentifier("Folder", forIndexPath: indexPath) as UICollectionViewCell
             let myCell = cell as FolderCollectionViewCell
