@@ -14,6 +14,8 @@
 		C9981F7719C798C600804558 /* CollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9981F7619C798C600804558 /* CollectionViewLayout.swift */; };
 		C99E408F19CB41AC003DE57D /* FolderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99E408E19CB41AC003DE57D /* FolderCollectionViewCell.swift */; };
 		C99E409119CB9187003DE57D /* AppCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99E409019CB9187003DE57D /* AppCollectionViewCell.swift */; };
+		C99E409319CB9EAD003DE57D /* FolderCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99E409219CB9EAD003DE57D /* FolderCollectionView.swift */; };
+		C99E409519CBA2A6003DE57D /* FolderDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99E409419CBA2A6003DE57D /* FolderDataSource.swift */; };
 		C9DAE69C19C73EC0007CF518 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DAE69B19C73EC0007CF518 /* AppDelegate.swift */; };
 		C9DAE69E19C73EC0007CF518 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DAE69D19C73EC0007CF518 /* ViewController.swift */; };
 		C9DAE6A119C73EC0007CF518 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9DAE69F19C73EC0007CF518 /* Main.storyboard */; };
@@ -40,6 +42,8 @@
 		C9981F7619C798C600804558 /* CollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewLayout.swift; sourceTree = "<group>"; };
 		C99E408E19CB41AC003DE57D /* FolderCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderCollectionViewCell.swift; sourceTree = "<group>"; };
 		C99E409019CB9187003DE57D /* AppCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCollectionViewCell.swift; sourceTree = "<group>"; };
+		C99E409219CB9EAD003DE57D /* FolderCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderCollectionView.swift; sourceTree = "<group>"; };
+		C99E409419CBA2A6003DE57D /* FolderDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderDataSource.swift; sourceTree = "<group>"; };
 		C9DAE69619C73EC0007CF518 /* SwiftBoard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftBoard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9DAE69A19C73EC0007CF518 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C9DAE69B19C73EC0007CF518 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -92,15 +96,17 @@
 			isa = PBXGroup;
 			children = (
 				C9DAE69B19C73EC0007CF518 /* AppDelegate.swift */,
-				C9DAE69D19C73EC0007CF518 /* ViewController.swift */,
-				C9981F7619C798C600804558 /* CollectionViewLayout.swift */,
 				C9981F7019C7765900804558 /* App.swift */,
 				C9981F7419C7814300804558 /* Folder.swift */,
+				C9DAE69D19C73EC0007CF518 /* ViewController.swift */,
+				C9981F7619C798C600804558 /* CollectionViewLayout.swift */,
+				C99E409019CB9187003DE57D /* AppCollectionViewCell.swift */,
+				C99E408E19CB41AC003DE57D /* FolderCollectionViewCell.swift */,
+				C99E409219CB9EAD003DE57D /* FolderCollectionView.swift */,
+				C99E409419CBA2A6003DE57D /* FolderDataSource.swift */,
 				C9DAE69F19C73EC0007CF518 /* Main.storyboard */,
 				C96A381119CA0F650069F5D9 /* AppCollectionViewCell.xib */,
-				C99E409019CB9187003DE57D /* AppCollectionViewCell.swift */,
 				C96A381319CA10120069F5D9 /* FolderCollectionViewCell.xib */,
-				C99E408E19CB41AC003DE57D /* FolderCollectionViewCell.swift */,
 				C9DAE6A219C73EC0007CF518 /* Images.xcassets */,
 				C9DAE6A419C73EC0007CF518 /* LaunchScreen.xib */,
 				C9DAE69919C73EC0007CF518 /* Supporting Files */,
@@ -235,6 +241,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C99E409319CB9EAD003DE57D /* FolderCollectionView.swift in Sources */,
+				C99E409519CBA2A6003DE57D /* FolderDataSource.swift in Sources */,
 				C9981F7119C7765900804558 /* App.swift in Sources */,
 				C9DAE69E19C73EC0007CF518 /* ViewController.swift in Sources */,
 				C9DAE69C19C73EC0007CF518 /* AppDelegate.swift in Sources */,

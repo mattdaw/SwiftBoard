@@ -10,15 +10,14 @@ import UIKit
 
 class FolderCollectionViewCell : UICollectionViewCell {
     
-    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var collectionView: FolderCollectionView!
     @IBOutlet weak var label: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        containerView.layer.cornerRadius = 5
+        collectionView.layer.cornerRadius = 5
     }
-    
     
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes!) {
         super.applyLayoutAttributes(layoutAttributes)

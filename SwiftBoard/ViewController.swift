@@ -11,6 +11,7 @@ import UIKit
 class ViewController: UICollectionViewController {
 
     var items: [AnyObject] = [];
+    var folderDataSource = FolderDataSource()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +26,7 @@ class ViewController: UICollectionViewController {
         }
         
         seedData();
+        folderDataSource.items = items;
     }
     
     func seedData() {
@@ -68,6 +70,10 @@ class ViewController: UICollectionViewController {
         case let folder as Folder:
             cell = collectionView.dequeueReusableCellWithReuseIdentifier("Folder", forIndexPath: indexPath) as UICollectionViewCell
             let myCell = cell as FolderCollectionViewCell
+            myCell.collectionView.itemIndex = indexPath.item
+            myCell.collectionView.dataSource = folderDataSource
+            myCell.collectionView.delegate = folderDataSource
+            
             myCell.label.text = folder.name
         default:
             cell = UICollectionViewCell()
