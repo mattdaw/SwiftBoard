@@ -40,7 +40,7 @@ class CollectionViewLayout: UICollectionViewLayout {
         var leftOffset = CGFloat(0)
         
         if let zoomIndex = zoomToIndexPath {
-            zoomedSize = availableWidth - 100
+            zoomedSize = availableWidth - 10
         }
 
         itemFrames = []
