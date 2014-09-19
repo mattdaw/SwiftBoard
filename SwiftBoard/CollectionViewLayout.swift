@@ -37,11 +37,19 @@ class CollectionViewLayout: UICollectionViewLayout {
         var left = CGFloat(0)
         var column = 1
         var zoomedSize = itemSize
-        var rowOffset = zoomedSize
+        var rowOffset = itemSize
+        var columnOffset = itemSize
         
         if let zoomIndex = zoomToIndexPath {
-            zoomedSize = availableWidth - 10
-            rowOffset = zoomedSize + (availableHeight - zoomedSize) / 2
+            if availableWidth < availableHeight {
+                zoomedSize = availableWidth - 10
+                rowOffset = zoomedSize + (availableHeight - zoomedSize) / 2
+                columnOffset = zoomedSize
+            } else {
+                zoomedSize = availableHeight - 10
+                rowOffset = zoomedSize
+                columnOffset = zoomedSize + (availableWidth - zoomedSize) / 2
+            }
         }
 
         itemFrames = []
@@ -57,7 +65,7 @@ class CollectionViewLayout: UICollectionViewLayout {
                 left = CGFloat(0)
                 top += rowOffset
             } else {
-                left += zoomedSize
+                left += columnOffset
             }
         }
         
