@@ -37,10 +37,11 @@ class CollectionViewLayout: UICollectionViewLayout {
         var left = CGFloat(0)
         var column = 1
         var zoomedSize = itemSize
-        var leftOffset = CGFloat(0)
+        var rowOffset = zoomedSize
         
         if let zoomIndex = zoomToIndexPath {
             zoomedSize = availableWidth - 10
+            rowOffset = zoomedSize + (availableHeight - zoomedSize) / 2
         }
 
         itemFrames = []
@@ -54,7 +55,7 @@ class CollectionViewLayout: UICollectionViewLayout {
             if column > itemsPerRow {
                 column = 1
                 left = CGFloat(0)
-                top += zoomedSize
+                top += rowOffset
             } else {
                 left += zoomedSize
             }
