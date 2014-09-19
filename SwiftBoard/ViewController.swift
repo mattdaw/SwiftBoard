@@ -49,6 +49,15 @@ class ViewController: UICollectionViewController {
         ]
     }
     
+    // Not sure this is right, but try to get the layout to assume its new size early so that in the animated rotation we don't
+    // see neighbour items animating off-screen.
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        if let layout = collectionView?.collectionViewLayout as? CollectionViewLayout {
+            layout.overrideSize = size
+            collectionView?.reloadData()
+        }
+    }
+    
     override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
     }

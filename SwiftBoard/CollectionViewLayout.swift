@@ -14,13 +14,20 @@ class CollectionViewLayout: UICollectionViewLayout {
     var itemFrames: [CGRect] = []
     var numberOfItems = 0
     var zoomToIndexPath: NSIndexPath?
+    var overrideSize: CGSize?
+    
+    func getSize() -> CGSize {
+        if let mySize = overrideSize {
+            return mySize
+        } else if let cv = collectionView {
+            return cv.bounds.size
+        }
+        
+        return CGSizeZero
+    }
     
     override func collectionViewContentSize() -> CGSize {
-        if let cv = collectionView {
-            return cv.bounds.size
-        } else {
-            return CGSizeZero
-        }
+        return getSize()
     }
     
     override func prepareLayout() {
@@ -29,8 +36,9 @@ class CollectionViewLayout: UICollectionViewLayout {
         }
         
         let myCollectionView = collectionView!
-        let availableHeight = myCollectionView.bounds.height
-        let availableWidth = myCollectionView.bounds.width
+        let mySize = getSize()
+        let availableHeight = mySize.height
+        let availableWidth = mySize.width
         let itemsPerRow = Int(floor(availableWidth / itemSize))
         
         var top = CGFloat(0)
