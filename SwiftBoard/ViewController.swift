@@ -95,6 +95,8 @@ class ViewController: UICollectionViewController {
         return cell
     }
     
+    // I'm not sure this is right yet, but it's seeming better to me to have two instantiated layouts. The layout's state
+    // can be confusing (to me) when the initial/final attributes methods are called on a single layout instance.
     func zoomLayout(recognizer:UITapGestureRecognizer) {
         if collectionView?.collectionViewLayout === regularLayout {
             let point = recognizer.locationInView(collectionView)
