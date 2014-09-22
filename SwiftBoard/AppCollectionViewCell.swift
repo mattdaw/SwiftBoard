@@ -29,13 +29,13 @@ class AppCollectionViewCell : UICollectionViewCell {
         super.applyLayoutAttributes(layoutAttributes)
         
         if bounds.width < 40 {
-            label.hidden = true
+            label.alpha = 0
             topConstraint.constant = 0
             bottomConstraint.constant = 0
             leftConstraint.constant = 0
             rightConstraint.constant = 0
         } else {
-            label.hidden = false
+            label.alpha = 1
             topConstraint.constant = 8
             bottomConstraint.constant = 28
             leftConstraint.constant = 18
