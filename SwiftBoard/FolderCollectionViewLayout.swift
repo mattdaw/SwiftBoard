@@ -10,7 +10,8 @@ import UIKit
 
 class FolderCollectionViewLayout: UICollectionViewLayout {
 
-    var itemFrames: [CGRect] = []    
+    var itemFrames: [CGRect] = []
+    var previousItemFrames: [CGRect] = []
     var numberOfItems = 0
     
     override func collectionViewContentSize() -> CGSize {
@@ -25,6 +26,8 @@ class FolderCollectionViewLayout: UICollectionViewLayout {
         if collectionView == nil {
             return
         }
+        
+        previousItemFrames = itemFrames
         
         let myCollectionView = collectionView!
         numberOfItems = myCollectionView.numberOfItemsInSection(0)
@@ -69,20 +72,22 @@ class FolderCollectionViewLayout: UICollectionViewLayout {
         return itemAttributes
     }
     
+    // When the bounds change, all items are "removed" from view then re-"added" if they're still visible. Provide their
+    // original frame so the change will be animated.
     override func initialLayoutAttributesForAppearingItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
-        return nil;
-    }
-    
-    override func finalLayoutAttributesForDisappearingItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
         let itemAttributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
         
         if indexPath.item < 9 {
-            itemAttributes.frame = itemFrames[indexPath.item]
+            itemAttributes.frame = previousItemFrames[indexPath.item]
         } else {
             itemAttributes.hidden = true
         }
         
         return itemAttributes
+    }
+    
+    override func finalLayoutAttributesForDisappearingItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
+        return nil
     }
     
     override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
