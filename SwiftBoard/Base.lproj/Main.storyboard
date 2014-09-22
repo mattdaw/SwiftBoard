@@ -12,7 +12,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                        <collectionViewLayout key="collectionViewLayout" id="Eud-n1-jG5" customClass="CollectionViewLayout" customModule="SwiftBoard" customModuleProvider="target"/>
+                        <collectionViewLayout key="collectionViewLayout" id="6sM-bE-w42" customClass="CollectionViewLayout" customModule="SwiftBoard" customModuleProvider="target"/>
                         <cells/>
                         <connections>
                             <outlet property="dataSource" destination="6kg-6L-ciZ" id="xxp-sV-xge"/>

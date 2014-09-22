@@ -12,13 +12,17 @@ class ViewController: UICollectionViewController {
 
     var items: [AnyObject] = [];
     var folderDataSource = FolderDataSource()
-    
+    var zoomedLayout = CollectionViewLayout()
+    var regularLayout = CollectionViewLayout()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
         if let myCollectionView = collectionView? {
             myCollectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
             myCollectionView.registerNib(UINib(nibName: "FolderCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "Folder")
+            
+            myCollectionView.setCollectionViewLayout(regularLayout, animated: false)
             
             let tapRecognizer = UITapGestureRecognizer(target: self, action: "zoomLayout:")
             myCollectionView.addGestureRecognizer(tapRecognizer)
@@ -92,23 +96,21 @@ class ViewController: UICollectionViewController {
     }
     
     func zoomLayout(recognizer:UITapGestureRecognizer) {
-        if let layout = collectionView?.collectionViewLayout as? CollectionViewLayout {
-            if (layout.zoomToIndexPath == nil) {
-                let point = recognizer.locationInView(collectionView)
-                if let indexPath = collectionView?.indexPathForItemAtPoint(point) {
-                    let item: AnyObject = items[indexPath.item]
-                    if let folder = item as? Folder {
-                        layout.zoomToIndexPath = indexPath
-                    } else {
-                        layout.zoomToIndexPath = nil
-                    }
-                }
-            } else {
-                layout.zoomToIndexPath = nil
-            }
+        if collectionView?.collectionViewLayout === regularLayout {
+            let point = recognizer.locationInView(collectionView)
             
-            collectionView?.performBatchUpdates(nil, nil)
+            if let indexPath = collectionView?.indexPathForItemAtPoint(point) {
+                let item: AnyObject = items[indexPath.item]
+                
+                if let folder = item as? Folder {
+                    zoomedLayout.zoomToIndexPath = indexPath
+                    collectionView?.setCollectionViewLayout(zoomedLayout, animated: true)
+                    return
+                }
+            }
         }
+        
+        collectionView?.setCollectionViewLayout(regularLayout, animated: true)
     }
 }
 
