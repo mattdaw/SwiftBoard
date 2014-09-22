@@ -107,7 +107,7 @@ class ViewController: UICollectionViewController {
                 layout.zoomToIndexPath = nil
             }
             
-            collectionView?.performBatchUpdates(nil, completion:nil)
+            collectionView?.performBatchUpdates(nil, nil)
         }
     }
 }
