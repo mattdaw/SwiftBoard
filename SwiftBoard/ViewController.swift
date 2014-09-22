@@ -20,7 +20,7 @@ class ViewController: UICollectionViewController {
             myCollectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
             myCollectionView.registerNib(UINib(nibName: "FolderCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "Folder")
             
-            let tapRecognizer = UITapGestureRecognizer(target: self, action: "zoomMe:")
+            let tapRecognizer = UITapGestureRecognizer(target: self, action: "zoomLayout:")
             myCollectionView.addGestureRecognizer(tapRecognizer)
             myCollectionView.scrollEnabled = false
         }
@@ -91,7 +91,7 @@ class ViewController: UICollectionViewController {
         return cell
     }
     
-    func zoomMe(recognizer:UITapGestureRecognizer) {
+    func zoomLayout(recognizer:UITapGestureRecognizer) {
         if let layout = collectionView?.collectionViewLayout as? CollectionViewLayout {
             if (layout.zoomToIndexPath == nil) {
                 let point = recognizer.locationInView(collectionView)

@@ -39,8 +39,12 @@
             </constraints>
             <size key="customSize" width="80" height="118"/>
             <connections>
+                <outlet property="bottomConstraint" destination="bdM-Aw-K8J" id="4GY-Zy-xIp"/>
                 <outlet property="containerView" destination="4Nv-jZ-ncV" id="E4w-7k-Mc4"/>
                 <outlet property="label" destination="rC8-b4-RiH" id="ByD-Lx-nVd"/>
+                <outlet property="leftConstraint" destination="iDb-EF-4Q6" id="2Q7-Tj-ZED"/>
+                <outlet property="rightConstraint" destination="yEY-ZK-q3o" id="tOa-XM-01v"/>
+                <outlet property="topConstraint" destination="nwe-Sz-t8x" id="Qm5-4X-sgX"/>
             </connections>
             <point key="canvasLocation" x="181" y="422"/>
         </collectionViewCell>

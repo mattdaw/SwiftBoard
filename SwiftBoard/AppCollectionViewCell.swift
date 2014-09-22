@@ -13,6 +13,11 @@ class AppCollectionViewCell : UICollectionViewCell {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var label: UILabel!
     
+    @IBOutlet weak var topConstraint: NSLayoutConstraint!
+    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var leftConstraint: NSLayoutConstraint!
+    @IBOutlet weak var rightConstraint: NSLayoutConstraint!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -22,6 +27,20 @@ class AppCollectionViewCell : UICollectionViewCell {
     
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes!) {
         super.applyLayoutAttributes(layoutAttributes)
+        
+        if bounds.width < 40 {
+            label.hidden = true
+            topConstraint.constant = 0
+            bottomConstraint.constant = 0
+            leftConstraint.constant = 0
+            rightConstraint.constant = 0
+        } else {
+            label.hidden = false
+            topConstraint.constant = 8
+            bottomConstraint.constant = 28
+            leftConstraint.constant = 18
+            rightConstraint.constant = 18
+        }
         
         // Trigger constraint re-evaluation, so the subview sizes get animated too
         // http://stackoverflow.com/questions/23564453/uicollectionview-layout-transitions
