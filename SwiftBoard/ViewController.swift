@@ -140,7 +140,9 @@ class ViewController: UICollectionViewController {
                 }
             }
         case UIGestureRecognizerState.Changed:
-            println(gesture.locationInView(view))
+            if let dv = draggingView {
+                dv.center = gesture.locationInView(view)
+            }
         case UIGestureRecognizerState.Ended:
             println("Ended!")
             
