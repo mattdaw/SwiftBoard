@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UICollectionViewController {
+class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
 
     var items: [AnyObject] = [];
     var folderDataSource = FolderDataSource()
@@ -30,6 +30,7 @@ class ViewController: UICollectionViewController {
             myCollectionView.addGestureRecognizer(tapRecognizer)
             
             let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
+            longPressRecognizer.delegate = self
             myCollectionView.addGestureRecognizer(longPressRecognizer)
         }
         
@@ -129,7 +130,7 @@ class ViewController: UICollectionViewController {
             if let dv = draggingView {
                 dv.center = gesture.locationInView(view)
             }
-        case UIGestureRecognizerState.Ended:
+        case UIGestureRecognizerState.Ended, UIGestureRecognizerState.Cancelled:
             if let dv = draggingView {
                 UIView.animateWithDuration(0.2, animations: { () -> Void in
                     dv.transform = CGAffineTransformIdentity
@@ -138,8 +139,6 @@ class ViewController: UICollectionViewController {
                     dv.removeFromSuperview()
                 })
             }
-        case UIGestureRecognizerState.Cancelled:
-            println("Cancelled!")
         default:
             println("Something else")
         }
@@ -172,6 +171,13 @@ class ViewController: UICollectionViewController {
                 dv.center = gesture.locationInView(self.view)
             }
         }
+    }
+    
+    // UIGestureRecognizerDelegate
+    // Only start the long press if we're on top of a cell.
+    func gestureRecognizerShouldBegin(gesture: UIGestureRecognizer) -> Bool {
+        let cell = cellForGesture(gesture)
+        return cell != nil
     }
 }
 
