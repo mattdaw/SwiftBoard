@@ -122,22 +122,8 @@ class ViewController: UICollectionViewController {
     func handleLongPress(gesture: UILongPressGestureRecognizer) {
         switch gesture.state {
         case UIGestureRecognizerState.Began:
-            println("Began!")
-            
-            let point = gesture.locationInView(view)
-            if let indexPath = collectionView?.indexPathForItemAtPoint(point) {
-                let cell = collectionView(collectionView!, cellForItemAtIndexPath: indexPath)
-                
-                draggingView = cell.snapshotViewAfterScreenUpdates(true)
-                if let dv = draggingView {
-                    dv.frame = cell.frame
-                    view.addSubview(dv)
-                    
-                    UIView.animateWithDuration(0.2) {
-                        dv.transform = CGAffineTransformMakeScale(1.2, 1.2)
-                        dv.alpha = 0.2
-                    }
-                }
+            if let cell = cellForGesture(gesture) {
+                grabCell(cell)
             }
         case UIGestureRecognizerState.Changed:
             if let dv = draggingView {
@@ -158,6 +144,30 @@ class ViewController: UICollectionViewController {
             println("Cancelled!")
         default:
             println("Something else")
+        }
+    }
+    
+    func cellForGesture(gesture: UIGestureRecognizer) -> UICollectionViewCell? {
+        let point = gesture.locationInView(view)
+        if let myCollectionView = collectionView {
+            if let indexPath = myCollectionView.indexPathForItemAtPoint(point) {
+                return collectionView(myCollectionView, cellForItemAtIndexPath: indexPath)
+            }
+        }
+        
+        return nil
+    }
+    
+    func grabCell(cell:UICollectionViewCell) {
+        draggingView = cell.snapshotViewAfterScreenUpdates(true)
+        if let dv = draggingView {
+            dv.frame = cell.frame
+            view.addSubview(dv)
+            
+            UIView.animateWithDuration(0.2) {
+                dv.transform = CGAffineTransformMakeScale(1.2, 1.2)
+                dv.alpha = 0.6
+            }
         }
     }
 }
