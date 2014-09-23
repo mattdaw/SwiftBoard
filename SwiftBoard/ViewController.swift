@@ -14,7 +14,8 @@ class ViewController: UICollectionViewController {
     var folderDataSource = FolderDataSource()
     var zoomedLayout = CollectionViewLayout()
     var regularLayout = CollectionViewLayout()
-
+    var draggingView: UIView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -23,10 +24,13 @@ class ViewController: UICollectionViewController {
             myCollectionView.registerNib(UINib(nibName: "FolderCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "Folder")
             
             myCollectionView.setCollectionViewLayout(regularLayout, animated: false)
+            myCollectionView.scrollEnabled = false
             
             let tapRecognizer = UITapGestureRecognizer(target: self, action: "zoomLayout:")
             myCollectionView.addGestureRecognizer(tapRecognizer)
-            myCollectionView.scrollEnabled = false
+            
+            let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
+            myCollectionView.addGestureRecognizer(longPressRecognizer)
         }
         
         seedData();
@@ -97,7 +101,7 @@ class ViewController: UICollectionViewController {
     
     // I'm not sure this is right yet, but it's seeming better to me to have two instantiated layouts. The layout's state
     // can be confusing (to me) when the initial/final attributes methods are called on a single layout instance.
-    func zoomLayout(recognizer:UITapGestureRecognizer) {
+    func zoomLayout(recognizer: UITapGestureRecognizer) {
         if collectionView?.collectionViewLayout === regularLayout {
             let point = recognizer.locationInView(collectionView)
             
@@ -113,6 +117,46 @@ class ViewController: UICollectionViewController {
         }
         
         collectionView?.setCollectionViewLayout(regularLayout, animated: true)
+    }
+    
+    func handleLongPress(gesture: UILongPressGestureRecognizer) {
+        switch gesture.state {
+        case UIGestureRecognizerState.Began:
+            println("Began!")
+            
+            let point = gesture.locationInView(view)
+            if let indexPath = collectionView?.indexPathForItemAtPoint(point) {
+                let cell = collectionView(collectionView!, cellForItemAtIndexPath: indexPath)
+                
+                draggingView = cell.snapshotViewAfterScreenUpdates(true)
+                if let dv = draggingView {
+                    dv.frame = cell.frame
+                    view.addSubview(dv)
+                    
+                    UIView.animateWithDuration(0.2) {
+                        dv.transform = CGAffineTransformMakeScale(1.2, 1.2)
+                        dv.alpha = 0.2
+                    }
+                }
+            }
+        case UIGestureRecognizerState.Changed:
+            println(gesture.locationInView(view))
+        case UIGestureRecognizerState.Ended:
+            println("Ended!")
+            
+            if let dv = draggingView {
+                UIView.animateWithDuration(0.2, animations: { () -> Void in
+                    dv.transform = CGAffineTransformIdentity
+                    dv.alpha = 1
+                }, completion: { (Bool) -> Void in
+                    dv.removeFromSuperview()
+                })
+            }
+        case UIGestureRecognizerState.Cancelled:
+            println("Cancelled!")
+        default:
+            println("Something else")
+        }
     }
 }
 
