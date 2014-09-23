@@ -123,15 +123,13 @@ class ViewController: UICollectionViewController {
         switch gesture.state {
         case UIGestureRecognizerState.Began:
             if let cell = cellForGesture(gesture) {
-                grabCell(cell)
+                grabCell(cell, gesture:gesture)
             }
         case UIGestureRecognizerState.Changed:
             if let dv = draggingView {
                 dv.center = gesture.locationInView(view)
             }
         case UIGestureRecognizerState.Ended:
-            println("Ended!")
-            
             if let dv = draggingView {
                 UIView.animateWithDuration(0.2, animations: { () -> Void in
                     dv.transform = CGAffineTransformIdentity
@@ -158,7 +156,7 @@ class ViewController: UICollectionViewController {
         return nil
     }
     
-    func grabCell(cell:UICollectionViewCell) {
+    func grabCell(cell:UICollectionViewCell, gesture:UIGestureRecognizer) {
         draggingView = cell.snapshotViewAfterScreenUpdates(true)
         if let dv = draggingView {
             dv.frame = cell.frame
@@ -167,6 +165,11 @@ class ViewController: UICollectionViewController {
             UIView.animateWithDuration(0.2) {
                 dv.transform = CGAffineTransformMakeScale(1.2, 1.2)
                 dv.alpha = 0.6
+                
+                // Move the icon to be centered under the user's finger. Makes it not jump
+                // when the first move happens if the user grabbed the icon by its edge.
+                // Tip from WWDC 2014 Advanced Scrollviews session
+                dv.center = gesture.locationInView(self.view)
             }
         }
     }
