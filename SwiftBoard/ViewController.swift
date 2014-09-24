@@ -14,7 +14,10 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
     var folderDataSource = FolderDataSource()
     var zoomedLayout = CollectionViewLayout()
     var regularLayout = CollectionViewLayout()
+    var dragOriginalCenter: CGPoint?
     var draggingView: UIView?
+    var panRecognizer: UIPanGestureRecognizer?
+    var longPressRecognizer: UILongPressGestureRecognizer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,9 +32,13 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
             let tapRecognizer = UITapGestureRecognizer(target: self, action: "zoomLayout:")
             myCollectionView.addGestureRecognizer(tapRecognizer)
             
-            let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
-            longPressRecognizer.delegate = self
-            myCollectionView.addGestureRecognizer(longPressRecognizer)
+            longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
+            longPressRecognizer!.delegate = self
+            myCollectionView.addGestureRecognizer(longPressRecognizer!)
+
+            panRecognizer = UIPanGestureRecognizer(target: self, action: "handlePan:")
+            panRecognizer!.delegate = self
+            myCollectionView.addGestureRecognizer(panRecognizer!)
         }
         
         seedData();
@@ -126,10 +133,6 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
             if let cell = cellForGesture(gesture) {
                 grabCell(cell, gesture:gesture)
             }
-        case UIGestureRecognizerState.Changed:
-            if let dv = draggingView {
-                dv.center = gesture.locationInView(view)
-            }
         case UIGestureRecognizerState.Ended, UIGestureRecognizerState.Cancelled:
             if let dv = draggingView {
                 UIView.animateWithDuration(0.2, animations: { () -> Void in
@@ -137,10 +140,24 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
                     dv.alpha = 1
                 }, completion: { (Bool) -> Void in
                     dv.removeFromSuperview()
+                    self.draggingView = nil
+                    self.dragOriginalCenter = nil
                 })
             }
         default:
-            println("Something else")
+            break
+        }
+    }
+    
+    func handlePan(gesture: UIPanGestureRecognizer) {
+        switch gesture.state {
+        case UIGestureRecognizerState.Began, UIGestureRecognizerState.Changed:
+            if let dv = draggingView {
+                let translation = gesture.translationInView(view)
+                dv.center = CGPoint(x: dragOriginalCenter!.x + translation.x, y: dragOriginalCenter!.y + translation.y)
+            }
+        default:
+            break
         }
     }
     
@@ -159,25 +176,39 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
         draggingView = cell.snapshotViewAfterScreenUpdates(true)
         if let dv = draggingView {
             dv.frame = cell.frame
+            dragOriginalCenter = dv.center
             view.addSubview(dv)
             
             UIView.animateWithDuration(0.2) {
-                dv.transform = CGAffineTransformMakeScale(1.2, 1.2)
+                dv.transform = CGAffineTransformMakeScale(1.1, 1.1)
                 dv.alpha = 0.6
-                
-                // Move the icon to be centered under the user's finger. Makes it not jump
-                // when the first move happens if the user grabbed the icon by its edge.
-                // Tip from WWDC 2014 Advanced Scrollviews session
-                dv.center = gesture.locationInView(self.view)
             }
         }
     }
     
     // UIGestureRecognizerDelegate
-    // Only start the long press if we're on top of a cell.
+    
     func gestureRecognizerShouldBegin(gesture: UIGestureRecognizer) -> Bool {
-        let cell = cellForGesture(gesture)
-        return cell != nil
+        switch gesture {
+        case longPressRecognizer!:
+            let cell = cellForGesture(gesture)
+            return cell != nil
+        case panRecognizer!:
+            return dragOriginalCenter != nil
+        default:
+            return false
+        }
+    }
+    
+    func gestureRecognizer(gesture: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGesture: UIGestureRecognizer) -> Bool {
+        switch gesture {
+        case longPressRecognizer!:
+            return otherGesture === panRecognizer
+        case panRecognizer!:
+            return otherGesture === longPressRecognizer
+        default:
+            return false
+        }
     }
 }
 
