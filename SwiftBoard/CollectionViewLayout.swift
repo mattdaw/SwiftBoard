@@ -14,6 +14,7 @@ class CollectionViewLayout: UICollectionViewLayout {
     var itemFrames: [CGRect] = []
     var numberOfItems = 0
     var zoomToIndexPath: NSIndexPath?
+    var hideIndexPath: NSIndexPath?
     var overrideSize: CGSize?
     
     func getSize() -> CGSize {
@@ -104,6 +105,12 @@ class CollectionViewLayout: UICollectionViewLayout {
     override func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes! {
         let itemAttributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
         itemAttributes.frame = itemFrames[indexPath.item]
+        
+        if let hideIndex = hideIndexPath {
+            if hideIndex == indexPath {
+                itemAttributes.hidden = true
+            }
+        }
         
         return itemAttributes
     }
