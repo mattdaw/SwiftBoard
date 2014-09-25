@@ -166,6 +166,17 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
                 let translation = gesture.translationInView(view)
                 dv.center = CGPoint(x: dragOriginalCenter!.x + translation.x + dragAddTranslation!.x,
                                     y: dragOriginalCenter!.y + translation.y + dragAddTranslation!.y)
+                
+                let (myCell, indexPath) = cellAndIndexPathForGesture(gesture)
+                
+                if let myCollectionView = collectionView {
+                    if let appCell = myCell as? AppCollectionViewCell {
+                        let location = gesture.locationInView(appCell)
+                        println(indexPath!.item)
+                        println(appCell.pointInsideIcon(location))
+                    }
+                }
+
             }
         default:
             break
@@ -173,10 +184,11 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
     }
     
     func cellAndIndexPathForGesture(gesture: UIGestureRecognizer) -> (UICollectionViewCell?, NSIndexPath?) {
-        let point = gesture.locationInView(view)
         if let myCollectionView = collectionView {
+            let point = gesture.locationInView(myCollectionView)
+            
             if let indexPath = myCollectionView.indexPathForItemAtPoint(point) {
-                let cell = collectionView(myCollectionView, cellForItemAtIndexPath: indexPath)
+                let cell = myCollectionView.cellForItemAtIndexPath(indexPath)
                 return (cell, indexPath)
             }
         }

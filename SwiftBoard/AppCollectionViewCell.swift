@@ -24,7 +24,6 @@ class AppCollectionViewCell : UICollectionViewCell {
         containerView.layer.cornerRadius = 5
     }
     
-    
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes!) {
         super.applyLayoutAttributes(layoutAttributes)
         
@@ -45,5 +44,10 @@ class AppCollectionViewCell : UICollectionViewCell {
         // Trigger constraint re-evaluation, so the subview sizes get animated too
         // http://stackoverflow.com/questions/23564453/uicollectionview-layout-transitions
         layoutIfNeeded()
+    }
+    
+    func pointInsideIcon(point:CGPoint) -> Bool {
+        let converted = convertPoint(point, toView:containerView)
+        return containerView.pointInside(converted, withEvent: nil)
     }
 }
