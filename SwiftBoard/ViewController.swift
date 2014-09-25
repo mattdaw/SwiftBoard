@@ -231,17 +231,18 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
         }
         
         // Update data source
-        var item: AnyObject = items[draggingIndexPath!.item]
-        items.removeAtIndex(draggingIndexPath!.item)
+        let originalIndexPath = draggingIndexPath!
+        var item: AnyObject = items[originalIndexPath.item]
+        items.removeAtIndex(originalIndexPath.item)
         items.insert(item, atIndex:indexPath.item)
         
+        draggingIndexPath = indexPath
         regularLayout.hideIndexPath = indexPath
         
         // Update collection view
         if let myCollectionView = collectionView {
             myCollectionView.performBatchUpdates({ () -> Void in
-                myCollectionView.deleteItemsAtIndexPaths([self.draggingIndexPath!])
-                myCollectionView.insertItemsAtIndexPaths([indexPath])
+                myCollectionView.moveItemAtIndexPath(originalIndexPath, toIndexPath: indexPath)
             }, completion: nil)
         }
     }
