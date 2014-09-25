@@ -20,6 +20,8 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
     var draggingView: UIView?
     var panRecognizer: UIPanGestureRecognizer?
     var longPressRecognizer: UILongPressGestureRecognizer?
+    var lastPanGesture: UIPanGestureRecognizer?
+    var moveCellsTimer: NSTimer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -170,31 +172,53 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
                 dv.center = CGPoint(x: dragOriginalCenter!.x + translation.x + dragAddTranslation!.x,
                                     y: dragOriginalCenter!.y + translation.y + dragAddTranslation!.y)
                 
-                let (myCell, indexPath) = cellAndIndexPathForGesture(gesture)
+                lastPanGesture = gesture
                 
-                if let myCollectionView = collectionView {
-                    if let sbCell = myCell as? SwiftBoardCell {
-                        let location = gesture.locationInView(myCell)
-                        let velocity = gesture.velocityInView(view)
-                        
-                        println(indexPath!.item)
-                        if sbCell.pointInsideIcon(location) {
-                            println("Icon!")
-                        } else if velocity.x > 0 {
-                            if (location.x > (myCell!.bounds.width / 2)) {
-                                moveDraggingCellToIndexPath(indexPath!)
-                            }
-                        } else {
-                            if (location.x < (myCell!.bounds.width / 2)) {
-                                moveDraggingCellToIndexPath(indexPath!)
-                            }
+                moveCellsTimer?.invalidate();
+                moveCellsTimer = NSTimer.scheduledTimerWithTimeInterval(0.2, target: self, selector: "moveCells", userInfo: nil, repeats: false)
+            }
+        case UIGestureRecognizerState.Ended:
+            moveCellsTimer?.invalidate()
+        default:
+            break
+        }
+    }
+    
+    func moveCells() {
+        if lastPanGesture == nil {
+            return
+        }
+        
+        let (myCell, indexPath) = cellAndIndexPathForGesture(lastPanGesture!)
+        
+        if let myCollectionView = collectionView {
+            if let sbCell = myCell as? SwiftBoardCell {
+                let location = lastPanGesture!.locationInView(myCell)
+                let velocity = lastPanGesture!.velocityInView(view)
+                
+                println(indexPath!.item)
+                
+                if sbCell.pointInsideIcon(location) {
+                    //println("Icon!")
+                } else if abs(velocity.y) > 20 {
+                    if location.x < (myCell!.bounds.width / 2) || indexPath!.item == items.count - 1 {
+                        moveDraggingCellToIndexPath(indexPath!)
+                    } else {
+                        let nextIndex = NSIndexPath(forItem: indexPath!.item + 1, inSection: indexPath!.section)
+                        moveDraggingCellToIndexPath(nextIndex)
+                    }
+                } else {
+                    if velocity.x > 0 {
+                        if (location.x > (myCell!.bounds.width / 2)) {
+                            moveDraggingCellToIndexPath(indexPath!)
+                        }
+                    } else {
+                        if (location.x < (myCell!.bounds.width / 2)) {
+                            moveDraggingCellToIndexPath(indexPath!)
                         }
                     }
                 }
-
             }
-        default:
-            break
         }
     }
     
