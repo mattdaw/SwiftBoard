@@ -16,6 +16,7 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
     var regularLayout = CollectionViewLayout()
     var dragOriginalCenter: CGPoint?
     var dragAddTranslation: CGPoint?
+    var draggingIndexPath: NSIndexPath?
     var draggingView: UIView?
     var panRecognizer: UIPanGestureRecognizer?
     var longPressRecognizer: UILongPressGestureRecognizer?
@@ -134,6 +135,7 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
             let (cell, indexPath) = cellAndIndexPathForGesture(gesture)
             
             if cell != nil {
+                draggingIndexPath = indexPath
                 grabCell(cell!, gesture:gesture)
                 
                 regularLayout.hideIndexPath = indexPath
@@ -149,6 +151,7 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
                     self.regularLayout.invalidateLayout()
                     
                     dv.removeFromSuperview()
+                    self.draggingIndexPath = nil
                     self.draggingView = nil
                     self.dragOriginalCenter = nil
                     self.dragAddTranslation = nil
@@ -223,7 +226,24 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
     }
     
     func moveDraggingCellToIndexPath(indexPath:NSIndexPath) {
+        if draggingIndexPath == nil || draggingIndexPath == indexPath {
+            return
+        }
         
+        // Update data source
+        var item: AnyObject = items[draggingIndexPath!.item]
+        items.removeAtIndex(draggingIndexPath!.item)
+        items.insert(item, atIndex:indexPath.item)
+        
+        regularLayout.hideIndexPath = indexPath
+        
+        // Update collection view
+        if let myCollectionView = collectionView {
+            myCollectionView.performBatchUpdates({ () -> Void in
+                myCollectionView.deleteItemsAtIndexPaths([self.draggingIndexPath!])
+                myCollectionView.insertItemsAtIndexPaths([indexPath])
+            }, completion: nil)
+        }
     }
     
     // UIGestureRecognizerDelegate
