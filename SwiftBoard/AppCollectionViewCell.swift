@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AppCollectionViewCell : UICollectionViewCell {
+class AppCollectionViewCell : UICollectionViewCell, SwiftBoardCell {
     
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var label: UILabel!

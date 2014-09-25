@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FolderCollectionViewCell : UICollectionViewCell {
+class FolderCollectionViewCell : UICollectionViewCell, SwiftBoardCell {
     
     @IBOutlet weak var collectionView: FolderCollectionView!
     @IBOutlet weak var label: UILabel!
@@ -25,5 +25,10 @@ class FolderCollectionViewCell : UICollectionViewCell {
         // Trigger constraint re-evaluation, so the subview sizes get animated too
         // http://stackoverflow.com/questions/23564453/uicollectionview-layout-transitions
         layoutIfNeeded()
+    }
+    
+    func pointInsideIcon(point:CGPoint) -> Bool {
+        let converted = convertPoint(point, toView:collectionView)
+        return collectionView.pointInside(converted, withEvent: nil)
     }
 }
