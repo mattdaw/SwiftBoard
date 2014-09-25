@@ -13,6 +13,7 @@ class CollectionViewLayout: UICollectionViewLayout {
     let itemSize = CGFloat(96)
     var itemFrames: [CGRect] = []
     var numberOfItems = 0
+    var itemsPerRow = 0
     var zoomToIndexPath: NSIndexPath?
     var hideIndexPath: NSIndexPath?
     var overrideSize: CGSize?
@@ -40,7 +41,8 @@ class CollectionViewLayout: UICollectionViewLayout {
         let mySize = getSize()
         let availableHeight = mySize.height
         let availableWidth = mySize.width
-        let itemsPerRow = Int(floor(availableWidth / itemSize))
+        
+        itemsPerRow = Int(floor(availableWidth / itemSize))
         
         var top = CGFloat(0)
         var left = CGFloat(0)
@@ -117,5 +119,18 @@ class CollectionViewLayout: UICollectionViewLayout {
     
     override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
         return true
+    }
+    
+    func indexPathToInsertLeftOfIndexPath(indexPath:NSIndexPath) -> NSIndexPath {
+        return NSIndexPath(forItem: indexPath.item, inSection: indexPath.section)
+    }
+    
+    func indexPathToInsertRightOfIndexPath(indexPath:NSIndexPath) -> NSIndexPath {
+        let column = indexPath.item % itemsPerRow
+        if column == itemsPerRow - 1 {
+            return NSIndexPath(forItem: indexPath.item, inSection: indexPath.section)
+        } else {
+            return NSIndexPath(forItem: indexPath.item + 1, inSection: indexPath.section)
+        }
     }
 }

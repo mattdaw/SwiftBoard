@@ -177,9 +177,9 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
                         if sbCell.pointInsideIcon(location) {
                             println("Icon!")
                         } else if location.x < (myCell!.bounds.width / 2) {
-                            println("Left!")
+                            moveDraggingCellToIndexPath(regularLayout.indexPathToInsertLeftOfIndexPath(indexPath!))
                         } else {
-                            println("Right!")
+                            moveDraggingCellToIndexPath(regularLayout.indexPathToInsertRightOfIndexPath(indexPath!))
                         }
                     }
                 }
@@ -220,6 +220,10 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
                 dv.alpha = 0.6
             }
         }
+    }
+    
+    func moveDraggingCellToIndexPath(indexPath:NSIndexPath) {
+        
     }
     
     // UIGestureRecognizerDelegate
