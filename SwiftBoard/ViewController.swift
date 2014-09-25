@@ -175,14 +175,19 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
                 if let myCollectionView = collectionView {
                     if let sbCell = myCell as? SwiftBoardCell {
                         let location = gesture.locationInView(myCell)
+                        let velocity = gesture.velocityInView(view)
                         
                         println(indexPath!.item)
                         if sbCell.pointInsideIcon(location) {
                             println("Icon!")
-                        } else if location.x < (myCell!.bounds.width / 2) {
-                            moveDraggingCellToIndexPath(regularLayout.indexPathToInsertLeftOfIndexPath(indexPath!))
+                        } else if velocity.x > 0 {
+                            if (location.x > (myCell!.bounds.width / 2)) {
+                                moveDraggingCellToIndexPath(indexPath!)
+                            }
                         } else {
-                            moveDraggingCellToIndexPath(regularLayout.indexPathToInsertRightOfIndexPath(indexPath!))
+                            if (location.x < (myCell!.bounds.width / 2)) {
+                                moveDraggingCellToIndexPath(indexPath!)
+                            }
                         }
                     }
                 }
@@ -234,7 +239,12 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
         let originalIndexPath = draggingIndexPath!
         var item: AnyObject = items[originalIndexPath.item]
         items.removeAtIndex(originalIndexPath.item)
-        items.insert(item, atIndex:indexPath.item)
+        
+        if (indexPath.item >= items.count) {
+            items.append(item)
+        } else {
+            items.insert(item, atIndex:indexPath.item)
+        }
         
         draggingIndexPath = indexPath
         regularLayout.hideIndexPath = indexPath
