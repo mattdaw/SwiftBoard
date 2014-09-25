@@ -172,8 +172,15 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
                 if let myCollectionView = collectionView {
                     if let appCell = myCell as? AppCollectionViewCell {
                         let location = gesture.locationInView(appCell)
+                        
                         println(indexPath!.item)
-                        println(appCell.pointInsideIcon(location))
+                        if appCell.pointInsideIcon(location) {
+                            println("Icon!")
+                        } else if location.x < (appCell.bounds.width / 2) {
+                            println("Left!")
+                        } else {
+                            println("Right!")
+                        }
                     }
                 }
 
