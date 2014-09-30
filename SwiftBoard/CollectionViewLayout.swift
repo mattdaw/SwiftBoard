@@ -121,19 +121,24 @@ class CollectionViewLayout: UICollectionViewLayout {
         return true
     }
     
-    func indexPathToInsertLeftOfIndexPath(indexPath:NSIndexPath) -> NSIndexPath {
-        let column = indexPath.item % itemsPerRow
-        let row = indexPath.item / itemsPerRow
-        
-        if column == 0 && row > 0 {
-            return NSIndexPath(forItem: indexPath.item + 1, inSection: indexPath.section)
-        } else {
-            return NSIndexPath(forItem: indexPath.item, inSection: indexPath.section)
+    func indexPathToMoveSourceIndexPathLeftOfDestIndexPath(sourceIndexPath:NSIndexPath, destIndexPath:NSIndexPath) -> NSIndexPath {
+        let column = destIndexPath.item % itemsPerRow
+        let row = destIndexPath.item / itemsPerRow
+    
+        var offset = 0
+        if sourceIndexPath.item < destIndexPath.item && column != 0 {
+            offset = -1
         }
+        
+        return NSIndexPath(forItem:destIndexPath.item + offset, inSection:destIndexPath.section)
     }
     
-    func indexPathToInsertRightOfIndexPath(indexPath:NSIndexPath) -> NSIndexPath {
-        let column = indexPath.item % itemsPerRow
-        return NSIndexPath(forItem: indexPath.item + 1, inSection: indexPath.section)
+    func indexPathToMoveSourceIndexPathRightOfDestIndexPath(sourceIndexPath:NSIndexPath, destIndexPath:NSIndexPath) -> NSIndexPath {
+        var offset = 1
+        if sourceIndexPath.item < destIndexPath.item {
+            offset = 0
+        }
+        
+        return NSIndexPath(forItem:destIndexPath.item + offset, inSection:destIndexPath.section)
     }
 }

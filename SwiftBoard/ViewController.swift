@@ -202,16 +202,13 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
             if let sbCell = myCell as? SwiftBoardCell {
                 let location = lastPanGesture!.locationInView(myCell)
 
-                // TODO: bug when moving far cell (0,2) to cell (0,1) and (1,1) to (0,1)
-                // And bug dragging secon
                 if sbCell.pointInsideIcon(location) {
                     //println("Icon!")
                 } else if location.x < (myCell!.bounds.width / 2) {
-                    let newPath = regularLayout.indexPathToInsertLeftOfIndexPath(indexPath!)
+                    let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(draggingIndexPath!, destIndexPath: indexPath!)
                     moveDraggingCellToIndexPath(newPath)
                 } else {
-                    // TODO: The "minus one" logic should be in the layout? Better name for methods?
-                    let newPath = regularLayout.indexPathToInsertRightOfIndexPath(indexPath!)
+                    let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(draggingIndexPath!, destIndexPath: indexPath!)
                     moveDraggingCellToIndexPath(newPath)
                 }
             }
@@ -258,27 +255,22 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
         // Update data source
         let originalIndexPath = draggingIndexPath!
         
-        var newIndexPath = indexPath
-        if originalIndexPath.item < indexPath.item {
-            newIndexPath = NSIndexPath(forItem: indexPath.item - 1, inSection: indexPath.section)
-        }
-        
         var item: AnyObject = items[originalIndexPath.item]
         items.removeAtIndex(originalIndexPath.item)
         
-        if newIndexPath.item >= items.count {
+        if indexPath.item >= items.count {
             items.append(item)
         } else {
-            items.insert(item, atIndex:newIndexPath.item)
+            items.insert(item, atIndex:indexPath.item)
         }
         
-        draggingIndexPath = newIndexPath
-        regularLayout.hideIndexPath = newIndexPath
+        draggingIndexPath = indexPath
+        regularLayout.hideIndexPath = indexPath
         
         // Update collection view
         if let myCollectionView = collectionView {
             myCollectionView.performBatchUpdates({ () -> Void in
-                myCollectionView.moveItemAtIndexPath(originalIndexPath, toIndexPath: newIndexPath)
+                myCollectionView.moveItemAtIndexPath(originalIndexPath, toIndexPath:indexPath)
             }, completion: nil)
         }
     }
