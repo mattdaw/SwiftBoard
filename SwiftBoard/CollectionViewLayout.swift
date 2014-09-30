@@ -122,14 +122,18 @@ class CollectionViewLayout: UICollectionViewLayout {
     }
     
     func indexPathToInsertLeftOfIndexPath(indexPath:NSIndexPath) -> NSIndexPath {
-        if indexPath.item == 0 {
-            return NSIndexPath(forItem: indexPath.item, inSection: indexPath.section)
+        let column = indexPath.item % itemsPerRow
+        let row = indexPath.item / itemsPerRow
+        
+        if column == 0 && row > 0 {
+            return NSIndexPath(forItem: indexPath.item + 1, inSection: indexPath.section)
         } else {
-            return NSIndexPath(forItem: indexPath.item - 1, inSection: indexPath.section)
+            return NSIndexPath(forItem: indexPath.item, inSection: indexPath.section)
         }
     }
     
     func indexPathToInsertRightOfIndexPath(indexPath:NSIndexPath) -> NSIndexPath {
-        return NSIndexPath(forItem: indexPath.item, inSection: indexPath.section)
+        let column = indexPath.item % itemsPerRow
+        return NSIndexPath(forItem: indexPath.item + 1, inSection: indexPath.section)
     }
 }

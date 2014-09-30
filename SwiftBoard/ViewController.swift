@@ -10,6 +10,8 @@ import UIKit
 
 class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
 
+    let kPauseBeforeDrag = 0.2
+    
     var items: [AnyObject] = [];
     var folderDataSource = FolderDataSource()
     var zoomedLayout = CollectionViewLayout()
@@ -175,7 +177,7 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
                 lastPanGesture = gesture
                 
                 moveCellsTimer?.invalidate();
-                moveCellsTimer = NSTimer.scheduledTimerWithTimeInterval(0.2, target: self, selector: "moveCells", userInfo: nil, repeats: false)
+                moveCellsTimer = NSTimer.scheduledTimerWithTimeInterval(kPauseBeforeDrag, target: self, selector: "moveCells", userInfo: nil, repeats: false)
             }
         case UIGestureRecognizerState.Ended:
             moveCellsTimer?.invalidate()
@@ -194,29 +196,16 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
         if let myCollectionView = collectionView {
             if let sbCell = myCell as? SwiftBoardCell {
                 let location = lastPanGesture!.locationInView(myCell)
-                let velocity = lastPanGesture!.velocityInView(view)
-                
-                println(indexPath!.item)
-                
+
                 if sbCell.pointInsideIcon(location) {
                     //println("Icon!")
-                } else if abs(velocity.y) > 20 {
-                    if location.x < (myCell!.bounds.width / 2) || indexPath!.item == items.count - 1 {
-                        moveDraggingCellToIndexPath(indexPath!)
-                    } else {
-                        let nextIndex = NSIndexPath(forItem: indexPath!.item + 1, inSection: indexPath!.section)
-                        moveDraggingCellToIndexPath(nextIndex)
-                    }
+                } else if location.x < (myCell!.bounds.width / 2) {
+                    let newPath = regularLayout.indexPathToInsertLeftOfIndexPath(indexPath!)
+                    moveDraggingCellToIndexPath(newPath)
                 } else {
-                    if velocity.x > 0 {
-                        if (location.x > (myCell!.bounds.width / 2)) {
-                            moveDraggingCellToIndexPath(indexPath!)
-                        }
-                    } else {
-                        if (location.x < (myCell!.bounds.width / 2)) {
-                            moveDraggingCellToIndexPath(indexPath!)
-                        }
-                    }
+                    // TODO: The "minus one" logic should be in the layout? Better name for methods?
+                    let newPath = regularLayout.indexPathToInsertRightOfIndexPath(indexPath!)
+                    moveDraggingCellToIndexPath(newPath)
                 }
             }
         }
@@ -261,22 +250,28 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
         
         // Update data source
         let originalIndexPath = draggingIndexPath!
+        
+        var newIndexPath = indexPath
+        if originalIndexPath.item < indexPath.item {
+            newIndexPath = NSIndexPath(forItem: indexPath.item - 1, inSection: indexPath.section)
+        }
+        
         var item: AnyObject = items[originalIndexPath.item]
         items.removeAtIndex(originalIndexPath.item)
         
-        if (indexPath.item >= items.count) {
+        if newIndexPath.item >= items.count {
             items.append(item)
         } else {
-            items.insert(item, atIndex:indexPath.item)
+            items.insert(item, atIndex:newIndexPath.item)
         }
         
-        draggingIndexPath = indexPath
-        regularLayout.hideIndexPath = indexPath
+        draggingIndexPath = newIndexPath
+        regularLayout.hideIndexPath = newIndexPath
         
         // Update collection view
         if let myCollectionView = collectionView {
             myCollectionView.performBatchUpdates({ () -> Void in
-                myCollectionView.moveItemAtIndexPath(originalIndexPath, toIndexPath: indexPath)
+                myCollectionView.moveItemAtIndexPath(originalIndexPath, toIndexPath: newIndexPath)
             }, completion: nil)
         }
     }
