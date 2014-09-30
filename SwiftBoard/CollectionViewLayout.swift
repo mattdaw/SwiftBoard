@@ -41,15 +41,18 @@ class CollectionViewLayout: UICollectionViewLayout {
         let mySize = getSize()
         let availableHeight = mySize.height
         let availableWidth = mySize.width
+        var myItemSize = CGFloat(itemSize)
         
         itemsPerRow = Int(floor(availableWidth / itemSize))
+        let floatItems = Float(availableWidth) / Float(itemsPerRow)
+        myItemSize = CGFloat(floor(floatItems))
         
         var top = CGFloat(0)
         var left = CGFloat(0)
         var column = 1
-        var zoomedSize = itemSize
-        var rowOffset = itemSize
-        var columnOffset = itemSize
+        var zoomedSize = myItemSize
+        var rowOffset = myItemSize
+        var columnOffset = myItemSize
         
         if let zoomIndex = zoomToIndexPath {
             if availableWidth < availableHeight {

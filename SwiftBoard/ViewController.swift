@@ -211,6 +211,8 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
                     let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(draggingIndexPath!, destIndexPath: indexPath!)
                     moveDraggingCellToIndexPath(newPath)
                 }
+            } else {
+                println("Outside")
             }
         }
     }
