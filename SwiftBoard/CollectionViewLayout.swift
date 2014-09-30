@@ -126,8 +126,6 @@ class CollectionViewLayout: UICollectionViewLayout {
     
     func indexPathToMoveSourceIndexPathLeftOfDestIndexPath(sourceIndexPath:NSIndexPath, destIndexPath:NSIndexPath) -> NSIndexPath {
         let column = destIndexPath.item % itemsPerRow
-        let row = destIndexPath.item / itemsPerRow
-    
         var offset = 0
         if sourceIndexPath.item < destIndexPath.item && column != 0 {
             offset = -1
