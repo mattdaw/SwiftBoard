@@ -68,6 +68,11 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
                 App(name: "App 4", color: UIColor.darkGrayColor())
             ]),
             App(name: "App 3", color: UIColor.redColor()),
+            App(name: "App 20", color: UIColor.redColor()),
+            App(name: "App 21", color: UIColor.redColor()),
+            App(name: "App 22", color: UIColor.redColor()),
+            App(name: "App 23", color: UIColor.redColor()),
+            App(name: "App 24", color: UIColor.redColor()),
         ]
     }
     
@@ -197,6 +202,8 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
             if let sbCell = myCell as? SwiftBoardCell {
                 let location = lastPanGesture!.locationInView(myCell)
 
+                // TODO: bug when moving far cell (0,2) to cell (0,1) and (1,1) to (0,1)
+                // And bug dragging secon
                 if sbCell.pointInsideIcon(location) {
                     //println("Icon!")
                 } else if location.x < (myCell!.bounds.width / 2) {
