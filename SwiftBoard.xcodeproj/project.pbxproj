@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C908190C19D485EA0091A58C /* SwiftBoardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C908190B19D485EA0091A58C /* SwiftBoardCell.swift */; };
+		C96664A619DCA3CD00247FC4 /* CollectionViewLayoutAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96664A519DCA3CD00247FC4 /* CollectionViewLayoutAttributes.swift */; };
 		C96A381219CA0F650069F5D9 /* AppCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C96A381119CA0F650069F5D9 /* AppCollectionViewCell.xib */; };
 		C96A381419CA10120069F5D9 /* FolderCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C96A381319CA10120069F5D9 /* FolderCollectionViewCell.xib */; };
 		C9981F7119C7765900804558 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9981F7019C7765900804558 /* App.swift */; };
@@ -38,6 +39,7 @@
 
 /* Begin PBXFileReference section */
 		C908190B19D485EA0091A58C /* SwiftBoardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBoardCell.swift; sourceTree = "<group>"; };
+		C96664A519DCA3CD00247FC4 /* CollectionViewLayoutAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewLayoutAttributes.swift; sourceTree = "<group>"; };
 		C96A381119CA0F650069F5D9 /* AppCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AppCollectionViewCell.xib; sourceTree = "<group>"; };
 		C96A381319CA10120069F5D9 /* FolderCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FolderCollectionViewCell.xib; sourceTree = "<group>"; };
 		C9981F7019C7765900804558 /* App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 				C9981F7419C7814300804558 /* Folder.swift */,
 				C9DAE69D19C73EC0007CF518 /* ViewController.swift */,
 				C9981F7619C798C600804558 /* CollectionViewLayout.swift */,
+				C96664A519DCA3CD00247FC4 /* CollectionViewLayoutAttributes.swift */,
 				C9A33FC619D09976004E8B62 /* FolderCollectionViewLayout.swift */,
 				C99E409219CB9EAD003DE57D /* FolderCollectionView.swift */,
 				C99E409419CBA2A6003DE57D /* FolderDataSource.swift */,
@@ -259,6 +262,7 @@
 				C99E408F19CB41AC003DE57D /* FolderCollectionViewCell.swift in Sources */,
 				C908190C19D485EA0091A58C /* SwiftBoardCell.swift in Sources */,
 				C9981F7719C798C600804558 /* CollectionViewLayout.swift in Sources */,
+				C96664A619DCA3CD00247FC4 /* CollectionViewLayoutAttributes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
