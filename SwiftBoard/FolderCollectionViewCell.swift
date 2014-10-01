@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FolderCollectionViewCell : UICollectionViewCell, SwiftBoardCell {
+class FolderCollectionViewCell : SwiftBoardCell {
     
     @IBOutlet weak var collectionView: FolderCollectionView!
     @IBOutlet weak var label: UILabel!
@@ -27,7 +27,7 @@ class FolderCollectionViewCell : UICollectionViewCell, SwiftBoardCell {
         layoutIfNeeded()
     }
     
-    func pointInsideIcon(point:CGPoint) -> Bool {
+    override func pointInsideIcon(point:CGPoint) -> Bool {
         let converted = convertPoint(point, toView:collectionView)
         return collectionView.pointInside(converted, withEvent: nil)
     }

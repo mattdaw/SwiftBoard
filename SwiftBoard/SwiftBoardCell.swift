@@ -8,6 +8,9 @@
 
 import UIKit
 
-@objc protocol SwiftBoardCell {
-    func pointInsideIcon(point:CGPoint) -> Bool
+class SwiftBoardCell : UICollectionViewCell {
+    
+    func pointInsideIcon(point:CGPoint) -> Bool {
+        return false;
+    }
 }

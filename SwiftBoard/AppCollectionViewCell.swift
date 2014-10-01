@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AppCollectionViewCell : UICollectionViewCell, SwiftBoardCell {
+class AppCollectionViewCell : SwiftBoardCell {
     
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var label: UILabel!
@@ -46,7 +46,7 @@ class AppCollectionViewCell : UICollectionViewCell, SwiftBoardCell {
         layoutIfNeeded()
     }
     
-    func pointInsideIcon(point:CGPoint) -> Bool {
+    override func pointInsideIcon(point:CGPoint) -> Bool {
         let converted = convertPoint(point, toView:containerView)
         return containerView.pointInside(converted, withEvent: nil)
     }
