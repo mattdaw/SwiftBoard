@@ -21,11 +21,7 @@ class FolderCollectionViewCell : SwiftBoardCell {
     
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes!) {
         super.applyLayoutAttributes(layoutAttributes)
-        
-        if let myAttributes = layoutAttributes as? CollectionViewLayoutAttributes {
-            println(myAttributes.editingModeEnabled)
-        }
-        
+    
         // Trigger constraint re-evaluation, so the subview sizes get animated too
         // http://stackoverflow.com/questions/23564453/uicollectionview-layout-transitions
         layoutIfNeeded()

@@ -10,7 +10,36 @@ import UIKit
 
 class SwiftBoardCell : UICollectionViewCell {
     
+    let animationKey = "editingModeEnabled"
+    
     func pointInsideIcon(point:CGPoint) -> Bool {
-        return false;
+        return false
+    }
+    
+    override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes!) {
+        super.applyLayoutAttributes(layoutAttributes)
+        
+        if let myAttributes = layoutAttributes as? CollectionViewLayoutAttributes {
+            if myAttributes.editingModeEnabled {
+                startAnimating()
+            } else {
+                stopAnimating()
+            }
+        }
+    }
+    
+    func startAnimating() {
+        let anim = CABasicAnimation(keyPath:"transform.rotation")
+        anim.fromValue = -M_PI / 48
+        anim.toValue = M_PI / 48
+        anim.autoreverses = true
+        anim.duration = 0.2
+        anim.repeatCount = HUGE
+        
+        self.layer.addAnimation(anim, forKey:animationKey);
+    }
+    
+    func stopAnimating() {
+        self.layer.removeAnimationForKey(animationKey)
     }
 }

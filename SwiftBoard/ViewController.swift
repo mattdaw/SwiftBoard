@@ -147,6 +147,7 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
                 draggingIndexPath = indexPath
                 grabCell(cell!, gesture:gesture)
                 
+                regularLayout.editingModeEnabled = true
                 regularLayout.hideIndexPath = indexPath
                 regularLayout.invalidateLayout()
             }
