@@ -27,12 +27,17 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     var lastPanGesture: UIPanGestureRecognizer?
     var moveCellsTimer: NSTimer?
     
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return UIStatusBarStyle.LightContent
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         collectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
         collectionView.registerNib(UINib(nibName: "FolderCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "Folder")
         
+        collectionView.backgroundColor = UIColor.clearColor()
         collectionView.setCollectionViewLayout(regularLayout, animated: false)
         collectionView.scrollEnabled = false
         
@@ -79,9 +84,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     // Not sure this is right, but try to get the layout to assume its new size early so that in the animated rotation we don't
     // see neighbour items animating off-screen.
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        if let layout = collectionView?.collectionViewLayout as? CollectionViewLayout {
+        if let layout = collectionView.collectionViewLayout as? CollectionViewLayout {
             layout.overrideSize = size
-            collectionView?.reloadData()
+            collectionView.reloadData()
         }
     }
     
@@ -121,21 +126,21 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     // I'm not sure this is right yet, but it's seeming better to me to have two instantiated layouts. The layout's state
     // can be confusing (to me) when the initial/final attributes methods are called on a single layout instance.
     func zoomLayout(recognizer: UITapGestureRecognizer) {
-        if collectionView?.collectionViewLayout === regularLayout {
+        if collectionView.collectionViewLayout === regularLayout {
             let point = recognizer.locationInView(collectionView)
             
-            if let indexPath = collectionView?.indexPathForItemAtPoint(point) {
+            if let indexPath = collectionView.indexPathForItemAtPoint(point) {
                 let item: AnyObject = items[indexPath.item]
                 
                 if let folder = item as? Folder {
                     zoomedLayout.zoomToIndexPath = indexPath
-                    collectionView?.setCollectionViewLayout(zoomedLayout, animated: true)
+                    collectionView.setCollectionViewLayout(zoomedLayout, animated: true)
                     return
                 }
             }
         }
         
-        collectionView?.setCollectionViewLayout(regularLayout, animated: true)
+        collectionView.setCollectionViewLayout(regularLayout, animated: true)
     }
     
     func handleLongPress(gesture: UILongPressGestureRecognizer) {
@@ -176,7 +181,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         switch gesture.state {
         case UIGestureRecognizerState.Began, UIGestureRecognizerState.Changed:
             if let dv = draggingView {
-                let translation = gesture.translationInView(view)
+                let translation = gesture.translationInView(collectionView)
                 dv.center = CGPoint(x: dragOriginalCenter!.x + translation.x + dragAddTranslation!.x,
                                     y: dragOriginalCenter!.y + translation.y + dragAddTranslation!.y)
                 
@@ -219,13 +224,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     func cellAndIndexPathForGesture(gesture: UIGestureRecognizer) -> (UICollectionViewCell?, NSIndexPath?) {
-        if let myCollectionView = collectionView {
-            let point = gesture.locationInView(myCollectionView)
+        let point = gesture.locationInView(collectionView)
             
-            if let indexPath = myCollectionView.indexPathForItemAtPoint(point) {
-                let cell = myCollectionView.cellForItemAtIndexPath(indexPath)
-                return (cell, indexPath)
-            }
+        if let indexPath = collectionView.indexPathForItemAtPoint(point) {
+            let cell = collectionView.cellForItemAtIndexPath(indexPath)
+            return (cell, indexPath)
         }
         
         return (nil, nil)
@@ -237,15 +240,15 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             dv.frame = cell.frame
             dragOriginalCenter = dv.center
             
-            let startLocation = gesture.locationInView(view)
+            let startLocation = gesture.locationInView(collectionView)
             dragAddTranslation = CGPoint(x: startLocation.x - dragOriginalCenter!.x,
                 y: startLocation.y - dragOriginalCenter!.y)
             
-            view.addSubview(dv)
+            collectionView.addSubview(dv)
             
             UIView.animateWithDuration(0.2) {
                 dv.transform = CGAffineTransformMakeScale(1.1, 1.1)
-                dv.alpha = 0.6
+                dv.alpha = 0.8
             }
         }
     }
