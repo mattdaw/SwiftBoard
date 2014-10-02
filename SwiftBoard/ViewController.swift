@@ -281,6 +281,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
     }
     
+    @IBAction func handleHomeButton(sender: AnyObject) {
+        if regularLayout.editingModeEnabled {
+            regularLayout.editingModeEnabled = false
+            regularLayout.invalidateLayout()
+        }
+    }
+    
     // UIGestureRecognizerDelegate
     
     func gestureRecognizerShouldBegin(gesture: UIGestureRecognizer) -> Bool {
