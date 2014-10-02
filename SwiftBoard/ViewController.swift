@@ -8,9 +8,11 @@
 
 import UIKit
 
-class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
+class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIGestureRecognizerDelegate {
 
     let kPauseBeforeDrag = 0.2
+    
+    @IBOutlet weak var collectionView: UICollectionView!
     
     var items: [AnyObject] = [];
     var folderDataSource = FolderDataSource()
@@ -28,24 +30,22 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let myCollectionView = collectionView? {
-            myCollectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
-            myCollectionView.registerNib(UINib(nibName: "FolderCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "Folder")
-            
-            myCollectionView.setCollectionViewLayout(regularLayout, animated: false)
-            myCollectionView.scrollEnabled = false
-            
-            let tapRecognizer = UITapGestureRecognizer(target: self, action: "zoomLayout:")
-            myCollectionView.addGestureRecognizer(tapRecognizer)
-            
-            longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
-            longPressRecognizer!.delegate = self
-            myCollectionView.addGestureRecognizer(longPressRecognizer!)
+        collectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
+        collectionView.registerNib(UINib(nibName: "FolderCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "Folder")
+        
+        collectionView.setCollectionViewLayout(regularLayout, animated: false)
+        collectionView.scrollEnabled = false
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: "zoomLayout:")
+        collectionView.addGestureRecognizer(tapRecognizer)
+        
+        longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
+        longPressRecognizer!.delegate = self
+        collectionView.addGestureRecognizer(longPressRecognizer!)
 
-            panRecognizer = UIPanGestureRecognizer(target: self, action: "handlePan:")
-            panRecognizer!.delegate = self
-            myCollectionView.addGestureRecognizer(panRecognizer!)
-        }
+        panRecognizer = UIPanGestureRecognizer(target: self, action: "handlePan:")
+        panRecognizer!.delegate = self
+        collectionView.addGestureRecognizer(panRecognizer!)
         
         seedData();
         folderDataSource.items = items;
@@ -85,15 +85,15 @@ class ViewController: UICollectionViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
     }
     
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return items.count
     }
     
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         var cell:UICollectionViewCell
         
         var item: AnyObject = items[indexPath.item]
