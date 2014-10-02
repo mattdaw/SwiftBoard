@@ -20,15 +20,13 @@ class CollectionViewLayoutAttributes : UICollectionViewLayoutAttributes {
     }
     
     override func isEqual(object: AnyObject?) -> Bool {
-        if self === object {
-            return true
-        } else if let castObject = object as? CollectionViewLayoutAttributes {
-            if editingModeEnabled == castObject.editingModeEnabled {
-                return super.isEqual(object)
+        if let castObject = object as? CollectionViewLayoutAttributes {
+            if editingModeEnabled != castObject.editingModeEnabled {
+                return false
             }
         }
         
-        return false
+        return super.isEqual(object)
     }
     
 }

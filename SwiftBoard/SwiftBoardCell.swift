@@ -30,8 +30,8 @@ class SwiftBoardCell : UICollectionViewCell {
     
     func startAnimating() {
         let anim = CABasicAnimation(keyPath:"transform.rotation")
-        anim.fromValue = -M_PI / 24
-        anim.toValue = M_PI / 24
+        anim.fromValue = -M_PI / 48
+        anim.toValue = M_PI / 48
         anim.autoreverses = true
         anim.duration = 0.2
         anim.repeatCount = HUGE

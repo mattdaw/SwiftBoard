@@ -119,7 +119,7 @@ class CollectionViewLayout: UICollectionViewLayout {
         
         if let hideIndex = hideIndexPath {
             if hideIndex == indexPath {
-                itemAttributes.hidden = true
+                itemAttributes.alpha = 0
             }
         }
         
