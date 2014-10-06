@@ -26,11 +26,25 @@
                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B1Y-vc-v4G">
+                        <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="44" id="PPC-Io-lL3"/>
+                            <constraint firstAttribute="height" constant="44" id="gBn-qn-aDt"/>
+                        </constraints>
+                        <state key="normal" title="X">
+                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                    </button>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
             <constraints>
+                <constraint firstItem="B1Y-vc-v4G" firstAttribute="leading" secondItem="L0q-fh-fem" secondAttribute="leading" id="Pe0-cc-NMi"/>
                 <constraint firstAttribute="bottom" secondItem="rC8-b4-RiH" secondAttribute="bottom" id="U8O-qZ-z42"/>
+                <constraint firstItem="B1Y-vc-v4G" firstAttribute="top" secondItem="L0q-fh-fem" secondAttribute="top" id="YJh-wL-2Ol"/>
                 <constraint firstAttribute="bottom" secondItem="4Nv-jZ-ncV" secondAttribute="bottom" constant="28" id="bdM-Aw-K8J"/>
                 <constraint firstItem="4Nv-jZ-ncV" firstAttribute="leading" secondItem="L0q-fh-fem" secondAttribute="leading" constant="18" id="iDb-EF-4Q6"/>
                 <constraint firstItem="4Nv-jZ-ncV" firstAttribute="top" secondItem="L0q-fh-fem" secondAttribute="top" constant="8" id="nwe-Sz-t8x"/>
@@ -41,6 +55,7 @@
             <connections>
                 <outlet property="bottomConstraint" destination="bdM-Aw-K8J" id="4GY-Zy-xIp"/>
                 <outlet property="containerView" destination="4Nv-jZ-ncV" id="E4w-7k-Mc4"/>
+                <outlet property="deleteButton" destination="B1Y-vc-v4G" id="l5W-Rt-fX6"/>
                 <outlet property="label" destination="rC8-b4-RiH" id="ByD-Lx-nVd"/>
                 <outlet property="leftConstraint" destination="iDb-EF-4Q6" id="2Q7-Tj-ZED"/>
                 <outlet property="rightConstraint" destination="yEY-ZK-q3o" id="tOa-XM-01v"/>

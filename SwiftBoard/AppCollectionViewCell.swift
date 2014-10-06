@@ -12,6 +12,7 @@ class AppCollectionViewCell : SwiftBoardCell {
     
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var deleteButton: UIButton!
     
     @IBOutlet weak var topConstraint: NSLayoutConstraint!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
@@ -28,12 +29,14 @@ class AppCollectionViewCell : SwiftBoardCell {
         super.applyLayoutAttributes(layoutAttributes)
         
         if bounds.width < 40 {
+            deleteButton.alpha = 0
             label.alpha = 0
             topConstraint.constant = 0
             bottomConstraint.constant = 0
             leftConstraint.constant = 0
             rightConstraint.constant = 0
         } else {
+            deleteButton.alpha = 1
             label.alpha = 1
             topConstraint.constant = 8
             bottomConstraint.constant = 28

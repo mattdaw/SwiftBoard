@@ -212,10 +212,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                     //println("Icon!")
                 } else if location.x < (myCell!.bounds.width / 2) {
                     let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(draggingIndexPath!, destIndexPath: indexPath!)
-                    moveDraggingCellToIndexPath(newPath)
+                    dropCellAtIndexPath(newPath)
                 } else {
                     let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(draggingIndexPath!, destIndexPath: indexPath!)
-                    moveDraggingCellToIndexPath(newPath)
+                    dropCellAtIndexPath(newPath)
                 }
             } else {
                 println("Outside")
@@ -253,7 +253,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
     }
     
-    func moveDraggingCellToIndexPath(indexPath:NSIndexPath) {
+    func dropCellAtIndexPath(indexPath:NSIndexPath) {
         if draggingIndexPath == nil || draggingIndexPath == indexPath {
             return
         }
