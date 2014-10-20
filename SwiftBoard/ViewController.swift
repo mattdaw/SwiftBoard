@@ -8,6 +8,23 @@
 
 import UIKit
 
+private struct DragState {
+    let originalCenter: CGPoint
+    let addTranslation: CGPoint
+    let dragProxyView: UIView
+    
+    var dragIndexPath: NSIndexPath
+    var dropIndexPath: NSIndexPath?
+    
+    mutating func setDragIndexPath(indexPath:NSIndexPath) {
+        dragIndexPath = indexPath
+    }
+    
+    mutating func setDropIndexPath(indexPath:NSIndexPath?) {
+        dropIndexPath = indexPath
+    }
+}
+
 class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIGestureRecognizerDelegate {
 
     let kPauseBeforeDrag = 0.2
@@ -17,14 +34,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     var items: [Any] = [];
     var zoomedLayout = CollectionViewLayout()
     var regularLayout = CollectionViewLayout()
-    var dragOriginalCenter: CGPoint?
-    var dragAddTranslation: CGPoint?
-    var draggingIndexPath: NSIndexPath?
-    var draggingView: UIView?
+
     var panRecognizer: UIPanGestureRecognizer?
     var longPressRecognizer: UILongPressGestureRecognizer?
     var lastPanGesture: UIPanGestureRecognizer?
     var moveCellsTimer: NSTimer?
+    
+    private var currentDragState: DragState?
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
@@ -143,32 +159,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func handleLongPress(gesture: UILongPressGestureRecognizer) {
         switch gesture.state {
         case UIGestureRecognizerState.Began:
-            let (cell, indexPath) = cellAndIndexPathForGesture(gesture)
-            
-            if cell != nil {
-                draggingIndexPath = indexPath
-                grabCell(cell!, gesture:gesture)
-                
-                regularLayout.editingModeEnabled = true
-                regularLayout.hideIndexPath = indexPath
-                regularLayout.invalidateLayout()
-            }
+            assert(currentDragState == nil)
+            startDrag(gesture)
         case UIGestureRecognizerState.Ended, UIGestureRecognizerState.Cancelled:
-            if let dv = draggingView {
-                UIView.animateWithDuration(0.2, animations: { () -> Void in
-                    dv.transform = CGAffineTransformIdentity
-                    dv.alpha = 1
-                }, completion: { (Bool) -> Void in
-                    self.regularLayout.hideIndexPath = nil
-                    self.regularLayout.invalidateLayout()
-                    
-                    dv.removeFromSuperview()
-                    self.draggingIndexPath = nil
-                    self.draggingView = nil
-                    self.dragOriginalCenter = nil
-                    self.dragAddTranslation = nil
-                })
-            }
+            endDrag()
         default:
             break
         }
@@ -177,12 +171,31 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func handlePan(gesture: UIPanGestureRecognizer) {
         switch gesture.state {
         case UIGestureRecognizerState.Began, UIGestureRecognizerState.Changed:
-            if let dv = draggingView {
+            if let dragState = currentDragState {
                 let translation = gesture.translationInView(collectionView)
-                dv.center = CGPoint(x: dragOriginalCenter!.x + translation.x + dragAddTranslation!.x,
-                                    y: dragOriginalCenter!.y + translation.y + dragAddTranslation!.y)
+                dragState.dragProxyView.center = CGPoint(x: dragState.originalCenter.x + translation.x + dragState.addTranslation.x,
+                                                         y: dragState.originalCenter.y + translation.y + dragState.addTranslation.y)
                 
-                lastPanGesture = gesture
+                let dropPoint = gesture.locationInView(collectionView)
+                if let dropIndexPath = collectionView.indexPathForItemAtPoint(dropPoint) {
+                    if let dropCell = collectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
+                        let location = gesture.locationInView(dropCell)
+                        
+                        if dropCell.pointInsideIcon(location) {
+                            //println("Icon!")
+                        } else if location.x < (dropCell.bounds.width / 2) {
+                            let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(dragState.dragIndexPath, destIndexPath: dropIndexPath)
+                            if (newPath != dragState.dragIndexPath) {
+                                currentDragState!.setDropIndexPath(newPath)
+                            }
+                        } else {
+                            let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(dragState.dragIndexPath, destIndexPath: dropIndexPath)
+                            if (newPath != dragState.dragIndexPath) {
+                                currentDragState!.setDropIndexPath(newPath)
+                            }
+                        }
+                    }
+                }
                 
                 moveCellsTimer?.invalidate();
                 moveCellsTimer = NSTimer.scheduledTimerWithTimeInterval(kPauseBeforeDrag, target: self, selector: "moveCells", userInfo: nil, repeats: false)
@@ -193,88 +206,79 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             break
         }
     }
+
+    func startDrag(gesture:UIGestureRecognizer) {
+        if let indexPath = collectionView.indexPathForItemAtPoint(gesture.locationInView(collectionView)) {
+            if let cell = collectionView.cellForItemAtIndexPath(indexPath) {
+                let dragProxyView = cell.snapshotViewAfterScreenUpdates(true)
+                dragProxyView.frame = cell.frame
+                collectionView.addSubview(dragProxyView)
+                
+                let startLocation = gesture.locationInView(collectionView)
+                let originalCenter = dragProxyView.center
+                let addTranslation = CGPoint(x: startLocation.x - originalCenter.x, y: startLocation.y - originalCenter.y)
+                
+                currentDragState = DragState(originalCenter:originalCenter,
+                                             addTranslation:addTranslation,
+                                              dragProxyView:dragProxyView,
+                                              dragIndexPath:indexPath,
+                                              dropIndexPath:nil)
+                
+                UIView.animateWithDuration(0.2) {
+                    dragProxyView.transform = CGAffineTransformMakeScale(1.1, 1.1)
+                    dragProxyView.alpha = 0.8
+                }
+                
+                regularLayout.editingModeEnabled = true
+                regularLayout.hideIndexPath = indexPath
+                regularLayout.invalidateLayout()
+            }
+        }
+    }
+    
+    func endDrag() {
+        if let dragState = currentDragState {
+            UIView.animateWithDuration(0.2, animations: { () -> Void in
+                dragState.dragProxyView.transform = CGAffineTransformIdentity
+                dragState.dragProxyView.alpha = 1
+            }, completion: { (Bool) -> Void in
+                    self.regularLayout.hideIndexPath = nil
+                    self.regularLayout.invalidateLayout()
+                    
+                    dragState.dragProxyView.removeFromSuperview()
+                    self.currentDragState = nil
+            })
+        }
+    }
     
     func moveCells() {
-        if lastPanGesture == nil {
-            return
-        }
-        
-        let (myCell, indexPath) = cellAndIndexPathForGesture(lastPanGesture!)
-        
-        if let myCollectionView = collectionView {
-            if let sbCell = myCell as? SwiftBoardCell {
-                let location = lastPanGesture!.locationInView(myCell)
-
-                if sbCell.pointInsideIcon(location) {
-                    //println("Icon!")
-                } else if location.x < (myCell!.bounds.width / 2) {
-                    let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(draggingIndexPath!, destIndexPath: indexPath!)
-                    dropCellAtIndexPath(newPath)
+        if let dragState = currentDragState {
+            if let dropIndexPath = dragState.dropIndexPath {
+                // Update data source
+                let originalIndexPath = dragState.dragIndexPath
+                
+                var item: Any = items[originalIndexPath.item]
+                items.removeAtIndex(originalIndexPath.item)
+                
+                if dropIndexPath.item >= items.count {
+                    items.append(item)
                 } else {
-                    let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(draggingIndexPath!, destIndexPath: indexPath!)
-                    dropCellAtIndexPath(newPath)
+                    items.insert(item, atIndex:dropIndexPath.item)
                 }
-            } else {
-                println("Outside")
+                
+                // Update drag state
+                currentDragState!.setDragIndexPath(dropIndexPath)
+                currentDragState!.setDropIndexPath(nil)
+                
+                // Update collection view
+                regularLayout.hideIndexPath = dropIndexPath
+                
+                if let myCollectionView = collectionView {
+                    myCollectionView.performBatchUpdates({ () -> Void in
+                        myCollectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dropIndexPath)
+                    }, completion: nil)
+                }
             }
-        }
-    }
-    
-    func cellAndIndexPathForGesture(gesture: UIGestureRecognizer) -> (UICollectionViewCell?, NSIndexPath?) {
-        let point = gesture.locationInView(collectionView)
-            
-        if let indexPath = collectionView.indexPathForItemAtPoint(point) {
-            let cell = collectionView.cellForItemAtIndexPath(indexPath)
-            return (cell, indexPath)
-        }
-        
-        return (nil, nil)
-    }
-    
-    func grabCell(cell:UICollectionViewCell, gesture:UIGestureRecognizer) {
-        draggingView = cell.snapshotViewAfterScreenUpdates(true)
-        if let dv = draggingView {
-            dv.frame = cell.frame
-            dragOriginalCenter = dv.center
-            
-            let startLocation = gesture.locationInView(collectionView)
-            dragAddTranslation = CGPoint(x: startLocation.x - dragOriginalCenter!.x,
-                y: startLocation.y - dragOriginalCenter!.y)
-            
-            collectionView.addSubview(dv)
-            
-            UIView.animateWithDuration(0.2) {
-                dv.transform = CGAffineTransformMakeScale(1.1, 1.1)
-                dv.alpha = 0.8
-            }
-        }
-    }
-    
-    func dropCellAtIndexPath(indexPath:NSIndexPath) {
-        if draggingIndexPath == nil || draggingIndexPath == indexPath {
-            return
-        }
-        
-        // Update data source
-        let originalIndexPath = draggingIndexPath!
-        
-        var item: Any = items[originalIndexPath.item]
-        items.removeAtIndex(originalIndexPath.item)
-        
-        if indexPath.item >= items.count {
-            items.append(item)
-        } else {
-            items.insert(item, atIndex:indexPath.item)
-        }
-        
-        draggingIndexPath = indexPath
-        regularLayout.hideIndexPath = indexPath
-        
-        // Update collection view
-        if let myCollectionView = collectionView {
-            myCollectionView.performBatchUpdates({ () -> Void in
-                myCollectionView.moveItemAtIndexPath(originalIndexPath, toIndexPath:indexPath)
-            }, completion: nil)
         }
     }
     
@@ -290,10 +294,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func gestureRecognizerShouldBegin(gesture: UIGestureRecognizer) -> Bool {
         switch gesture {
         case longPressRecognizer!:
-            let (cell, indexPath) = cellAndIndexPathForGesture(gesture)
-            return cell != nil
+            return true
         case panRecognizer!:
-            return dragOriginalCenter != nil
+            return currentDragState != nil
         default:
             return false
         }
