@@ -102,17 +102,17 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         switch item {
         case let app as App:
-            cell = collectionView.dequeueReusableCellWithReuseIdentifier("App", forIndexPath: indexPath) as UICollectionViewCell
-            let myCell = cell as AppCollectionViewCell
+            let myCell = collectionView.dequeueReusableCellWithReuseIdentifier("App", forIndexPath: indexPath) as AppCollectionViewCell
             myCell.label.text = app.name
             myCell.containerView.backgroundColor = app.color
-        case let folder as Folder:
-            cell = collectionView.dequeueReusableCellWithReuseIdentifier("Folder", forIndexPath: indexPath) as UICollectionViewCell
-            let myCell = cell as FolderCollectionViewCell
-            let folderDataSource = FolderDataSource(apps:folder.apps)
             
-            myCell.folderDataSource = folderDataSource            
+            cell = myCell
+        case let folder as Folder:
+            let myCell = collectionView.dequeueReusableCellWithReuseIdentifier("Folder", forIndexPath: indexPath) as FolderCollectionViewCell
+            myCell.folderDataSource = FolderDataSource(apps:folder.apps)
             myCell.label.text = folder.name
+            
+            cell = myCell
         default:
             cell = UICollectionViewCell()
         }
