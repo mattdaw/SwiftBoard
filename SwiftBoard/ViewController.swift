@@ -266,10 +266,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                     items.insert(item, atIndex:dropIndexPath.item)
                 }
                 
-                // Update drag state
-                currentDragState!.setDragIndexPath(dropIndexPath)
-                currentDragState!.setDropIndexPath(nil)
-                
                 // Update collection view
                 regularLayout.hideIndexPath = dropIndexPath
                 
@@ -278,6 +274,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                         myCollectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dropIndexPath)
                     }, completion: nil)
                 }
+                
+                // Update drag state
+                currentDragState!.setDragIndexPath(dropIndexPath)
+                currentDragState!.setDropIndexPath(nil)
             }
         }
     }
