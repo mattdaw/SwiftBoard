@@ -8,12 +8,7 @@
 
 import Foundation
 
-class Folder {
+struct Folder {
     var name: String
     var apps: [App]
-    
-    init(name myName:String, apps myApps:[App]) {
-        name = myName
-        apps = myApps
-    }
 }

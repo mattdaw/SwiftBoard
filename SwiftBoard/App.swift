@@ -8,12 +8,7 @@
 
 import UIKit
 
-class App {
+struct App {
     var name: String
     var color: UIColor
-    
-    init(name myName:String, color myColor:UIColor) {
-        name = myName;
-        color = myColor;
-    }
 }

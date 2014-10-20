@@ -14,7 +14,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var items: [AnyObject] = [];
+    var items: [Any] = [];
     var folderDataSource = FolderDataSource()
     var zoomedLayout = CollectionViewLayout()
     var regularLayout = CollectionViewLayout()
@@ -101,7 +101,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         var cell:UICollectionViewCell
         
-        var item: AnyObject = items[indexPath.item]
+        var item: Any = items[indexPath.item]
         switch item {
         case let app as App:
             cell = collectionView.dequeueReusableCellWithReuseIdentifier("App", forIndexPath: indexPath) as UICollectionViewCell
@@ -130,7 +130,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             let point = recognizer.locationInView(collectionView)
             
             if let indexPath = collectionView.indexPathForItemAtPoint(point) {
-                let item: AnyObject = items[indexPath.item]
+                let item: Any = items[indexPath.item]
                 
                 if let folder = item as? Folder {
                     zoomedLayout.zoomToIndexPath = indexPath
@@ -261,7 +261,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         // Update data source
         let originalIndexPath = draggingIndexPath!
         
-        var item: AnyObject = items[originalIndexPath.item]
+        var item: Any = items[originalIndexPath.item]
         items.removeAtIndex(originalIndexPath.item)
         
         if indexPath.item >= items.count {

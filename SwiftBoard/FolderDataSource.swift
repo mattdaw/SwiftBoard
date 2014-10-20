@@ -10,7 +10,7 @@ import UIKit
 
 class FolderDataSource : NSObject, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    var items: [AnyObject] = [];
+    var items: [Any] = [];
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
