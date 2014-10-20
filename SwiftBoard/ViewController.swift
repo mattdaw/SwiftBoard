@@ -30,14 +30,12 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     let kPauseBeforeDrag = 0.2
     
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet var longPressRecognizer: UILongPressGestureRecognizer!
+    @IBOutlet var panRecognizer: UIPanGestureRecognizer!
     
     var items: [Any] = [];
     var zoomedLayout = CollectionViewLayout()
     var regularLayout = CollectionViewLayout()
-
-    var panRecognizer: UIPanGestureRecognizer?
-    var longPressRecognizer: UILongPressGestureRecognizer?
-    var lastPanGesture: UIPanGestureRecognizer?
     var moveCellsTimer: NSTimer?
     
     private var currentDragState: DragState?
@@ -55,17 +53,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.setCollectionViewLayout(regularLayout, animated: false)
         collectionView.scrollEnabled = false
-        
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: "zoomLayout:")
-        collectionView.addGestureRecognizer(tapRecognizer)
-        
-        longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
-        longPressRecognizer!.delegate = self
-        collectionView.addGestureRecognizer(longPressRecognizer!)
-
-        panRecognizer = UIPanGestureRecognizer(target: self, action: "handlePan:")
-        panRecognizer!.delegate = self
-        collectionView.addGestureRecognizer(panRecognizer!)
         
         seedData();
     }
@@ -136,73 +123,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         return cell
     }
     
-    // I'm not sure this is right yet, but it's seeming better to me to have two instantiated layouts. The layout's state
-    // can be confusing (to me) when the initial/final attributes methods are called on a single layout instance.
-    func zoomLayout(recognizer: UITapGestureRecognizer) {
-        if collectionView.collectionViewLayout === regularLayout {
-            let point = recognizer.locationInView(collectionView)
-            
-            if let indexPath = collectionView.indexPathForItemAtPoint(point) {
-                let item: Any = items[indexPath.item]
-                
-                if let folder = item as? Folder {
-                    zoomedLayout.zoomToIndexPath = indexPath
-                    collectionView.setCollectionViewLayout(zoomedLayout, animated: true)
-                    return
-                }
-            }
-        }
-        
-        collectionView.setCollectionViewLayout(regularLayout, animated: true)
-    }
-    
-    func handleLongPress(gesture: UILongPressGestureRecognizer) {
-        switch gesture.state {
-        case UIGestureRecognizerState.Began:
-            assert(currentDragState == nil)
-            startDrag(gesture)
-        case UIGestureRecognizerState.Ended, UIGestureRecognizerState.Cancelled:
-            endDrag()
-        default:
-            break
-        }
-    }
-    
-    func handlePan(gesture: UIPanGestureRecognizer) {
-        switch gesture.state {
-        case UIGestureRecognizerState.Began, UIGestureRecognizerState.Changed:
-            if let dragState = currentDragState {
-                let translation = gesture.translationInView(collectionView)
-                dragState.dragProxyView.center = CGPoint(x: dragState.originalCenter.x + translation.x + dragState.addTranslation.x,
-                                                         y: dragState.originalCenter.y + translation.y + dragState.addTranslation.y)
-                
-                let dropPoint = gesture.locationInView(collectionView)
-                if let dropIndexPath = collectionView.indexPathForItemAtPoint(dropPoint) {
-                    if let dropCell = collectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
-                        let location = gesture.locationInView(dropCell)
-                        
-                        if dropCell.pointInsideIcon(location) {
-                            //println("Icon!")
-                        } else if location.x < (dropCell.bounds.width / 2) {
-                            let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(dragState.dragIndexPath, destIndexPath: dropIndexPath)
-                            currentDragState!.setDropIndexPath(newPath)
-                        } else {
-                            let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(dragState.dragIndexPath, destIndexPath: dropIndexPath)
-                            currentDragState!.setDropIndexPath(newPath)
-                        }
-                    }
-                }
-                
-                moveCellsTimer?.invalidate();
-                moveCellsTimer = NSTimer.scheduledTimerWithTimeInterval(kPauseBeforeDrag, target: self, selector: "moveCells", userInfo: nil, repeats: false)
-            }
-        case UIGestureRecognizerState.Ended:
-            moveCellsTimer?.invalidate()
-        default:
-            break
-        }
-    }
-
     func startDrag(gesture:UIGestureRecognizer) {
         if let indexPath = collectionView.indexPathForItemAtPoint(gesture.locationInView(collectionView)) {
             if let cell = collectionView.cellForItemAtIndexPath(indexPath) {
@@ -289,13 +209,84 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
     }
     
+    // Gesture Recognizer Actions
+    
+    // I'm not sure this is right yet, but it's seeming better to me to have two instantiated layouts. The layout's state
+    // can be confusing (to me) when the initial/final attributes methods are called on a single layout instance.
+    @IBAction func handleTap(recognizer: UITapGestureRecognizer) {
+        if collectionView.collectionViewLayout === regularLayout {
+            let point = recognizer.locationInView(collectionView)
+            
+            if let indexPath = collectionView.indexPathForItemAtPoint(point) {
+                let item: Any = items[indexPath.item]
+                
+                if let folder = item as? Folder {
+                    zoomedLayout.zoomToIndexPath = indexPath
+                    collectionView.setCollectionViewLayout(zoomedLayout, animated: true)
+                    return
+                }
+            }
+        }
+        
+        collectionView.setCollectionViewLayout(regularLayout, animated: true)
+    }
+
+    @IBAction func handleLongPress(gesture: UILongPressGestureRecognizer) {
+        switch gesture.state {
+        case UIGestureRecognizerState.Began:
+            startDrag(gesture)
+        case UIGestureRecognizerState.Ended, UIGestureRecognizerState.Cancelled:
+            endDrag()
+        default:
+            break
+        }
+    }
+    
+    @IBAction func handlePan(gesture: UIPanGestureRecognizer) {
+        switch gesture.state {
+        case UIGestureRecognizerState.Began, UIGestureRecognizerState.Changed:
+            if let dragState = currentDragState {
+                let translation = gesture.translationInView(collectionView)
+                
+                // TODO: I don't think this is right yet... Re-check this math, do we really need both originalCenter and addTranslation
+                // saved too?
+                dragState.dragProxyView.center = CGPoint(x: dragState.originalCenter.x + translation.x + dragState.addTranslation.x,
+                    y: dragState.originalCenter.y + translation.y + dragState.addTranslation.y)
+                
+                let dropPoint = gesture.locationInView(collectionView)
+                if let dropIndexPath = collectionView.indexPathForItemAtPoint(dropPoint) {
+                    if let dropCell = collectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
+                        let location = gesture.locationInView(dropCell)
+                        
+                        if dropCell.pointInsideIcon(location) {
+                            //println("Icon!")
+                        } else if location.x < (dropCell.bounds.width / 2) {
+                            let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(dragState.dragIndexPath, destIndexPath: dropIndexPath)
+                            currentDragState!.setDropIndexPath(newPath)
+                        } else {
+                            let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(dragState.dragIndexPath, destIndexPath: dropIndexPath)
+                            currentDragState!.setDropIndexPath(newPath)
+                        }
+                    }
+                }
+                
+                moveCellsTimer?.invalidate();
+                moveCellsTimer = NSTimer.scheduledTimerWithTimeInterval(kPauseBeforeDrag, target: self, selector: "moveCells", userInfo: nil, repeats: false)
+            }
+        case UIGestureRecognizerState.Ended:
+            moveCellsTimer?.invalidate()
+        default:
+            break
+        }
+    }
+    
     // UIGestureRecognizerDelegate
     
     func gestureRecognizerShouldBegin(gesture: UIGestureRecognizer) -> Bool {
         switch gesture {
-        case longPressRecognizer!:
+        case longPressRecognizer:
             return true
-        case panRecognizer!:
+        case panRecognizer:
             return currentDragState != nil
         default:
             return false
@@ -304,10 +295,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     func gestureRecognizer(gesture: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGesture: UIGestureRecognizer) -> Bool {
         switch gesture {
-        case longPressRecognizer!:
-            return otherGesture === panRecognizer!
-        case panRecognizer!:
-            return otherGesture === longPressRecognizer!
+        case longPressRecognizer:
+            return otherGesture === panRecognizer
+        case panRecognizer:
+            return otherGesture === longPressRecognizer
         default:
             return false
         }
