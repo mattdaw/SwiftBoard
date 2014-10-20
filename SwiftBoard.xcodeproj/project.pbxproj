@@ -16,7 +16,6 @@
 		C9981F7719C798C600804558 /* CollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9981F7619C798C600804558 /* CollectionViewLayout.swift */; };
 		C99E408F19CB41AC003DE57D /* FolderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99E408E19CB41AC003DE57D /* FolderCollectionViewCell.swift */; };
 		C99E409119CB9187003DE57D /* AppCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99E409019CB9187003DE57D /* AppCollectionViewCell.swift */; };
-		C99E409319CB9EAD003DE57D /* FolderCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99E409219CB9EAD003DE57D /* FolderCollectionView.swift */; };
 		C99E409519CBA2A6003DE57D /* FolderDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99E409419CBA2A6003DE57D /* FolderDataSource.swift */; };
 		C9A33FC719D09976004E8B62 /* FolderCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A33FC619D09976004E8B62 /* FolderCollectionViewLayout.swift */; };
 		C9DAE69C19C73EC0007CF518 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DAE69B19C73EC0007CF518 /* AppDelegate.swift */; };
@@ -47,7 +46,6 @@
 		C9981F7619C798C600804558 /* CollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewLayout.swift; sourceTree = "<group>"; };
 		C99E408E19CB41AC003DE57D /* FolderCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderCollectionViewCell.swift; sourceTree = "<group>"; };
 		C99E409019CB9187003DE57D /* AppCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCollectionViewCell.swift; sourceTree = "<group>"; };
-		C99E409219CB9EAD003DE57D /* FolderCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderCollectionView.swift; sourceTree = "<group>"; };
 		C99E409419CBA2A6003DE57D /* FolderDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderDataSource.swift; sourceTree = "<group>"; };
 		C9A33FC619D09976004E8B62 /* FolderCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderCollectionViewLayout.swift; sourceTree = "<group>"; };
 		C9DAE69619C73EC0007CF518 /* SwiftBoard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftBoard.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,11 +107,10 @@
 				C9981F7619C798C600804558 /* CollectionViewLayout.swift */,
 				C96664A519DCA3CD00247FC4 /* CollectionViewLayoutAttributes.swift */,
 				C9A33FC619D09976004E8B62 /* FolderCollectionViewLayout.swift */,
-				C99E409219CB9EAD003DE57D /* FolderCollectionView.swift */,
 				C99E409419CBA2A6003DE57D /* FolderDataSource.swift */,
 				C908190B19D485EA0091A58C /* SwiftBoardCell.swift */,
-				C99E408E19CB41AC003DE57D /* FolderCollectionViewCell.swift */,
 				C99E409019CB9187003DE57D /* AppCollectionViewCell.swift */,
+				C99E408E19CB41AC003DE57D /* FolderCollectionViewCell.swift */,
 				C96A381119CA0F650069F5D9 /* AppCollectionViewCell.xib */,
 				C96A381319CA10120069F5D9 /* FolderCollectionViewCell.xib */,
 				C9DAE6A219C73EC0007CF518 /* Images.xcassets */,
@@ -251,7 +248,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C99E409319CB9EAD003DE57D /* FolderCollectionView.swift in Sources */,
 				C99E409519CBA2A6003DE57D /* FolderDataSource.swift in Sources */,
 				C9A33FC719D09976004E8B62 /* FolderCollectionViewLayout.swift in Sources */,
 				C9981F7119C7765900804558 /* App.swift in Sources */,

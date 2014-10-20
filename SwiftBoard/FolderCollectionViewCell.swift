@@ -10,8 +10,16 @@ import UIKit
 
 class FolderCollectionViewCell : SwiftBoardCell {
     
-    @IBOutlet weak var collectionView: FolderCollectionView!
+    @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var label: UILabel!
+    
+    var folderDataSource: FolderDataSource? {
+        didSet {
+            collectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
+            collectionView.dataSource = folderDataSource
+            collectionView.delegate = folderDataSource
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()

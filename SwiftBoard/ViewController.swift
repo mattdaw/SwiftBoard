@@ -15,7 +15,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     @IBOutlet weak var collectionView: UICollectionView!
     
     var items: [Any] = [];
-    var folderDataSource = FolderDataSource()
     var zoomedLayout = CollectionViewLayout()
     var regularLayout = CollectionViewLayout()
     var dragOriginalCenter: CGPoint?
@@ -53,7 +52,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         collectionView.addGestureRecognizer(panRecognizer!)
         
         seedData();
-        folderDataSource.items = items;
     }
     
     func seedData() {
@@ -100,8 +98,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         var cell:UICollectionViewCell
-        
         var item: Any = items[indexPath.item]
+        
         switch item {
         case let app as App:
             cell = collectionView.dequeueReusableCellWithReuseIdentifier("App", forIndexPath: indexPath) as UICollectionViewCell
@@ -111,10 +109,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         case let folder as Folder:
             cell = collectionView.dequeueReusableCellWithReuseIdentifier("Folder", forIndexPath: indexPath) as UICollectionViewCell
             let myCell = cell as FolderCollectionViewCell
-            myCell.collectionView.itemIndex = indexPath.item
-            myCell.collectionView.dataSource = folderDataSource
-            myCell.collectionView.delegate = folderDataSource
+            let folderDataSource = FolderDataSource(apps:folder.apps)
             
+            myCell.folderDataSource = folderDataSource            
             myCell.label.text = folder.name
         default:
             cell = UICollectionViewCell()

@@ -10,35 +10,27 @@ import UIKit
 
 class FolderDataSource : NSObject, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    var items: [Any] = [];
+    var apps: [App];
+    
+    init(apps inApps:[App]) {
+        apps = inApps
+    }
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let folderCollectionView = collectionView as? FolderCollectionView {
-            if let folder = items[folderCollectionView.itemIndex!] as? Folder {
-                return folder.apps.count
-            }
-        }
-        
-        return 0
+        return apps.count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        var cell = collectionView.dequeueReusableCellWithReuseIdentifier("App", forIndexPath: indexPath) as UICollectionViewCell
-        let myCell = cell as AppCollectionViewCell
+        let app = apps[indexPath.item]
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("App", forIndexPath: indexPath) as AppCollectionViewCell
         
-        if let folderCollectionView = collectionView as? FolderCollectionView {
-            if let folder = items[folderCollectionView.itemIndex!] as? Folder {
-                let app = folder.apps[indexPath.item]
-                
-                myCell.label.text = app.name
-                myCell.containerView.backgroundColor = app.color
-            }
-        }
-
+        cell.label.text = app.name
+        cell.containerView.backgroundColor = app.color
+        
         return cell
     }
 
