@@ -185,14 +185,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                             //println("Icon!")
                         } else if location.x < (dropCell.bounds.width / 2) {
                             let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(dragState.dragIndexPath, destIndexPath: dropIndexPath)
-                            if (newPath != dragState.dragIndexPath) {
-                                currentDragState!.setDropIndexPath(newPath)
-                            }
+                            currentDragState!.setDropIndexPath(newPath)
                         } else {
                             let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(dragState.dragIndexPath, destIndexPath: dropIndexPath)
-                            if (newPath != dragState.dragIndexPath) {
-                                currentDragState!.setDropIndexPath(newPath)
-                            }
+                            currentDragState!.setDropIndexPath(newPath)
                         }
                     }
                 }
@@ -254,6 +250,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func moveCells() {
         if let dragState = currentDragState {
             if let dropIndexPath = dragState.dropIndexPath {
+                if dragState.dragIndexPath == dropIndexPath {
+                    return
+                }
+                
                 // Update data source
                 let originalIndexPath = dragState.dragIndexPath
                 
