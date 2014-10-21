@@ -10,5 +10,5 @@ import Foundation
 
 struct Folder {
     var name: String
-    var apps: [App]
+    var apps: [Any]
 }

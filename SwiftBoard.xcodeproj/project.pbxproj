@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C908190C19D485EA0091A58C /* SwiftBoardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C908190B19D485EA0091A58C /* SwiftBoardCell.swift */; };
+		C94803FA19F70C2B000A4FB0 /* CollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94803F919F70C2B000A4FB0 /* CollectionViewDataSource.swift */; };
 		C96664A619DCA3CD00247FC4 /* CollectionViewLayoutAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96664A519DCA3CD00247FC4 /* CollectionViewLayoutAttributes.swift */; };
 		C96A381219CA0F650069F5D9 /* AppCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C96A381119CA0F650069F5D9 /* AppCollectionViewCell.xib */; };
 		C96A381419CA10120069F5D9 /* FolderCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C96A381319CA10120069F5D9 /* FolderCollectionViewCell.xib */; };
@@ -16,7 +17,6 @@
 		C9981F7719C798C600804558 /* CollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9981F7619C798C600804558 /* CollectionViewLayout.swift */; };
 		C99E408F19CB41AC003DE57D /* FolderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99E408E19CB41AC003DE57D /* FolderCollectionViewCell.swift */; };
 		C99E409119CB9187003DE57D /* AppCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99E409019CB9187003DE57D /* AppCollectionViewCell.swift */; };
-		C99E409519CBA2A6003DE57D /* FolderDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99E409419CBA2A6003DE57D /* FolderDataSource.swift */; };
 		C9A33FC719D09976004E8B62 /* FolderCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A33FC619D09976004E8B62 /* FolderCollectionViewLayout.swift */; };
 		C9DAE69C19C73EC0007CF518 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DAE69B19C73EC0007CF518 /* AppDelegate.swift */; };
 		C9DAE69E19C73EC0007CF518 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DAE69D19C73EC0007CF518 /* ViewController.swift */; };
@@ -38,6 +38,7 @@
 
 /* Begin PBXFileReference section */
 		C908190B19D485EA0091A58C /* SwiftBoardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBoardCell.swift; sourceTree = "<group>"; };
+		C94803F919F70C2B000A4FB0 /* CollectionViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDataSource.swift; sourceTree = "<group>"; };
 		C96664A519DCA3CD00247FC4 /* CollectionViewLayoutAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewLayoutAttributes.swift; sourceTree = "<group>"; };
 		C96A381119CA0F650069F5D9 /* AppCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AppCollectionViewCell.xib; sourceTree = "<group>"; };
 		C96A381319CA10120069F5D9 /* FolderCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FolderCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -46,7 +47,6 @@
 		C9981F7619C798C600804558 /* CollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewLayout.swift; sourceTree = "<group>"; };
 		C99E408E19CB41AC003DE57D /* FolderCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderCollectionViewCell.swift; sourceTree = "<group>"; };
 		C99E409019CB9187003DE57D /* AppCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCollectionViewCell.swift; sourceTree = "<group>"; };
-		C99E409419CBA2A6003DE57D /* FolderDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderDataSource.swift; sourceTree = "<group>"; };
 		C9A33FC619D09976004E8B62 /* FolderCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderCollectionViewLayout.swift; sourceTree = "<group>"; };
 		C9DAE69619C73EC0007CF518 /* SwiftBoard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftBoard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9DAE69A19C73EC0007CF518 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -104,10 +104,10 @@
 				C9981F7419C7814300804558 /* Folder.swift */,
 				C9DAE69F19C73EC0007CF518 /* Main.storyboard */,
 				C9DAE69D19C73EC0007CF518 /* ViewController.swift */,
+				C94803F919F70C2B000A4FB0 /* CollectionViewDataSource.swift */,
 				C9981F7619C798C600804558 /* CollectionViewLayout.swift */,
 				C96664A519DCA3CD00247FC4 /* CollectionViewLayoutAttributes.swift */,
 				C9A33FC619D09976004E8B62 /* FolderCollectionViewLayout.swift */,
-				C99E409419CBA2A6003DE57D /* FolderDataSource.swift */,
 				C908190B19D485EA0091A58C /* SwiftBoardCell.swift */,
 				C99E409019CB9187003DE57D /* AppCollectionViewCell.swift */,
 				C99E408E19CB41AC003DE57D /* FolderCollectionViewCell.swift */,
@@ -248,13 +248,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C99E409519CBA2A6003DE57D /* FolderDataSource.swift in Sources */,
 				C9A33FC719D09976004E8B62 /* FolderCollectionViewLayout.swift in Sources */,
 				C9981F7119C7765900804558 /* App.swift in Sources */,
 				C9DAE69E19C73EC0007CF518 /* ViewController.swift in Sources */,
 				C9DAE69C19C73EC0007CF518 /* AppDelegate.swift in Sources */,
 				C99E409119CB9187003DE57D /* AppCollectionViewCell.swift in Sources */,
 				C9981F7519C7814300804558 /* Folder.swift in Sources */,
+				C94803FA19F70C2B000A4FB0 /* CollectionViewDataSource.swift in Sources */,
 				C99E408F19CB41AC003DE57D /* FolderCollectionViewCell.swift in Sources */,
 				C908190C19D485EA0091A58C /* SwiftBoardCell.swift in Sources */,
 				C9981F7719C798C600804558 /* CollectionViewLayout.swift in Sources */,

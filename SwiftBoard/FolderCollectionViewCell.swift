@@ -13,11 +13,11 @@ class FolderCollectionViewCell : SwiftBoardCell {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var label: UILabel!
     
-    var folderDataSource: FolderDataSource? {
+    var dataSource: CollectionViewDataSource? {
         didSet {
             collectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
-            collectionView.dataSource = folderDataSource
-            collectionView.delegate = folderDataSource
+            collectionView.dataSource = dataSource
+            collectionView.delegate = dataSource
         }
     }
     

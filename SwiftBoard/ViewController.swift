@@ -25,7 +25,7 @@ private struct DragState {
     }
 }
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIGestureRecognizerDelegate {
+class ViewController: UIViewController, UIGestureRecognizerDelegate {
 
     let kPauseBeforeDrag = 0.2
     
@@ -34,6 +34,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     @IBOutlet var panRecognizer: UIPanGestureRecognizer!
     
     var items: [Any] = [];
+    var dataSource:CollectionViewDataSource = CollectionViewDataSource()
     var zoomedLayout = CollectionViewLayout()
     var regularLayout = CollectionViewLayout()
     var moveCellsTimer: NSTimer?
@@ -47,14 +48,18 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        seedData();
+        
+        dataSource.items = items
+        collectionView.dataSource = dataSource
+        collectionView.delegate = dataSource
+        
         collectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
         collectionView.registerNib(UINib(nibName: "FolderCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "Folder")
         
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.setCollectionViewLayout(regularLayout, animated: false)
         collectionView.scrollEnabled = false
-        
-        seedData();
     }
     
     func seedData() {
@@ -89,38 +94,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             layout.overrideSize = size
             collectionView.reloadData()
         }
-    }
-    
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return items.count
-    }
-    
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        var cell:UICollectionViewCell
-        var item: Any = items[indexPath.item]
-        
-        switch item {
-        case let app as App:
-            let myCell = collectionView.dequeueReusableCellWithReuseIdentifier("App", forIndexPath: indexPath) as AppCollectionViewCell
-            myCell.label.text = app.name
-            myCell.containerView.backgroundColor = app.color
-            
-            cell = myCell
-        case let folder as Folder:
-            let myCell = collectionView.dequeueReusableCellWithReuseIdentifier("Folder", forIndexPath: indexPath) as FolderCollectionViewCell
-            myCell.folderDataSource = FolderDataSource(apps:folder.apps)
-            myCell.label.text = folder.name
-            
-            cell = myCell
-        default:
-            cell = UICollectionViewCell()
-        }
-        
-        return cell
     }
     
     func startDrag(gesture:UIGestureRecognizer) {
@@ -209,7 +182,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
     }
     
-    // Gesture Recognizer Actions
+    // MARK: Gesture Recognizer Actions
     
     // I'm not sure this is right yet, but it's seeming better to me to have two instantiated layouts. The layout's state
     // can be confusing (to me) when the initial/final attributes methods are called on a single layout instance.
@@ -280,7 +253,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
     }
     
-    // UIGestureRecognizerDelegate
+    // MARK: UIGestureRecognizerDelegate
     
     func gestureRecognizerShouldBegin(gesture: UIGestureRecognizer) -> Bool {
         switch gesture {
