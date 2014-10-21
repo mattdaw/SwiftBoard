@@ -232,7 +232,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                         let location = gesture.locationInView(dropCell)
                         
                         if dropCell.pointInsideIcon(location) {
-                            //println("Icon!")
+                            currentDragState!.setDropIndexPath(nil)
                         } else if location.x < (dropCell.bounds.width / 2) {
                             let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(dragState.dragIndexPath, destIndexPath: dropIndexPath)
                             currentDragState!.setDropIndexPath(newPath)
