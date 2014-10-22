@@ -25,6 +25,11 @@ private struct DragState {
     }
 }
 
+private struct ZoomState {
+    let indexPath: NSIndexPath
+    let collectionView: UICollectionView
+}
+
 class ViewController: UIViewController, UIGestureRecognizerDelegate {
 
     let kPauseBeforeDrag = 0.2
@@ -40,6 +45,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     var moveCellsTimer: NSTimer?
     
     private var currentDragState: DragState?
+    private var currentZoomState: ZoomState?
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
@@ -175,6 +181,13 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    func zoomFolder() {
+        if let zoomState = currentZoomState {
+            zoomedLayout.zoomToIndexPath = zoomState.indexPath
+            collectionView.setCollectionViewLayout(zoomedLayout, animated: true)
+        }
+    }
+    
     @IBAction func handleHomeButton(sender: AnyObject) {
         if regularLayout.editingModeEnabled {
             regularLayout.editingModeEnabled = false
@@ -201,6 +214,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             }
         }
         
+        currentZoomState = nil
         collectionView.setCollectionViewLayout(regularLayout, animated: true)
     }
 
@@ -226,25 +240,55 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 dragState.dragProxyView.center = CGPoint(x: dragState.originalCenter.x + translation.x + dragState.addTranslation.x,
                     y: dragState.originalCenter.y + translation.y + dragState.addTranslation.y)
                 
-                let dropPoint = gesture.locationInView(collectionView)
-                if let dropIndexPath = collectionView.indexPathForItemAtPoint(dropPoint) {
-                    if let dropCell = collectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
-                        let location = gesture.locationInView(dropCell)
-                        
-                        if dropCell.pointInsideIcon(location) {
-                            currentDragState!.setDropIndexPath(nil)
-                        } else if location.x < (dropCell.bounds.width / 2) {
-                            let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(dragState.dragIndexPath, destIndexPath: dropIndexPath)
-                            currentDragState!.setDropIndexPath(newPath)
-                        } else {
-                            let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(dragState.dragIndexPath, destIndexPath: dropIndexPath)
-                            currentDragState!.setDropIndexPath(newPath)
+                if let zoomState = currentZoomState {
+                    let dropPoint = gesture.locationInView(zoomState.collectionView)
+                    if let dropIndexPath = zoomState.collectionView.indexPathForItemAtPoint(dropPoint) {
+                        if let dropCell = zoomState.collectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
+                            let location = gesture.locationInView(dropCell)
+                            
+                            if dropCell.pointInsideIcon(location) {
+                                currentDragState!.setDropIndexPath(nil)
+                            } else if location.x < (dropCell.bounds.width / 2) {
+                                println("ZOOMED LEFT")
+                                //let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(dragState.dragIndexPath, destIndexPath: dropIndexPath)
+                                //currentDragState!.setDropIndexPath(newPath)
+                            } else {
+                                println("ZOOMED RIGHT")
+                                //let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(dragState.dragIndexPath, destIndexPath: dropIndexPath)
+                                //currentDragState!.setDropIndexPath(newPath)
+                            }
+                        }
+                    }
+                } else {
+                    let dropPoint = gesture.locationInView(collectionView)
+                    if let dropIndexPath = collectionView.indexPathForItemAtPoint(dropPoint) {
+                        if let dropCell = collectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
+                            let location = gesture.locationInView(dropCell)
+                            
+                            if dropCell.pointInsideIcon(location) {
+                                currentDragState!.setDropIndexPath(nil)
+                                
+                                if let folderCell = dropCell as? FolderCollectionViewCell {
+                                    currentZoomState = ZoomState(indexPath: dropIndexPath, collectionView: folderCell.collectionView)
+                                }
+                            } else if location.x < (dropCell.bounds.width / 2) {
+                                let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(dragState.dragIndexPath, destIndexPath: dropIndexPath)
+                                currentDragState!.setDropIndexPath(newPath)
+                            } else {
+                                let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(dragState.dragIndexPath, destIndexPath: dropIndexPath)
+                                currentDragState!.setDropIndexPath(newPath)
+                            }
                         }
                     }
                 }
                 
                 moveCellsTimer?.invalidate();
-                moveCellsTimer = NSTimer.scheduledTimerWithTimeInterval(kPauseBeforeDrag, target: self, selector: "moveCells", userInfo: nil, repeats: false)
+                if currentZoomState != nil {
+                    moveCellsTimer = NSTimer.scheduledTimerWithTimeInterval(kPauseBeforeDrag, target: self, selector: "zoomFolder", userInfo: nil, repeats: false)
+                } else {
+                    moveCellsTimer = NSTimer.scheduledTimerWithTimeInterval(kPauseBeforeDrag, target: self, selector: "moveCells", userInfo: nil, repeats: false)
+                }
+                
             }
         case UIGestureRecognizerState.Ended:
             moveCellsTimer?.invalidate()
