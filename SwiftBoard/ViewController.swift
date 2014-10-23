@@ -168,15 +168,30 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 // Update collection view
                 regularLayout.hideIndexPath = dropIndexPath
                 
-                if let myCollectionView = collectionView {
-                    myCollectionView.performBatchUpdates({ () -> Void in
-                        myCollectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dropIndexPath)
-                    }, completion: nil)
-                }
+                collectionView.performBatchUpdates({ () -> Void in
+                    self.collectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dropIndexPath)
+                }, completion: nil)
                 
                 // Update drag state
                 currentDragState!.setDragIndexPath(dropIndexPath)
                 currentDragState!.setDropIndexPath(nil)
+            }
+        }
+    }
+    
+    func moveAppToEndOfFolder() {
+        if let dragState = currentDragState {
+            // Update data source
+            let app = items[dragState.dragIndexPath.item]
+            items.removeAtIndex(dragState.dragIndexPath.item)
+            
+            // Update collection view
+            regularLayout.hideIndexPath = nil
+            collectionView.deleteItemsAtIndexPaths([dragState.dragIndexPath])
+            
+            if let zoomState = currentZoomState {
+                var folder = items[zoomState.indexPath.item] as Folder
+                folder.apps.append(app)
             }
         }
     }
