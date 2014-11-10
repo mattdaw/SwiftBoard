@@ -28,7 +28,6 @@
                                     <outlet property="dataSource" destination="s2V-eg-KGn" id="bEo-Gg-A95"/>
                                     <outlet property="delegate" destination="s2V-eg-KGn" id="BHj-ph-EgN"/>
                                     <outletCollection property="gestureRecognizers" destination="0aG-aN-S2M" appends="YES" id="5Zj-dW-p4a"/>
-                                    <outletCollection property="gestureRecognizers" destination="A2k-fZ-bkG" appends="YES" id="efg-lS-aqU"/>
                                     <outletCollection property="gestureRecognizers" destination="IVZ-Yk-chc" appends="YES" id="jea-xr-h2z"/>
                                 </connections>
                             </collectionView>
@@ -64,7 +63,6 @@
                     <connections>
                         <outlet property="collectionView" destination="d6y-1U-Anl" id="Hbd-HD-nv0"/>
                         <outlet property="longPressRecognizer" destination="0aG-aN-S2M" id="0RV-PF-mbO"/>
-                        <outlet property="panRecognizer" destination="A2k-fZ-bkG" id="M4m-RT-LxT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hzk-jR-dXQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -74,12 +72,6 @@
                         <outlet property="delegate" destination="s2V-eg-KGn" id="V6p-yt-B4a"/>
                     </connections>
                 </pongPressGestureRecognizer>
-                <panGestureRecognizer minimumNumberOfTouches="1" id="A2k-fZ-bkG">
-                    <connections>
-                        <action selector="handlePan:" destination="s2V-eg-KGn" id="B4e-dl-qlE"/>
-                        <outlet property="delegate" destination="s2V-eg-KGn" id="h0j-Wi-Xnh"/>
-                    </connections>
-                </panGestureRecognizer>
                 <tapGestureRecognizer id="IVZ-Yk-chc">
                     <connections>
                         <action selector="handleTap:" destination="s2V-eg-KGn" id="pTU-HT-tBx"/>

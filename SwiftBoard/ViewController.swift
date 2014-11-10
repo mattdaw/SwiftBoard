@@ -36,7 +36,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet var longPressRecognizer: UILongPressGestureRecognizer!
-    @IBOutlet var panRecognizer: UIPanGestureRecognizer!
+    var panAndStopGestureRecognizer: PanAndStopGestureRecognizer!
     
     var items: [Any] = [];
     var dataSource:CollectionViewDataSource = CollectionViewDataSource()
@@ -66,6 +66,9 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.setCollectionViewLayout(regularLayout, animated: false)
         collectionView.scrollEnabled = false
+        
+        panAndStopGestureRecognizer = PanAndStopGestureRecognizer(target:self, action:"handlePan:", stopAfterSecondsWithoutMovement:0.2)
+        collectionView.addGestureRecognizer(panAndStopGestureRecognizer)
     }
     
     func seedData() {
@@ -244,7 +247,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    @IBAction func handlePan(gesture: UIPanGestureRecognizer) {
+    @IBAction func handlePan(gesture: PanAndStopGestureRecognizer) {
         switch gesture.state {
         case UIGestureRecognizerState.Began, UIGestureRecognizerState.Changed:
             if let dragState = currentDragState {
@@ -318,7 +321,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         switch gesture {
         case longPressRecognizer:
             return true
-        case panRecognizer:
+        case panAndStopGestureRecognizer:
             return currentDragState != nil
         default:
             return false
@@ -328,8 +331,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     func gestureRecognizer(gesture: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGesture: UIGestureRecognizer) -> Bool {
         switch gesture {
         case longPressRecognizer:
-            return otherGesture === panRecognizer
-        case panRecognizer:
+            return otherGesture === panAndStopGestureRecognizer
+        case panAndStopGestureRecognizer:
             return otherGesture === longPressRecognizer
         default:
             return false
