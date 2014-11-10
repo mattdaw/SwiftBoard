@@ -321,18 +321,19 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     
                     if let folderCell = dropCell as? FolderCollectionViewCell {
                         currentZoomState = ZoomState(indexPath: dropIndexPath, collectionView: folderCell.collectionView)
+                        zoomFolder()
                     }
                 } else if cellLocation.x < (dropCell.bounds.width / 2) {
                     let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
                     currentDragState!.setDropIndexPath(newPath)
+                    moveCells()
                 } else {
                     let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
                     currentDragState!.setDropIndexPath(newPath)
+                    moveCells()
                 }
             }
         }
-        
-        moveCells()
     }
     
     // MARK: UIGestureRecognizerDelegate
