@@ -54,7 +54,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        seedData();
+        seedData()
         
         dataSource.items = items
         collectionView.dataSource = dataSource
@@ -67,7 +67,9 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         collectionView.setCollectionViewLayout(regularLayout, animated: false)
         collectionView.scrollEnabled = false
         
-        panAndStopGestureRecognizer = PanAndStopGestureRecognizer(target:self, action:"handlePan:", stopAfterSecondsWithoutMovement:0.2)
+        panAndStopGestureRecognizer = PanAndStopGestureRecognizer(target:self, action:"handlePan:", stopAfterSecondsWithoutMovement:0.2) {
+            (translation:CGPoint) in self.panGestureStopped(translation)
+        }
         collectionView.addGestureRecognizer(panAndStopGestureRecognizer)
     }
     
@@ -258,6 +260,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 dragState.dragProxyView.center = CGPoint(x: dragState.originalCenter.x + translation.x + dragState.addTranslation.x,
                     y: dragState.originalCenter.y + translation.y + dragState.addTranslation.y)
                 
+                /*
                 if let zoomState = currentZoomState {
                     let dropPoint = gesture.locationInView(zoomState.collectionView)
                     if let dropIndexPath = zoomState.collectionView.indexPathForItemAtPoint(dropPoint) {
@@ -299,20 +302,17 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                         }
                     }
                 }
-                
-                moveCellsTimer?.invalidate();
-                if currentZoomState != nil {
-                    moveCellsTimer = NSTimer.scheduledTimerWithTimeInterval(kPauseBeforeDrag, target: self, selector: "zoomFolder", userInfo: nil, repeats: false)
-                } else {
-                    moveCellsTimer = NSTimer.scheduledTimerWithTimeInterval(kPauseBeforeDrag, target: self, selector: "moveCells", userInfo: nil, repeats: false)
-                }
-                
+                */
             }
         case UIGestureRecognizerState.Ended:
-            moveCellsTimer?.invalidate()
+            println("Ended!")
         default:
             break
         }
+    }
+    
+    func panGestureStopped(lastTranslation: CGPoint) {
+        print(lastTranslation)
     }
     
     // MARK: UIGestureRecognizerDelegate
@@ -322,7 +322,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         case longPressRecognizer:
             return true
         case panAndStopGestureRecognizer:
-            return currentDragState != nil
+            return true //currentDragState != nil
         default:
             return false
         }

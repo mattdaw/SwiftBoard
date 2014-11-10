@@ -10,10 +10,16 @@ import UIKit
 
 class PanAndStopGestureRecognizer: UIPanGestureRecognizer {
     let stopAfterSecondsWithoutMovement: Double
-    var stopTimer: NSTimer?
     
-    init(target:AnyObject, action:Selector, stopAfterSecondsWithoutMovement stopAfterSeconds:Double) {
+    private var stopTimer: NSTimer?
+    private var stopFunction:CGPoint -> ()
+    private var lastTranslation:CGPoint
+    
+    // TODO: Take a block that is called when a "stop" is detected. Pass it the latest position?
+    init(target:AnyObject, action:Selector, stopAfterSecondsWithoutMovement stopAfterSeconds:Double, stopFunction stopFn:CGPoint -> ()) {
         stopAfterSecondsWithoutMovement = stopAfterSeconds
+        stopFunction = stopFn
+        lastTranslation = CGPoint(x:0, y:0)
         super.init(target: target, action: action)
     }
     
@@ -22,7 +28,8 @@ class PanAndStopGestureRecognizer: UIPanGestureRecognizer {
         stopTimer?.invalidate()
         
         if state == .Began || state == .Changed {
-            stopTimer = NSTimer.scheduledTimerWithTimeInterval(stopAfterSecondsWithoutMovement, target: self, selector: "stopGesture", userInfo: nil, repeats: false)
+            lastTranslation = translationInView(view!)
+            stopTimer = NSTimer.scheduledTimerWithTimeInterval(stopAfterSecondsWithoutMovement, target: self, selector: "callStopFunction", userInfo: nil, repeats: false)
         }
     }
     
@@ -31,7 +38,7 @@ class PanAndStopGestureRecognizer: UIPanGestureRecognizer {
         stopTimer?.invalidate()
     }
     
-    func stopGesture() {
-        state = .Ended
+    func callStopFunction() {
+        stopFunction(lastTranslation)
     }
 }
