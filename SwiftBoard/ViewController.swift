@@ -311,8 +311,28 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    func panGestureStopped(lastTranslation: CGPoint) {
-        print(lastTranslation)
+    func panGestureStopped(location: CGPoint) {
+        if let dropIndexPath = collectionView.indexPathForItemAtPoint(location) {
+            if let dropCell = collectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
+                let cellLocation = collectionView.convertPoint(location, toView: dropCell)
+                
+                if dropCell.pointInsideIcon(cellLocation) {
+                    currentDragState!.setDropIndexPath(nil)
+                    
+                    if let folderCell = dropCell as? FolderCollectionViewCell {
+                        currentZoomState = ZoomState(indexPath: dropIndexPath, collectionView: folderCell.collectionView)
+                    }
+                } else if cellLocation.x < (dropCell.bounds.width / 2) {
+                    let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
+                    currentDragState!.setDropIndexPath(newPath)
+                } else {
+                    let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
+                    currentDragState!.setDropIndexPath(newPath)
+                }
+            }
+        }
+        
+        moveCells()
     }
     
     // MARK: UIGestureRecognizerDelegate
