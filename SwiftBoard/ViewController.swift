@@ -38,6 +38,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     private var currentDragState: DragState?
     private var currentZoomState: ZoomState?
+    private var droppingAtIndexPath: NSIndexPath?
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
@@ -130,6 +131,9 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     func endDrag() {
         if let dragState = currentDragState {
             UIView.animateWithDuration(0.2, animations: { () -> Void in
+                let attrs = self.regularLayout.layoutAttributesForItemAtIndexPath(self.droppingAtIndexPath!)
+                
+                dragState.dragProxyView.frame = attrs.frame
                 dragState.dragProxyView.transform = CGAffineTransformIdentity
                 dragState.dragProxyView.alpha = 1
             }, completion: { (Bool) -> Void in
@@ -170,6 +174,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             }, completion: nil)
             
             // Update drag state
+            droppingAtIndexPath = dropIndexPath
             currentDragState!.setDragIndexPath(dropIndexPath)
         }
     }
