@@ -241,6 +241,50 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    func moveZoomedCells() {
+        if let zoomState = currentZoomState {
+            if let dragState = currentDragState {
+                if dragState.dragIndexPath == dragState.dropIndexPath {
+                    return
+                }
+                
+                // Update data source
+                let originalIndexPath = dragState.dragIndexPath
+                var folder = items[zoomState.indexPath.item] as Folder
+                var apps = folder.apps
+                var app = apps[originalIndexPath.item]
+                
+                apps.removeAtIndex(originalIndexPath.item)
+                
+                if dragState.dropIndexPath.item >= apps.count {
+                    apps.append(app)
+                } else {
+                    apps.insert(app, atIndex:dragState.dropIndexPath.item)
+                }
+                
+                // TODO: This leaves the root items array un-updated? The value semantics feel extra
+                // tricky here, maybe I should introduce a wrapper object?
+                
+                var zoomDataSource = zoomState.collectionView.dataSource as CollectionViewDataSource
+                zoomDataSource.items = apps
+                
+                var zoomLayout = zoomState.collectionView.collectionViewLayout as FolderCollectionViewLayout
+                
+                // Update collection view
+                zoomLayout.hideIndexPath = dragState.dropIndexPath
+                
+                zoomState.collectionView.performBatchUpdates({ () -> Void in
+                    zoomState.collectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dragState.dropIndexPath)
+                    }, completion: nil)
+                
+                // Update drag state
+                currentDragState!.setDragIndexPath(dragState.dropIndexPath)
+            }
+
+        }
+    }
+
+    
     func zoomFolder() {
         if let zoomState = currentZoomState {
             zoomedLayout.zoomToIndexPath = zoomState.indexPath
@@ -313,27 +357,51 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func panGestureStopped(location: CGPoint) {
-        if let dropIndexPath = rootCollectionView.indexPathForItemAtPoint(location) {
-            if let dropCell = rootCollectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
-                let cellLocation = rootCollectionView.convertPoint(location, toView: dropCell)
-                
-                if dropCell.pointInsideIcon(cellLocation) {
-                    // TODO: Avoid being able to drop folder on top of folder
-                    if let folderCell = dropCell as? FolderCollectionViewCell {
-                        
-                        /*
-                        currentZoomState = ZoomState(indexPath: dropIndexPath, collectionView: folderCell.collectionView)
-                        zoomFolder()
-                        */
+        if let zoomState = currentZoomState {
+            let zoomCollectionView = zoomState.collectionView
+            let zoomLayout = zoomState.collectionView.collectionViewLayout as FolderCollectionViewLayout
+            let zoomLocation = rootCollectionView.convertPoint(location, toView: zoomState.collectionView)
+            
+            if let dropIndexPath = zoomCollectionView.indexPathForItemAtPoint(zoomLocation) {
+                if let dropCell = zoomCollectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
+                    let cellLocation = zoomCollectionView.convertPoint(location, toView: dropCell)
+                    
+                    if dropCell.pointInsideIcon(cellLocation) {
+                        println("Does nothing in zoomed mode right?")
+                    } else if cellLocation.x < (dropCell.bounds.width / 2) {
+                        let newPath = zoomLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
+                        currentDragState?.setDropIndexPath(newPath)
+                        moveZoomedCells()
+                    } else {
+                        let newPath = zoomLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
+                        currentDragState?.setDropIndexPath(newPath)
+                        moveZoomedCells()
                     }
-                } else if cellLocation.x < (dropCell.bounds.width / 2) {
-                    let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
-                    currentDragState?.setDropIndexPath(newPath)
-                    moveCells()
-                } else {
-                    let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
-                    currentDragState?.setDropIndexPath(newPath)
-                    moveCells()
+                }
+            }
+        } else {
+            if let dropIndexPath = rootCollectionView.indexPathForItemAtPoint(location) {
+                if let dropCell = rootCollectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
+                    let cellLocation = rootCollectionView.convertPoint(location, toView: dropCell)
+                    
+                    if dropCell.pointInsideIcon(cellLocation) {
+                        // TODO: Avoid being able to drop folder on top of folder
+                        if let folderCell = dropCell as? FolderCollectionViewCell {
+                            
+                            /*
+                            currentZoomState = ZoomState(indexPath: dropIndexPath, collectionView: folderCell.collectionView)
+                            zoomFolder()
+                            */
+                        }
+                    } else if cellLocation.x < (dropCell.bounds.width / 2) {
+                        let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
+                        currentDragState?.setDropIndexPath(newPath)
+                        moveCells()
+                    } else {
+                        let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
+                        currentDragState?.setDropIndexPath(newPath)
+                        moveCells()
+                    }
                 }
             }
         }
