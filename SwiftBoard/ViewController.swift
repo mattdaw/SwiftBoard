@@ -31,8 +31,6 @@ private struct ZoomState {
 }
 
 class ViewController: UIViewController, UIGestureRecognizerDelegate {
-
-    let kPauseBeforeDrag = 0.2
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet var longPressRecognizer: UILongPressGestureRecognizer!
@@ -42,7 +40,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     var dataSource:CollectionViewDataSource = CollectionViewDataSource()
     var zoomedLayout = CollectionViewLayout()
     var regularLayout = CollectionViewLayout()
-    var moveCellsTimer: NSTimer?
     
     private var currentDragState: DragState?
     private var currentZoomState: ZoomState?
@@ -170,6 +167,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     items.insert(item, atIndex:dropIndexPath.item)
                 }
                 
+                dataSource.items = items
+                
                 // Update collection view
                 regularLayout.hideIndexPath = dropIndexPath
                 
@@ -180,23 +179,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 // Update drag state
                 currentDragState!.setDragIndexPath(dropIndexPath)
                 currentDragState!.setDropIndexPath(nil)
-            }
-        }
-    }
-    
-    func moveAppToEndOfFolder() {
-        if let dragState = currentDragState {
-            // Update data source
-            let app = items[dragState.dragIndexPath.item]
-            items.removeAtIndex(dragState.dragIndexPath.item)
-            
-            // Update collection view
-            regularLayout.hideIndexPath = nil
-            collectionView.deleteItemsAtIndexPaths([dragState.dragIndexPath])
-            
-            if let zoomState = currentZoomState {
-                var folder = items[zoomState.indexPath.item] as Folder
-                folder.apps.append(app)
             }
         }
     }
@@ -304,8 +286,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 }
                 */
             }
-        case UIGestureRecognizerState.Ended:
-            println("Ended!")
         default:
             break
         }
@@ -320,6 +300,13 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     currentDragState!.setDropIndexPath(nil)
                     
                     if let folderCell = dropCell as? FolderCollectionViewCell {
+                        // Something like:
+                        /*
+                        dataSource.items.removeAtIndex(currentDragState!.dragIndexPath.item)
+                        collectionView.deleteItemsAtIndexPaths([currentDragState!.dragIndexPath])
+                        regularLayout.hideIndexPath = nil
+                        */
+
                         currentZoomState = ZoomState(indexPath: dropIndexPath, collectionView: folderCell.collectionView)
                         zoomFolder()
                     }
