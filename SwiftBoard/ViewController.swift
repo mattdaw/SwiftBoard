@@ -209,9 +209,9 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     
-    func moveCells(dropIndexPath:NSIndexPath) {
+    func moveCells() {
         if let dragState = currentDragState {
-            if dragState.dragIndexPath == dropIndexPath {
+            if dragState.dragIndexPath == dragState.dropIndexPath {
                 return
             }
             
@@ -221,24 +221,23 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             var item: Any = items[originalIndexPath.item]
             items.removeAtIndex(originalIndexPath.item)
             
-            if dropIndexPath.item >= items.count {
+            if dragState.dropIndexPath.item >= items.count {
                 items.append(item)
             } else {
-                items.insert(item, atIndex:dropIndexPath.item)
+                items.insert(item, atIndex:dragState.dropIndexPath.item)
             }
             
             dataSource.items = items
             
             // Update collection view
-            regularLayout.hideIndexPath = dropIndexPath
+            regularLayout.hideIndexPath = dragState.dropIndexPath
             
             rootCollectionView.performBatchUpdates({ () -> Void in
-                self.rootCollectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dropIndexPath)
+                self.rootCollectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dragState.dropIndexPath)
             }, completion: nil)
             
             // Update drag state
-            currentDragState!.setDragIndexPath(dropIndexPath)
-            currentDragState!.setDropIndexPath(dropIndexPath)
+            currentDragState!.setDragIndexPath(dragState.dropIndexPath)
         }
     }
     
@@ -322,7 +321,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     // TODO: Avoid being able to drop folder on top of folder
                     if let folderCell = dropCell as? FolderCollectionViewCell {
                         
-
                         /*
                         currentZoomState = ZoomState(indexPath: dropIndexPath, collectionView: folderCell.collectionView)
                         zoomFolder()
@@ -330,10 +328,12 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     }
                 } else if cellLocation.x < (dropCell.bounds.width / 2) {
                     let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
-                    moveCells(newPath)
+                    currentDragState?.setDropIndexPath(newPath)
+                    moveCells()
                 } else {
                     let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
-                    moveCells(newPath)
+                    currentDragState?.setDropIndexPath(newPath)
+                    moveCells()
                 }
             }
         }
