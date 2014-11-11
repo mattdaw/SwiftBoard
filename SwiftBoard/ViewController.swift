@@ -14,14 +14,9 @@ private struct DragState {
     let dragProxyView: UIView
     
     var dragIndexPath: NSIndexPath
-    var dropIndexPath: NSIndexPath?
     
     mutating func setDragIndexPath(indexPath:NSIndexPath) {
         dragIndexPath = indexPath
-    }
-    
-    mutating func setDropIndexPath(indexPath:NSIndexPath?) {
-        dropIndexPath = indexPath
     }
 }
 
@@ -118,8 +113,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 currentDragState = DragState(originalCenter:originalCenter,
                                              addTranslation:addTranslation,
                                               dragProxyView:dragProxyView,
-                                              dragIndexPath:indexPath,
-                                              dropIndexPath:nil)
+                                              dragIndexPath:indexPath)
                 
                 UIView.animateWithDuration(0.2) {
                     dragProxyView.transform = CGAffineTransformMakeScale(1.1, 1.1)
@@ -148,38 +142,35 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    func moveCells() {
+    func moveCells(dropIndexPath:NSIndexPath) {
         if let dragState = currentDragState {
-            if let dropIndexPath = dragState.dropIndexPath {
-                if dragState.dragIndexPath == dropIndexPath {
-                    return
-                }
-                
-                // Update data source
-                let originalIndexPath = dragState.dragIndexPath
-                
-                var item: Any = items[originalIndexPath.item]
-                items.removeAtIndex(originalIndexPath.item)
-                
-                if dropIndexPath.item >= items.count {
-                    items.append(item)
-                } else {
-                    items.insert(item, atIndex:dropIndexPath.item)
-                }
-                
-                dataSource.items = items
-                
-                // Update collection view
-                regularLayout.hideIndexPath = dropIndexPath
-                
-                collectionView.performBatchUpdates({ () -> Void in
-                    self.collectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dropIndexPath)
-                }, completion: nil)
-                
-                // Update drag state
-                currentDragState!.setDragIndexPath(dropIndexPath)
-                currentDragState!.setDropIndexPath(nil)
+            if dragState.dragIndexPath == dropIndexPath {
+                return
             }
+            
+            // Update data source
+            let originalIndexPath = dragState.dragIndexPath
+            
+            var item: Any = items[originalIndexPath.item]
+            items.removeAtIndex(originalIndexPath.item)
+            
+            if dropIndexPath.item >= items.count {
+                items.append(item)
+            } else {
+                items.insert(item, atIndex:dropIndexPath.item)
+            }
+            
+            dataSource.items = items
+            
+            // Update collection view
+            regularLayout.hideIndexPath = dropIndexPath
+            
+            collectionView.performBatchUpdates({ () -> Void in
+                self.collectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dropIndexPath)
+            }, completion: nil)
+            
+            // Update drag state
+            currentDragState!.setDragIndexPath(dropIndexPath)
         }
     }
     
@@ -250,8 +241,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 let cellLocation = collectionView.convertPoint(location, toView: dropCell)
                 
                 if dropCell.pointInsideIcon(cellLocation) {
-                    currentDragState!.setDropIndexPath(nil)
-                    
                     if let folderCell = dropCell as? FolderCollectionViewCell {
                         // Something like:
                         /*
@@ -265,12 +254,10 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     }
                 } else if cellLocation.x < (dropCell.bounds.width / 2) {
                     let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
-                    currentDragState!.setDropIndexPath(newPath)
-                    moveCells()
+                    moveCells(newPath)
                 } else {
                     let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
-                    currentDragState!.setDropIndexPath(newPath)
-                    moveCells()
+                    moveCells(newPath)
                 }
             }
         }
