@@ -242,17 +242,13 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 
                 if dropCell.pointInsideIcon(cellLocation) {
                     // TODO: Avoid being able to drop folder on top of folder
-                    // TODO: "Double pulse" animation before zooming folder
                     if let folderCell = dropCell as? FolderCollectionViewCell {
-                        // Something like:
-                        /*
-                        dataSource.items.removeAtIndex(currentDragState!.dragIndexPath.item)
-                        rootCollectionView.deleteItemsAtIndexPaths([currentDragState!.dragIndexPath])
-                        regularLayout.hideIndexPath = nil
-                        */
+                        
 
+                        /*
                         currentZoomState = ZoomState(indexPath: dropIndexPath, collectionView: folderCell.collectionView)
                         zoomFolder()
+                        */
                     }
                 } else if cellLocation.x < (dropCell.bounds.width / 2) {
                     let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
