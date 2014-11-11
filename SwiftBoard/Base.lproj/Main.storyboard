@@ -61,8 +61,8 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="collectionView" destination="d6y-1U-Anl" id="Hbd-HD-nv0"/>
                         <outlet property="longPressRecognizer" destination="0aG-aN-S2M" id="0RV-PF-mbO"/>
+                        <outlet property="rootCollectionView" destination="d6y-1U-Anl" id="QO2-uz-xgH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hzk-jR-dXQ" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -27,7 +27,7 @@ private struct ZoomState {
 
 class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var rootCollectionView: UICollectionView!
     @IBOutlet var longPressRecognizer: UILongPressGestureRecognizer!
     var panAndStopGestureRecognizer: PanAndStopGestureRecognizer!
     
@@ -49,20 +49,20 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         seedData()
         
         dataSource.items = items
-        collectionView.dataSource = dataSource
-        collectionView.delegate = dataSource
+        rootCollectionView.dataSource = dataSource
+        rootCollectionView.delegate = dataSource
         
-        collectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
-        collectionView.registerNib(UINib(nibName: "FolderCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "Folder")
+        rootCollectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
+        rootCollectionView.registerNib(UINib(nibName: "FolderCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "Folder")
         
-        collectionView.backgroundColor = UIColor.clearColor()
-        collectionView.setCollectionViewLayout(regularLayout, animated: false)
-        collectionView.scrollEnabled = false
+        rootCollectionView.backgroundColor = UIColor.clearColor()
+        rootCollectionView.setCollectionViewLayout(regularLayout, animated: false)
+        rootCollectionView.scrollEnabled = false
         
         panAndStopGestureRecognizer = PanAndStopGestureRecognizer(target:self, action:"handlePan:", stopAfterSecondsWithoutMovement:0.2) {
             (translation:CGPoint) in self.panGestureStopped(translation)
         }
-        collectionView.addGestureRecognizer(panAndStopGestureRecognizer)
+        rootCollectionView.addGestureRecognizer(panAndStopGestureRecognizer)
     }
     
     func seedData() {
@@ -93,20 +93,20 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     // Not sure this is right, but try to get the layout to assume its new size early so that in the animated rotation we don't
     // see neighbour items animating off-screen.
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        if let layout = collectionView.collectionViewLayout as? CollectionViewLayout {
+        if let layout = rootCollectionView.collectionViewLayout as? CollectionViewLayout {
             layout.overrideSize = size
-            collectionView.reloadData()
+            rootCollectionView.reloadData()
         }
     }
     
     func startDrag(gesture:UIGestureRecognizer) {
-        if let indexPath = collectionView.indexPathForItemAtPoint(gesture.locationInView(collectionView)) {
-            if let cell = collectionView.cellForItemAtIndexPath(indexPath) {
+        if let indexPath = rootCollectionView.indexPathForItemAtPoint(gesture.locationInView(rootCollectionView)) {
+            if let cell = rootCollectionView.cellForItemAtIndexPath(indexPath) {
                 let dragProxyView = cell.snapshotViewAfterScreenUpdates(true)
                 dragProxyView.frame = cell.frame
-                collectionView.addSubview(dragProxyView)
+                rootCollectionView.addSubview(dragProxyView)
                 
-                let startLocation = gesture.locationInView(collectionView)
+                let startLocation = gesture.locationInView(rootCollectionView)
                 let originalCenter = dragProxyView.center
                 let addTranslation = CGPoint(x: startLocation.x - originalCenter.x, y: startLocation.y - originalCenter.y)
                 
@@ -165,8 +165,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             // Update collection view
             regularLayout.hideIndexPath = dropIndexPath
             
-            collectionView.performBatchUpdates({ () -> Void in
-                self.collectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dropIndexPath)
+            rootCollectionView.performBatchUpdates({ () -> Void in
+                self.rootCollectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dropIndexPath)
             }, completion: nil)
             
             // Update drag state
@@ -177,7 +177,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     func zoomFolder() {
         if let zoomState = currentZoomState {
             zoomedLayout.zoomToIndexPath = zoomState.indexPath
-            collectionView.setCollectionViewLayout(zoomedLayout, animated: true)
+            rootCollectionView.setCollectionViewLayout(zoomedLayout, animated: true)
         }
     }
     
@@ -193,22 +193,22 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     // I'm not sure this is right yet, but it's seeming better to me to have two instantiated layouts. The layout's state
     // can be confusing (to me) when the initial/final attributes methods are called on a single layout instance.
     @IBAction func handleTap(recognizer: UITapGestureRecognizer) {
-        if collectionView.collectionViewLayout === regularLayout {
-            let point = recognizer.locationInView(collectionView)
+        if rootCollectionView.collectionViewLayout === regularLayout {
+            let point = recognizer.locationInView(rootCollectionView)
             
-            if let indexPath = collectionView.indexPathForItemAtPoint(point) {
+            if let indexPath = rootCollectionView.indexPathForItemAtPoint(point) {
                 let item: Any = items[indexPath.item]
                 
                 if let folder = item as? Folder {
                     zoomedLayout.zoomToIndexPath = indexPath
-                    collectionView.setCollectionViewLayout(zoomedLayout, animated: true)
+                    rootCollectionView.setCollectionViewLayout(zoomedLayout, animated: true)
                     return
                 }
             }
         }
         
         currentZoomState = nil
-        collectionView.setCollectionViewLayout(regularLayout, animated: true)
+        rootCollectionView.setCollectionViewLayout(regularLayout, animated: true)
     }
 
     @IBAction func handleLongPress(gesture: UILongPressGestureRecognizer) {
@@ -225,7 +225,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     @IBAction func handlePan(gesture: PanAndStopGestureRecognizer) {
         if gesture.state == .Began || gesture.state == .Changed {
             if let dragState = currentDragState {
-                let translation = gesture.translationInView(collectionView)
+                let translation = gesture.translationInView(rootCollectionView)
                 
                 // TODO: I don't think this is right yet... Re-check this math, do we really need both originalCenter and addTranslation
                 // saved too?
@@ -236,16 +236,18 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func panGestureStopped(location: CGPoint) {
-        if let dropIndexPath = collectionView.indexPathForItemAtPoint(location) {
-            if let dropCell = collectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
-                let cellLocation = collectionView.convertPoint(location, toView: dropCell)
+        if let dropIndexPath = rootCollectionView.indexPathForItemAtPoint(location) {
+            if let dropCell = rootCollectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
+                let cellLocation = rootCollectionView.convertPoint(location, toView: dropCell)
                 
                 if dropCell.pointInsideIcon(cellLocation) {
+                    // TODO: Avoid being able to drop folder on top of folder
+                    // TODO: "Double pulse" animation before zooming folder
                     if let folderCell = dropCell as? FolderCollectionViewCell {
                         // Something like:
                         /*
                         dataSource.items.removeAtIndex(currentDragState!.dragIndexPath.item)
-                        collectionView.deleteItemsAtIndexPaths([currentDragState!.dragIndexPath])
+                        rootCollectionView.deleteItemsAtIndexPaths([currentDragState!.dragIndexPath])
                         regularLayout.hideIndexPath = nil
                         */
 
