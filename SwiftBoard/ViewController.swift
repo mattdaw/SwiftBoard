@@ -14,9 +14,14 @@ private struct DragState {
     let dragProxyView: UIView
     
     var dragIndexPath: NSIndexPath
+    var dropIndexPath: NSIndexPath
     
     mutating func setDragIndexPath(indexPath:NSIndexPath) {
         dragIndexPath = indexPath
+    }
+    
+    mutating func setDropIndexPath(indexPath:NSIndexPath) {
+        dropIndexPath = indexPath
     }
 }
 
@@ -38,7 +43,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     private var currentDragState: DragState?
     private var currentZoomState: ZoomState?
-    private var droppingAtIndexPath: NSIndexPath?
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
@@ -60,7 +64,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         rootCollectionView.setCollectionViewLayout(regularLayout, animated: false)
         rootCollectionView.scrollEnabled = false
         
-        panAndStopGestureRecognizer = PanAndStopGestureRecognizer(target:self, action:"handlePan:", stopAfterSecondsWithoutMovement:0.2) {
+        panAndStopGestureRecognizer = PanAndStopGestureRecognizer(target: self, action: "handlePan:", stopAfterSecondsWithoutMovement: 0.2) {
             (translation:CGPoint) in self.panGestureStopped(translation)
         }
         rootCollectionView.addGestureRecognizer(panAndStopGestureRecognizer)
@@ -114,7 +118,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 currentDragState = DragState(originalCenter:originalCenter,
                                              addTranslation:addTranslation,
                                               dragProxyView:dragProxyView,
-                                              dragIndexPath:indexPath)
+                                              dragIndexPath:indexPath,
+                                              dropIndexPath:indexPath)
                 
                 UIView.animateWithDuration(0.2) {
                     dragProxyView.transform = CGAffineTransformMakeScale(1.1, 1.1)
@@ -128,10 +133,45 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    func startZoomedDrag(gesture:UIGestureRecognizer) {
+        if let zoomState = currentZoomState {
+            let location = gesture.locationInView(zoomState.collectionView)
+            if let indexPath = zoomState.collectionView.indexPathForItemAtPoint(location) {
+                if let cell = zoomState.collectionView.cellForItemAtIndexPath(indexPath) {
+                    let dragProxyView = cell.snapshotViewAfterScreenUpdates(true)
+                    dragProxyView.frame = rootCollectionView.convertRect(cell.frame, fromView: cell.superview)
+                    rootCollectionView.addSubview(dragProxyView)
+                    
+                    let startLocation = gesture.locationInView(rootCollectionView)
+                    let originalCenter = dragProxyView.center
+                    let addTranslation = CGPoint(x: startLocation.x - originalCenter.x, y: startLocation.y - originalCenter.y)
+                    
+                    currentDragState = DragState(originalCenter:originalCenter,
+                        addTranslation:addTranslation,
+                        dragProxyView:dragProxyView,
+                        dragIndexPath:indexPath,
+                        dropIndexPath:indexPath)
+                    
+                    UIView.animateWithDuration(0.2) {
+                        dragProxyView.transform = CGAffineTransformMakeScale(1.1, 1.1)
+                        dragProxyView.alpha = 0.8
+                    }
+                    
+                    if let folderLayout = zoomState.collectionView.collectionViewLayout as? FolderCollectionViewLayout {
+                        //folderLayout.editingModeEnabled = true
+                        folderLayout.hideIndexPath = indexPath
+                        folderLayout.invalidateLayout()
+                    }
+                }
+            }
+        }
+    }
+    
+    // TODO: What happens when drop is inside a folder? Do I need a drop state struct?
     func endDrag() {
         if let dragState = currentDragState {
             UIView.animateWithDuration(0.2, animations: { () -> Void in
-                let attrs = self.regularLayout.layoutAttributesForItemAtIndexPath(self.droppingAtIndexPath!)
+                let attrs = self.regularLayout.layoutAttributesForItemAtIndexPath(dragState.dropIndexPath)
                 
                 dragState.dragProxyView.frame = attrs.frame
                 dragState.dragProxyView.transform = CGAffineTransformIdentity
@@ -145,6 +185,29 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             })
         }
     }
+    
+    func endZoomedDrag() {
+        if let zoomState = currentZoomState {
+            let layout = zoomState.collectionView.collectionViewLayout as FolderCollectionViewLayout
+            
+            if let dragState = currentDragState {
+                UIView.animateWithDuration(0.2, animations: { () -> Void in
+                        let attrs = layout.layoutAttributesForItemAtIndexPath(dragState.dropIndexPath)
+                    
+                        dragState.dragProxyView.frame = self.rootCollectionView.convertRect(attrs.frame, fromView:zoomState.collectionView)
+                        dragState.dragProxyView.transform = CGAffineTransformIdentity
+                        dragState.dragProxyView.alpha = 1
+                    }, completion: { (Bool) -> Void in
+                        layout.hideIndexPath = nil
+                        layout.invalidateLayout()
+                        
+                        dragState.dragProxyView.removeFromSuperview()
+                        self.currentDragState = nil
+                })
+            }
+        }
+    }
+
     
     func moveCells(dropIndexPath:NSIndexPath) {
         if let dragState = currentDragState {
@@ -174,8 +237,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             }, completion: nil)
             
             // Update drag state
-            droppingAtIndexPath = dropIndexPath
             currentDragState!.setDragIndexPath(dropIndexPath)
+            currentDragState!.setDropIndexPath(dropIndexPath)
         }
     }
     
@@ -205,9 +268,11 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 let item: Any = items[indexPath.item]
                 
                 if let folder = item as? Folder {
-                    zoomedLayout.zoomToIndexPath = indexPath
-                    rootCollectionView.setCollectionViewLayout(zoomedLayout, animated: true)
-                    return
+                    if let folderCell = rootCollectionView.cellForItemAtIndexPath(indexPath) as? FolderCollectionViewCell {
+                        currentZoomState = ZoomState(indexPath:indexPath, collectionView:folderCell.collectionView)
+                        zoomFolder()
+                        return
+                    }
                 }
             }
         }
@@ -219,9 +284,17 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     @IBAction func handleLongPress(gesture: UILongPressGestureRecognizer) {
         switch gesture.state {
         case UIGestureRecognizerState.Began:
-            startDrag(gesture)
+            if let zoomState = currentZoomState {
+                startZoomedDrag(gesture)
+            } else {
+                startDrag(gesture)
+            }
         case UIGestureRecognizerState.Ended, UIGestureRecognizerState.Cancelled:
-            endDrag()
+            if let zoomState = currentZoomState {
+                endZoomedDrag()
+            } else {
+                endDrag()
+            }
         default:
             break
         }
