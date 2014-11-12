@@ -14,6 +14,7 @@ class FolderCollectionViewLayout: UICollectionViewLayout {
     var previousItemFrames: [CGRect] = []
     var numberOfItems = 0
     var hideIndexPath: NSIndexPath?
+    var updating = false
     
     override func collectionViewContentSize() -> CGSize {
         if let myCollectionView = collectionView {
@@ -82,22 +83,40 @@ class FolderCollectionViewLayout: UICollectionViewLayout {
         return itemAttributes
     }
     
+    // Set a flag to indicate we're adding/removing items. The initial/final layout attribute methods need to use
+    // the default behaviour in this case... and has special code for animating a bounds change.
+    override func prepareForCollectionViewUpdates(updateItems: [AnyObject]!) {
+        updating = true
+    }
+    
+    override func finalizeCollectionViewUpdates() {
+        updating = false
+    }
+    
     // When the bounds change, all items are "removed" from view then re-"added" if they're still visible. Provide their
     // original frame so the change will be animated.
     override func initialLayoutAttributesForAppearingItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
-        let itemAttributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
-        
-        if indexPath.item < 9 {
-            itemAttributes.frame = previousItemFrames[indexPath.item]
+        if (updating) {
+            return super.initialLayoutAttributesForAppearingItemAtIndexPath(indexPath)
         } else {
-            itemAttributes.hidden = true
+            let itemAttributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
+            
+            if indexPath.item < 9 {
+                itemAttributes.frame = previousItemFrames[indexPath.item]
+            } else {
+                itemAttributes.hidden = true
+            }
+            
+            return itemAttributes
         }
-        
-        return itemAttributes
     }
     
     override func finalLayoutAttributesForDisappearingItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
-        return nil
+        if (updating) {
+            return super.finalLayoutAttributesForDisappearingItemAtIndexPath(indexPath)
+        } else {
+            return nil
+        }
     }
     
     override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
