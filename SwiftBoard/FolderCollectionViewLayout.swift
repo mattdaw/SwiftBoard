@@ -93,12 +93,12 @@ class FolderCollectionViewLayout: UICollectionViewLayout {
         updating = false
     }
     
-    // When the bounds change, all items are "removed" from view then re-"added" if they're still visible. Provide their
-    // original frame so the change will be animated.
     override func initialLayoutAttributesForAppearingItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
         if (updating) {
             return super.initialLayoutAttributesForAppearingItemAtIndexPath(indexPath)
         } else {
+            // When the bounds change, all items are "removed" from view then re-"added" if they're still visible. Provide their
+            // original frame so the change will be animated.
             let itemAttributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
             
             if indexPath.item < 9 {
