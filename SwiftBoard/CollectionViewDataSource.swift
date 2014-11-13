@@ -10,7 +10,7 @@ import UIKit
 
 class CollectionViewDataSource : NSObject, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    var items: [Any] = [];
+    var items: NSMutableArray = []
         
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
@@ -22,7 +22,7 @@ class CollectionViewDataSource : NSObject, UICollectionViewDelegate, UICollectio
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         var cell:UICollectionViewCell
-        var item: Any = items[indexPath.item]
+        var item: AnyObject = items[indexPath.item]
         
         switch item {
         case let app as App:

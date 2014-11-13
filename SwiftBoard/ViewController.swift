@@ -36,7 +36,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet var longPressRecognizer: UILongPressGestureRecognizer!
     var panAndStopGestureRecognizer: PanAndStopGestureRecognizer!
     
-    var items: [Any] = [];
+    var items: NSMutableArray = []
     var dataSource:CollectionViewDataSource = CollectionViewDataSource()
     var zoomedLayout = CollectionViewLayout()
     var regularLayout = CollectionViewLayout()
@@ -91,7 +91,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             App(name: "App 21", color: UIColor.redColor()),
             App(name: "App 22", color: UIColor.redColor()),
             App(name: "App 23", color: UIColor.redColor()),
-            App(name: "App 24", color: UIColor.redColor()),
+            App(name: "App 24", color: UIColor.redColor())
         ]
     }
     
@@ -159,81 +159,38 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     
-    func moveCells() {
+    func moveCells(collectionView:UICollectionView) {
         if let dragState = currentDragState {
             if dragState.dragIndexPath == dragState.dropIndexPath {
                 return
             }
             
             // Update data source
+            let dataSource = collectionView.dataSource as CollectionViewDataSource
+            let dataItems = dataSource.items
             let originalIndexPath = dragState.dragIndexPath
             
-            var item: Any = items[originalIndexPath.item]
-            items.removeAtIndex(originalIndexPath.item)
+            var item: AnyObject = dataItems[originalIndexPath.item]
+            dataItems.removeObjectAtIndex(originalIndexPath.item)
             
-            if dragState.dropIndexPath.item >= items.count {
-                items.append(item)
+            if dragState.dropIndexPath.item >= dataItems.count {
+                dataItems.addObject(item)
             } else {
-                items.insert(item, atIndex:dragState.dropIndexPath.item)
+                dataItems.insertObject(item, atIndex: dragState.dropIndexPath.item)
             }
             
-            dataSource.items = items
-            
             // Update collection view
-            regularLayout.hideIndexPath = dragState.dropIndexPath
+            let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
+            layout.hideIndexPath = dragState.dropIndexPath
             
-            rootCollectionView.performBatchUpdates({ () -> Void in
-                self.rootCollectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dragState.dropIndexPath)
+            collectionView.performBatchUpdates({ () -> Void in
+                collectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dragState.dropIndexPath)
             }, completion: nil)
             
             // Update drag state
             currentDragState!.setDragIndexPath(dragState.dropIndexPath)
         }
     }
-    
-    func moveZoomedCells() {
-        if let zoomState = currentZoomState {
-            if let dragState = currentDragState {
-                if dragState.dragIndexPath == dragState.dropIndexPath {
-                    return
-                }
-                
-                // Update data source
-                let originalIndexPath = dragState.dragIndexPath
-                var folder = items[zoomState.indexPath.item] as Folder
-                var apps = folder.apps
-                var app = apps[originalIndexPath.item]
-                
-                apps.removeAtIndex(originalIndexPath.item)
-                
-                if dragState.dropIndexPath.item >= apps.count {
-                    apps.append(app)
-                } else {
-                    apps.insert(app, atIndex:dragState.dropIndexPath.item)
-                }
-                
-                // TODO: This leaves the root items array un-updated? The value semantics feel extra
-                // tricky here, maybe I should introduce a wrapper object?
-                
-                var zoomDataSource = zoomState.collectionView.dataSource as CollectionViewDataSource
-                zoomDataSource.items = apps
-                
-                var zoomLayout = zoomState.collectionView.collectionViewLayout as FolderCollectionViewLayout
-                
-                // Update collection view
-                zoomLayout.hideIndexPath = dragState.dropIndexPath
-                
-                zoomState.collectionView.performBatchUpdates({ () -> Void in
-                    zoomState.collectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dragState.dropIndexPath)
-                    }, completion: nil)
-                
-                // Update drag state
-                currentDragState!.setDragIndexPath(dragState.dropIndexPath)
-            }
-
-        }
-    }
-
     
     func zoomFolder() {
         if let zoomState = currentZoomState {
@@ -258,7 +215,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             let point = recognizer.locationInView(rootCollectionView)
             
             if let indexPath = rootCollectionView.indexPathForItemAtPoint(point) {
-                let item: Any = items[indexPath.item]
+                let item: AnyObject = items[indexPath.item]
                 
                 if let folder = item as? Folder {
                     if let folderCell = rootCollectionView.cellForItemAtIndexPath(indexPath) as? FolderCollectionViewCell {
@@ -312,22 +269,11 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 } else if locationInCell.x < (dropCell.bounds.width / 2) {
                     let newPath = layout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
                     currentDragState?.setDropIndexPath(newPath)
-                    
-                    if let zoomState = currentZoomState {
-                        moveZoomedCells()
-                    } else {
-                        moveCells()
-                    }
-                    
+                    moveCells(collectionView)
                 } else {
                     let newPath = layout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
                     currentDragState?.setDropIndexPath(newPath)
-                    
-                    if let zoomState = currentZoomState {
-                        moveZoomedCells()
-                    } else {
-                        moveCells()
-                    }
+                    moveCells(collectionView)
                 }
             }
         }

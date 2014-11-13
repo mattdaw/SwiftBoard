@@ -8,7 +8,12 @@
 
 import Foundation
 
-struct Folder {
+class Folder: NSObject {
     var name: String
-    var apps: [Any]
+    var apps: NSMutableArray
+    
+    init(name folderName:String, apps folderApps:NSMutableArray) {
+        name = folderName
+        apps = folderApps
+    }
 }

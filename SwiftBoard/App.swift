@@ -8,7 +8,12 @@
 
 import UIKit
 
-struct App {
+class App: NSObject {
     var name: String
     var color: UIColor
+    
+    init(name appName:String, color appColor:UIColor) {
+        name = appName
+        color = appColor
+    }
 }
