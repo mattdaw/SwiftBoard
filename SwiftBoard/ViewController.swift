@@ -137,44 +137,24 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    // TODO: What happens when drop is inside a folder? Do I need a drop state struct?
-    func endDrag() {
+    func endDrag(gesture:UIGestureRecognizer) {
+        let collectionView = collectionViewForGesture(gesture)
+        let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
+        
         if let dragState = currentDragState {
             UIView.animateWithDuration(0.2, animations: { () -> Void in
-                let attrs = self.regularLayout.layoutAttributesForItemAtIndexPath(dragState.dropIndexPath)
+                    let attrs = layout.layoutAttributesForItemAtIndexPath(dragState.dropIndexPath)
                 
-                dragState.dragProxyView.frame = attrs.frame
-                dragState.dragProxyView.transform = CGAffineTransformIdentity
-                dragState.dragProxyView.alpha = 1
-            }, completion: { (Bool) -> Void in
-                    self.regularLayout.hideIndexPath = nil
-                    self.regularLayout.invalidateLayout()
+                    dragState.dragProxyView.frame = self.rootCollectionView.convertRect(attrs.frame, fromView:collectionView)
+                    dragState.dragProxyView.transform = CGAffineTransformIdentity
+                    dragState.dragProxyView.alpha = 1
+                }, completion: { (Bool) -> Void in
+                    layout.hideIndexPath = nil
+                    layout.invalidateLayout()
                     
                     dragState.dragProxyView.removeFromSuperview()
                     self.currentDragState = nil
-            })
-        }
-    }
-    
-    func endZoomedDrag() {
-        if let zoomState = currentZoomState {
-            let layout = zoomState.collectionView.collectionViewLayout as FolderCollectionViewLayout
-            
-            if let dragState = currentDragState {
-                UIView.animateWithDuration(0.2, animations: { () -> Void in
-                        let attrs = layout.layoutAttributesForItemAtIndexPath(dragState.dropIndexPath)
-                    
-                        dragState.dragProxyView.frame = self.rootCollectionView.convertRect(attrs.frame, fromView:zoomState.collectionView)
-                        dragState.dragProxyView.transform = CGAffineTransformIdentity
-                        dragState.dragProxyView.alpha = 1
-                    }, completion: { (Bool) -> Void in
-                        layout.hideIndexPath = nil
-                        layout.invalidateLayout()
-                        
-                        dragState.dragProxyView.removeFromSuperview()
-                        self.currentDragState = nil
                 })
-            }
         }
     }
 
@@ -299,11 +279,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         case UIGestureRecognizerState.Began:
             startDrag(gesture)
         case UIGestureRecognizerState.Ended, UIGestureRecognizerState.Cancelled:
-            if let zoomState = currentZoomState {
-                endZoomedDrag()
-            } else {
-                endDrag()
-            }
+            endDrag(gesture)
         default:
             break
         }
