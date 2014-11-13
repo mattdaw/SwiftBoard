@@ -15,7 +15,6 @@ class PanAndStopGestureRecognizer: UIPanGestureRecognizer {
     private var stopFunction:CGPoint -> ()
     private var lastLocation:CGPoint
     
-    // TODO: Take a block that is called when a "stop" is detected. Pass it the latest position?
     init(target:AnyObject, action:Selector, stopAfterSecondsWithoutMovement stopAfterSeconds:Double, stopFunction stopFn:CGPoint -> ()) {
         stopAfterSecondsWithoutMovement = stopAfterSeconds
         stopFunction = stopFn
