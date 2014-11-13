@@ -8,12 +8,11 @@
 
 import UIKit
 
-class CollectionViewLayout: UICollectionViewLayout {
+class CollectionViewLayout: DroppableCollectionViewLayout {
     
     let itemSize = CGFloat(96)
     var itemFrames: [CGRect] = []
     var numberOfItems = 0
-    var itemsPerRow = 0
     var zoomToIndexPath: NSIndexPath?
     var hideIndexPath: NSIndexPath?
     var overrideSize: CGSize?
@@ -131,24 +130,5 @@ class CollectionViewLayout: UICollectionViewLayout {
     
     override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
         return true
-    }
-    
-    func indexPathToMoveSourceIndexPathLeftOfDestIndexPath(sourceIndexPath:NSIndexPath, destIndexPath:NSIndexPath) -> NSIndexPath {
-        let column = destIndexPath.item % itemsPerRow
-        var offset = 0
-        if sourceIndexPath.item < destIndexPath.item && column != 0 {
-            offset = -1
-        }
-        
-        return NSIndexPath(forItem:destIndexPath.item + offset, inSection:destIndexPath.section)
-    }
-    
-    func indexPathToMoveSourceIndexPathRightOfDestIndexPath(sourceIndexPath:NSIndexPath, destIndexPath:NSIndexPath) -> NSIndexPath {
-        var offset = 1
-        if sourceIndexPath.item < destIndexPath.item {
-            offset = 0
-        }
-        
-        return NSIndexPath(forItem:destIndexPath.item + offset, inSection:destIndexPath.section)
-    }
+    }    
 }

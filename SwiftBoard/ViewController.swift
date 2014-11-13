@@ -65,7 +65,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         rootCollectionView.scrollEnabled = false
         
         panAndStopGestureRecognizer = PanAndStopGestureRecognizer(target: self, action: "handlePan:", stopAfterSecondsWithoutMovement: 0.2) {
-            (translation:CGPoint) in self.panGestureStopped(translation)
+            (gesture:UIPanGestureRecognizer) in self.panGestureStopped(gesture)
         }
         rootCollectionView.addGestureRecognizer(panAndStopGestureRecognizer)
     }
@@ -356,54 +356,46 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    func panGestureStopped(location: CGPoint) {
+    func panGestureStopped(gesture: UIPanGestureRecognizer) {
+        let collectionView = collectionViewForGesture(gesture)
+        let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
+        let location = gesture.locationInView(collectionView)
+        
+        if let dropIndexPath = collectionView.indexPathForItemAtPoint(location) {
+            if let dropCell = collectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
+                let locationInCell = collectionView.convertPoint(location, toView: dropCell)
+                
+                if dropCell.pointInsideIcon(locationInCell) {
+                    // nothing for now
+                } else if locationInCell.x < (dropCell.bounds.width / 2) {
+                    let newPath = layout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
+                    currentDragState?.setDropIndexPath(newPath)
+                    
+                    if let zoomState = currentZoomState {
+                        moveZoomedCells()
+                    } else {
+                        moveCells()
+                    }
+                    
+                } else {
+                    let newPath = layout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
+                    currentDragState?.setDropIndexPath(newPath)
+                    
+                    if let zoomState = currentZoomState {
+                        moveZoomedCells()
+                    } else {
+                        moveCells()
+                    }
+                }
+            }
+        }
+    }
+    
+    func collectionViewForGesture(gesture:UIGestureRecognizer) -> UICollectionView {
         if let zoomState = currentZoomState {
-            let zoomCollectionView = zoomState.collectionView
-            let zoomLayout = zoomState.collectionView.collectionViewLayout as FolderCollectionViewLayout
-            let zoomLocation = rootCollectionView.convertPoint(location, toView: zoomState.collectionView)
-            
-            if let dropIndexPath = zoomCollectionView.indexPathForItemAtPoint(zoomLocation) {
-                if let dropCell = zoomCollectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
-                    let cellLocation = zoomCollectionView.convertPoint(location, toView: dropCell)
-                    
-                    if dropCell.pointInsideIcon(cellLocation) {
-                        println("Does nothing in zoomed mode right?")
-                    } else if cellLocation.x < (dropCell.bounds.width / 2) {
-                        let newPath = zoomLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
-                        currentDragState?.setDropIndexPath(newPath)
-                        moveZoomedCells()
-                    } else {
-                        let newPath = zoomLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
-                        currentDragState?.setDropIndexPath(newPath)
-                        moveZoomedCells()
-                    }
-                }
-            }
+            return zoomState.collectionView
         } else {
-            if let dropIndexPath = rootCollectionView.indexPathForItemAtPoint(location) {
-                if let dropCell = rootCollectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
-                    let cellLocation = rootCollectionView.convertPoint(location, toView: dropCell)
-                    
-                    if dropCell.pointInsideIcon(cellLocation) {
-                        // TODO: Avoid being able to drop folder on top of folder
-                        if let folderCell = dropCell as? FolderCollectionViewCell {
-                            
-                            /*
-                            currentZoomState = ZoomState(indexPath: dropIndexPath, collectionView: folderCell.collectionView)
-                            zoomFolder()
-                            */
-                        }
-                    } else if cellLocation.x < (dropCell.bounds.width / 2) {
-                        let newPath = regularLayout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
-                        currentDragState?.setDropIndexPath(newPath)
-                        moveCells()
-                    } else {
-                        let newPath = regularLayout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
-                        currentDragState?.setDropIndexPath(newPath)
-                        moveCells()
-                    }
-                }
-            }
+            return rootCollectionView
         }
     }
     
