@@ -34,7 +34,7 @@ class FolderCollectionViewLayout: DroppableCollectionViewLayout {
         let myCollectionView = collectionView!
         numberOfItems = myCollectionView.numberOfItemsInSection(0)
         
-        let itemsToLayout = numberOfItems > 8 ? 8 : numberOfItems
+        let itemsToLayout = numberOfItems > 9 ? 9 : numberOfItems
         let availableWidth = myCollectionView.bounds.width
         let itemSize = availableWidth / 3
         
