@@ -13,7 +13,6 @@ class FolderCollectionViewLayout: DroppableCollectionViewLayout {
     var itemFrames: [CGRect] = []
     var previousItemFrames: [CGRect] = []
     var numberOfItems = 0
-    var hideIndexPath: NSIndexPath?
     var updating = false
     
     override func collectionViewContentSize() -> CGSize {

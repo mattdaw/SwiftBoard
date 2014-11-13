@@ -14,7 +14,6 @@ class CollectionViewLayout: DroppableCollectionViewLayout {
     var itemFrames: [CGRect] = []
     var numberOfItems = 0
     var zoomToIndexPath: NSIndexPath?
-    var hideIndexPath: NSIndexPath?
     var overrideSize: CGSize?
     var editingModeEnabled = false
     

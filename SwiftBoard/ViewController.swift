@@ -105,10 +105,14 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func startDrag(gesture:UIGestureRecognizer) {
-        if let indexPath = rootCollectionView.indexPathForItemAtPoint(gesture.locationInView(rootCollectionView)) {
-            if let cell = rootCollectionView.cellForItemAtIndexPath(indexPath) {
+        let collectionView = collectionViewForGesture(gesture)
+        let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
+        let location = gesture.locationInView(collectionView)
+        
+        if let indexPath = collectionView.indexPathForItemAtPoint(location) {
+            if let cell = collectionView.cellForItemAtIndexPath(indexPath) {
                 let dragProxyView = cell.snapshotViewAfterScreenUpdates(true)
-                dragProxyView.frame = cell.frame
+                dragProxyView.frame = rootCollectionView.convertRect(cell.frame, fromView: cell.superview)
                 rootCollectionView.addSubview(dragProxyView)
                 
                 let startLocation = gesture.locationInView(rootCollectionView)
@@ -116,53 +120,19 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 let addTranslation = CGPoint(x: startLocation.x - originalCenter.x, y: startLocation.y - originalCenter.y)
                 
                 currentDragState = DragState(originalCenter:originalCenter,
-                                             addTranslation:addTranslation,
-                                              dragProxyView:dragProxyView,
-                                              dragIndexPath:indexPath,
-                                              dropIndexPath:indexPath)
+                    addTranslation:addTranslation,
+                    dragProxyView:dragProxyView,
+                    dragIndexPath:indexPath,
+                    dropIndexPath:indexPath)
                 
                 UIView.animateWithDuration(0.2) {
                     dragProxyView.transform = CGAffineTransformMakeScale(1.1, 1.1)
                     dragProxyView.alpha = 0.8
                 }
                 
-                regularLayout.editingModeEnabled = true
-                regularLayout.hideIndexPath = indexPath
-                regularLayout.invalidateLayout()
-            }
-        }
-    }
-    
-    func startZoomedDrag(gesture:UIGestureRecognizer) {
-        if let zoomState = currentZoomState {
-            let location = gesture.locationInView(zoomState.collectionView)
-            if let indexPath = zoomState.collectionView.indexPathForItemAtPoint(location) {
-                if let cell = zoomState.collectionView.cellForItemAtIndexPath(indexPath) {
-                    let dragProxyView = cell.snapshotViewAfterScreenUpdates(true)
-                    dragProxyView.frame = rootCollectionView.convertRect(cell.frame, fromView: cell.superview)
-                    rootCollectionView.addSubview(dragProxyView)
-                    
-                    let startLocation = gesture.locationInView(rootCollectionView)
-                    let originalCenter = dragProxyView.center
-                    let addTranslation = CGPoint(x: startLocation.x - originalCenter.x, y: startLocation.y - originalCenter.y)
-                    
-                    currentDragState = DragState(originalCenter:originalCenter,
-                        addTranslation:addTranslation,
-                        dragProxyView:dragProxyView,
-                        dragIndexPath:indexPath,
-                        dropIndexPath:indexPath)
-                    
-                    UIView.animateWithDuration(0.2) {
-                        dragProxyView.transform = CGAffineTransformMakeScale(1.1, 1.1)
-                        dragProxyView.alpha = 0.8
-                    }
-                    
-                    if let folderLayout = zoomState.collectionView.collectionViewLayout as? FolderCollectionViewLayout {
-                        //folderLayout.editingModeEnabled = true
-                        folderLayout.hideIndexPath = indexPath
-                        folderLayout.invalidateLayout()
-                    }
-                }
+                //layout = true
+                layout.hideIndexPath = indexPath
+                layout.invalidateLayout()
             }
         }
     }
@@ -327,11 +297,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     @IBAction func handleLongPress(gesture: UILongPressGestureRecognizer) {
         switch gesture.state {
         case UIGestureRecognizerState.Began:
-            if let zoomState = currentZoomState {
-                startZoomedDrag(gesture)
-            } else {
-                startDrag(gesture)
-            }
+            startDrag(gesture)
         case UIGestureRecognizerState.Ended, UIGestureRecognizerState.Cancelled:
             if let zoomState = currentZoomState {
                 endZoomedDrag()
