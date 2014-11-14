@@ -43,6 +43,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     private var currentDragState: DragState?
     private var currentZoomState: ZoomState?
+    private var dropOperation: (() -> ())?
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
@@ -130,15 +131,14 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     dragProxyView.alpha = 0.8
                 }
                 
-                //layout = true
+                //layout.editingModeEnabled = true
                 layout.hideIndexPath = indexPath
                 layout.invalidateLayout()
             }
         }
     }
     
-    func endDrag(gesture:UIGestureRecognizer) {
-        let collectionView = collectionViewForGesture(gesture)
+    func endDrag(collectionView:UICollectionView) {
         let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
         
         if let dragState = currentDragState {
@@ -202,7 +202,9 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         case UIGestureRecognizerState.Began:
             startDrag(gesture)
         case UIGestureRecognizerState.Ended, UIGestureRecognizerState.Cancelled:
-            endDrag(gesture)
+            if let dropBlock = dropOperation {
+                dropBlock()
+            }
         default:
             break
         }
@@ -226,13 +228,22 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
         let location = gesture.locationInView(collectionView)
         
+        dropOperation = {
+            self.endDrag(collectionView)
+        }
+        
         if let dropIndexPath = collectionView.indexPathForItemAtPoint(location) {
             if let dropCell = collectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
                 let locationInCell = collectionView.convertPoint(location, toView: dropCell)
                 
                 if dropCell.pointInsideIcon(locationInCell) {
                     if let folderCell = dropCell as? FolderCollectionViewCell {
-                        dropAppOnFolder(currentDragState!.dragIndexPath, folderIndexPath: dropIndexPath, folderCell: folderCell)
+                        let dragIndexPath = currentDragState!.dragIndexPath
+                        
+                        folderCell.expand()
+                        dropOperation = {
+                            self.dropAppOnFolder(dragIndexPath, folderIndexPath: dropIndexPath, folderCell: folderCell)
+                        }
                     }
                 } else if locationInCell.x < (dropCell.bounds.width / 2) {
                     let newPath = layout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
@@ -280,7 +291,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             layout.hideIndexPath = dragState.dropIndexPath
             
             collectionView.performBatchUpdates({ () -> Void in
-                collectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dragState.dropIndexPath)
+                    collectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dragState.dropIndexPath)
                 }, completion: nil)
             
             // Update drag state
@@ -312,6 +323,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         let folderLayout = folderCollectionView.collectionViewLayout as DroppableCollectionViewLayout
         
         folderCollectionView.performBatchUpdates({ () -> Void in
+            folderCell.collapse()
             folderCollectionView.insertItemsAtIndexPaths([newIndexPath])
         }, completion: nil)
         

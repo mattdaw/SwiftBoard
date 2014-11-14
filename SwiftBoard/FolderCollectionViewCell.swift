@@ -39,4 +39,18 @@ class FolderCollectionViewCell : SwiftBoardCell {
         let converted = convertPoint(point, toView:collectionView)
         return collectionView.pointInside(converted, withEvent: nil)
     }
+    
+    func expand() {
+        UIView.animateWithDuration(0.2) {
+            self.transform = CGAffineTransformMakeScale(1.15, 1.15)
+            self.label.alpha = 0
+        }
+    }
+    
+    func collapse() {
+        UIView.animateWithDuration(0.2) {
+            self.transform = CGAffineTransformIdentity
+            self.label.alpha = 1
+        }
+    }
 }
