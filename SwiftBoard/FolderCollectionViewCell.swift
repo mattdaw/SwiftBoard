@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FolderCollectionViewCell : SwiftBoardCell {
+class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var label: UILabel!
@@ -52,5 +52,11 @@ class FolderCollectionViewCell : SwiftBoardCell {
             self.transform = CGAffineTransformIdentity
             self.label.alpha = 1
         }
+    }
+    
+    // FolderViewModelDelegate
+    
+    func folderViewModelDraggingDidChange(dragging: Bool) {
+        println("Changed!")
     }
 }

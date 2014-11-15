@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AppCollectionViewCell : SwiftBoardCell {
+class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
     
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var label: UILabel!
@@ -52,5 +52,10 @@ class AppCollectionViewCell : SwiftBoardCell {
     override func pointInsideIcon(point:CGPoint) -> Bool {
         let converted = convertPoint(point, toView:containerView)
         return containerView.pointInside(converted, withEvent: nil)
+    }
+    
+    // AppViewModelDelegate
+    func appViewModelDraggingDidChange(dragging: Bool) {
+        println("Changed!")
     }
 }

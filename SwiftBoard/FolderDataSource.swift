@@ -32,6 +32,7 @@ class FolderDataSource : NSObject, UICollectionViewDelegate, UICollectionViewDat
         
         myCell.label.text = appViewModel.name
         myCell.containerView.backgroundColor = appViewModel.color
+        appViewModel.delegate = myCell
         
         return myCell
     }
