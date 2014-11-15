@@ -38,10 +38,7 @@ class RootDataSource : NSObject, UICollectionViewDelegate, UICollectionViewDataS
             cell = myCell
         case let folderViewModel as FolderViewModel:
             let myCell = collectionView.dequeueReusableCellWithReuseIdentifier("Folder", forIndexPath: indexPath) as FolderCollectionViewCell
-            
-            myCell.dataSource = FolderDataSource(folderViewModel: folderViewModel)
-            myCell.label.text = folderViewModel.name
-            folderViewModel.delegate = myCell
+            myCell.configureForFolderViewModel(folderViewModel)
             
             cell = myCell
         default:

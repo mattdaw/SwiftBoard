@@ -13,18 +13,19 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var label: UILabel!
     
-    var dataSource: FolderDataSource? {
-        didSet {
-            collectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
-            collectionView.dataSource = dataSource
-            collectionView.delegate = dataSource
-        }
-    }
+    var dataSource: FolderDataSource?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
         collectionView.layer.cornerRadius = 5
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        hidden = false
+        dataSource = nil
     }
     
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes!) {
@@ -54,14 +55,22 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
         }
     }
     
+    func configureForFolderViewModel(folderViewModel: FolderViewModel) {
+        hidden = folderViewModel.dragging
+        label.text = folderViewModel.name
+        
+        dataSource = FolderDataSource(folderViewModel: folderViewModel)
+        collectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
+        collectionView.dataSource = dataSource
+        collectionView.delegate = dataSource
+        
+        folderViewModel.delegate = self
+    }
+    
     // FolderViewModelDelegate
     
     func folderViewModelDraggingDidChange(dragging: Bool) {
-        if dragging {
-            alpha = 0
-        } else {
-            alpha = 1
-        }
+        hidden = dragging
     }
     
     func folderViewModelAppDidMove(fromIndex: Int, toIndex: Int) {

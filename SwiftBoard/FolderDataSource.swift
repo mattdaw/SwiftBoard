@@ -29,10 +29,7 @@ class FolderDataSource : NSObject, UICollectionViewDelegate, UICollectionViewDat
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let appViewModel = folderViewModel.appViewModelAtIndex(indexPath.item)
         let myCell = collectionView.dequeueReusableCellWithReuseIdentifier("App", forIndexPath: indexPath) as AppCollectionViewCell
-        
-        myCell.label.text = appViewModel.name
-        myCell.containerView.backgroundColor = appViewModel.color
-        appViewModel.delegate = myCell
+        myCell.configureForAppViewModel(appViewModel)
         
         return myCell
     }
