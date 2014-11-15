@@ -56,6 +56,10 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
     
     // AppViewModelDelegate
     func appViewModelDraggingDidChange(dragging: Bool) {
-        println("Changed!")
+        if dragging {
+            alpha = 0
+        } else {
+            alpha = 1
+        }
     }
 }

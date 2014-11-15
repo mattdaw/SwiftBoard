@@ -176,19 +176,18 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }*/
     }
     
-    func endDrag(collectionView:UICollectionView) {
-        let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
+    private func endDrag(gestureInfo: GestureInfo) {
+        let cell = gestureInfo.collectionViewCell
+        let collectionView = gestureInfo.collectionView
+        let viewModel = gestureInfo.viewModel
         
         if let dragState = currentDragState {
             UIView.animateWithDuration(0.2, animations: { () -> Void in
-                    let attrs = layout.layoutAttributesForItemAtIndexPath(dragState.dropIndexPath)
-                
-                    dragState.dragProxyView.frame = self.rootCollectionView.convertRect(attrs.frame, fromView:collectionView)
+                    dragState.dragProxyView.frame = self.rootCollectionView.convertRect(cell.frame, fromView:collectionView)
                     dragState.dragProxyView.transform = CGAffineTransformIdentity
                     dragState.dragProxyView.alpha = 1
                 }, completion: { (Bool) -> Void in
-                    layout.hideIndexPath = nil
-                    layout.invalidateLayout()
+                    viewModel.dragging = false
                     
                     dragState.dragProxyView.removeFromSuperview()
                     self.currentDragState = nil
@@ -269,9 +268,12 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         let collectionView = collectionViewForGesture(gesture)
         let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
         let location = gesture.locationInView(collectionView)
+        let gestureInfo = infoForGesture(gesture)
         
         dropOperation = {
-            self.endDrag(collectionView)
+            if gestureInfo != nil {
+                self.endDrag(gestureInfo!)
+            }
         }
         
         if let dropIndexPath = collectionView.indexPathForItemAtPoint(location) {

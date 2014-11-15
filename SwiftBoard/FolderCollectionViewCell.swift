@@ -57,6 +57,10 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     // FolderViewModelDelegate
     
     func folderViewModelDraggingDidChange(dragging: Bool) {
-        println("Changed!")
+        if dragging {
+            alpha = 0
+        } else {
+            alpha = 1
+        }
     }
 }
