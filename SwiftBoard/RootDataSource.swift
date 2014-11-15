@@ -8,37 +8,40 @@
 
 import UIKit
 
-class CollectionViewDataSource : NSObject, UICollectionViewDelegate, UICollectionViewDataSource {
+class RootDataSource : NSObject, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    var items: NSMutableArray = []
+    var rootViewModel: RootViewModel
+    
+    init(rootViewModel initViewModel: RootViewModel) {
+        rootViewModel = initViewModel
         
+        super.init()
+    }
+    
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return items.count
+        return rootViewModel.numberOfChildren()
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         var cell:UICollectionViewCell
-        var item: AnyObject = items[indexPath.item]
+        var viewModel = rootViewModel.childAtIndex(indexPath.item)
         
-        switch item {
-        case let app as App:
+        switch viewModel {
+        case let appViewModel as AppViewModel:
             let myCell = collectionView.dequeueReusableCellWithReuseIdentifier("App", forIndexPath: indexPath) as AppCollectionViewCell
-            myCell.label.text = app.name
-            myCell.containerView.backgroundColor = app.color
+            myCell.label.text = appViewModel.name
+            myCell.containerView.backgroundColor = appViewModel.color
             
             cell = myCell
-        case let folder as Folder:
+        case let folderViewModel as FolderViewModel:
             let myCell = collectionView.dequeueReusableCellWithReuseIdentifier("Folder", forIndexPath: indexPath) as FolderCollectionViewCell
-            
-            let dataSource = CollectionViewDataSource()
-            dataSource.items = folder.apps
-            
-            myCell.dataSource = dataSource
-            myCell.label.text = folder.name
+
+            myCell.dataSource = FolderDataSource(folderViewModel: folderViewModel)
+            myCell.label.text = folderViewModel.name
             
             cell = myCell
         default:

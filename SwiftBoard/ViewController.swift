@@ -37,7 +37,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     var panAndStopGestureRecognizer: PanAndStopGestureRecognizer!
     
     var items: NSMutableArray = []
-    var dataSource:CollectionViewDataSource = CollectionViewDataSource()
+    var rootViewModel: RootViewModel?
+    var rootDataSource: RootDataSource?
     var zoomedLayout = CollectionViewLayout()
     var regularLayout = CollectionViewLayout()
     
@@ -53,10 +54,11 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         super.viewDidLoad()
         
         seedData()
+        seedViewModel()
         
-        dataSource.items = items
-        rootCollectionView.dataSource = dataSource
-        rootCollectionView.delegate = dataSource
+        rootDataSource = RootDataSource(rootViewModel: rootViewModel!)
+        rootCollectionView.dataSource = rootDataSource
+        rootCollectionView.delegate = rootDataSource
         
         rootCollectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
         rootCollectionView.registerNib(UINib(nibName: "FolderCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "Folder")
@@ -95,7 +97,34 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             App(name: "App 24", color: UIColor.redColor())
         ]
     }
-    
+
+    func seedViewModel() {
+        var viewModels: [SwiftBoardViewModel] = [
+            AppViewModel(name: "App 1", color: UIColor.greenColor()),
+            AppViewModel(name: "App 2", color: UIColor.blueColor()),
+            FolderViewModel(name: "Folder 1", appViewModels: [
+                AppViewModel(name: "App 5", color: UIColor.purpleColor()),
+                AppViewModel(name: "App 6", color: UIColor.grayColor()),
+                AppViewModel(name: "App 7", color: UIColor.yellowColor()),
+                AppViewModel(name: "App 8", color: UIColor.yellowColor()),
+                AppViewModel(name: "App 9", color: UIColor.redColor()),
+                AppViewModel(name: "App 10", color: UIColor.purpleColor()),
+                AppViewModel(name: "App 11", color: UIColor.blueColor()),
+                ]),
+            FolderViewModel(name: "Folder 2", appViewModels: [
+                AppViewModel(name: "App 4", color: UIColor.darkGrayColor())
+                ]),
+            AppViewModel(name: "App 3", color: UIColor.redColor()),
+            AppViewModel(name: "App 20", color: UIColor.redColor()),
+            AppViewModel(name: "App 21", color: UIColor.redColor()),
+            AppViewModel(name: "App 22", color: UIColor.redColor()),
+            AppViewModel(name: "App 23", color: UIColor.redColor()),
+            AppViewModel(name: "App 24", color: UIColor.redColor())
+        ]
+        
+        rootViewModel = RootViewModel(viewModels: viewModels)
+    }
+
     // Not sure this is right, but try to get the layout to assume its new size early so that in the animated rotation we don't
     // see neighbour items animating off-screen.
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
@@ -267,6 +296,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func reorderCells(collectionView:UICollectionView) {
+        /*
         if let dragState = currentDragState {
             if dragState.dragIndexPath == dragState.dropIndexPath {
                 return
@@ -296,7 +326,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             
             // Update drag state
             currentDragState!.setDragIndexPath(dragState.dropIndexPath)
-        }
+        }*/
     }
     
     func dropAppOnFolder(appIndexPath: NSIndexPath, folderIndexPath: NSIndexPath, folderCell: FolderCollectionViewCell) {
