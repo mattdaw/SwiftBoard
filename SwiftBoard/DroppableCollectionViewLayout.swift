@@ -10,7 +10,6 @@ import Foundation
 
 class DroppableCollectionViewLayout: UICollectionViewLayout {
     var itemsPerRow = 1
-    var hideIndexPath: NSIndexPath?
     
     func indexPathToMoveSourceIndexPathLeftOfDestIndexPath(sourceIndexPath:NSIndexPath, destIndexPath:NSIndexPath) -> NSIndexPath {
         let column = destIndexPath.item % itemsPerRow

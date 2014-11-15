@@ -13,6 +13,8 @@ private struct DragState {
     let addTranslation: CGPoint
     let dragProxyView: UIView
     
+    var viewModel: SwiftBoardViewModel
+    
     var dragIndexPath: NSIndexPath
     var dropIndexPath: NSIndexPath
     
@@ -132,6 +134,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             currentDragState = DragState(originalCenter:originalCenter,
                 addTranslation:addTranslation,
                 dragProxyView:dragProxyView,
+                viewModel:gestureInfo.viewModel,
                 dragIndexPath:indexPath,
                 dropIndexPath:indexPath)
             
@@ -177,21 +180,25 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     private func endDrag(gestureInfo: GestureInfo) {
-        let cell = gestureInfo.collectionViewCell
         let collectionView = gestureInfo.collectionView
-        let viewModel = gestureInfo.viewModel
         
         if let dragState = currentDragState {
-            UIView.animateWithDuration(0.2, animations: { () -> Void in
-                    dragState.dragProxyView.frame = self.rootCollectionView.convertRect(cell.frame, fromView:collectionView)
-                    dragState.dragProxyView.transform = CGAffineTransformIdentity
-                    dragState.dragProxyView.alpha = 1
-                }, completion: { (Bool) -> Void in
-                    viewModel.dragging = false
+            // TEMP: should be wherever the item got dropped
+            let indexPath = dragState.dragIndexPath
+            
+            if let cell = collectionView.cellForItemAtIndexPath(indexPath) {
+            
+                UIView.animateWithDuration(0.2, animations: { () -> Void in
+                        dragState.dragProxyView.frame = self.rootCollectionView.convertRect(cell.frame, fromView:collectionView)
+                        dragState.dragProxyView.transform = CGAffineTransformIdentity
+                        dragState.dragProxyView.alpha = 1
+                    }, completion: { (Bool) -> Void in
+                        dragState.viewModel.dragging = false
                     
-                    dragState.dragProxyView.removeFromSuperview()
-                    self.currentDragState = nil
+                        dragState.dragProxyView.removeFromSuperview()
+                        self.currentDragState = nil
                 })
+            }
         }
     }
 
@@ -276,6 +283,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             }
         }
         
+        /*
         if let dropIndexPath = collectionView.indexPathForItemAtPoint(location) {
             if let dropCell = collectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
                 let locationInCell = collectionView.convertPoint(location, toView: dropCell)
@@ -300,6 +308,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 }
             }
         }
+        */
     }
     
     func collectionViewForGesture(gesture:UIGestureRecognizer) -> UICollectionView {
@@ -415,7 +424,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         case longPressRecognizer:
             return true
         case panAndStopGestureRecognizer:
-            return true //currentDragState != nil
+            return currentDragState != nil
         default:
             return false
         }

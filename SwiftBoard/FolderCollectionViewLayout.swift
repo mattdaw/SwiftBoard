@@ -67,15 +67,6 @@ class FolderCollectionViewLayout: DroppableCollectionViewLayout {
         
         if indexPath.item < 9 {
             itemAttributes.frame = itemFrames[indexPath.item]
-            
-            if let hideIndex = hideIndexPath {
-                if hideIndex == indexPath {
-                    // I was using hidden = true before, but it had a weird interaction with the jiggle animation. The docs
-                    // mention that it may not create the view when the item is hidden for optimization, so that's a possible
-                    // cause?
-                    itemAttributes.alpha = 0
-                }
-            }
         } else {
             itemAttributes.hidden = true
         }
