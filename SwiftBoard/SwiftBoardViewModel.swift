@@ -9,5 +9,5 @@
 import Foundation
 
 protocol SwiftBoardViewModel: class {
-    
+    var dragging: Bool { get set }
 }

@@ -96,8 +96,8 @@
 		C972A7751A17BDFE00EDC404 /* View Models */ = {
 			isa = PBXGroup;
 			children = (
-				C972A77C1A17C2B300EDC404 /* RootViewModel.swift */,
 				C972A77A1A17C25C00EDC404 /* SwiftBoardViewModel.swift */,
+				C972A77C1A17C2B300EDC404 /* RootViewModel.swift */,
 				C972A7761A17BE1700EDC404 /* AppViewModel.swift */,
 				C972A7781A17C16400EDC404 /* FolderViewModel.swift */,
 			);

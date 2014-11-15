@@ -1,5 +1,5 @@
 //
-//  CollectionViewDataSource.swift
+//  RootDataSource.swift
 //  SwiftBoard
 //
 //  Created by Matt Daw on 2014-10-21.

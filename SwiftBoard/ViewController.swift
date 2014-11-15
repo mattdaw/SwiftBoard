@@ -28,6 +28,14 @@ private struct DragState {
 private struct ZoomState {
     let indexPath: NSIndexPath
     let collectionView: UICollectionView
+    let folderViewModel: FolderViewModel
+}
+
+private struct GestureInfo {
+    let collectionView: UICollectionView
+    let collectionViewCell: UICollectionViewCell
+    let indexPath: NSIndexPath
+    let viewModel: SwiftBoardViewModel
 }
 
 class ViewController: UIViewController, UIGestureRecognizerDelegate {
@@ -36,7 +44,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet var longPressRecognizer: UILongPressGestureRecognizer!
     var panAndStopGestureRecognizer: PanAndStopGestureRecognizer!
     
-    var items: NSMutableArray = []
     var rootViewModel: RootViewModel?
     var rootDataSource: RootDataSource?
     var zoomedLayout = CollectionViewLayout()
@@ -53,7 +60,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        seedData()
+        // TODO: Move to AppDelegate and pass in
         seedViewModel()
         
         rootDataSource = RootDataSource(rootViewModel: rootViewModel!)
@@ -73,31 +80,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         rootCollectionView.addGestureRecognizer(panAndStopGestureRecognizer)
     }
     
-    func seedData() {
-        items = [
-            App(name: "App 1", color: UIColor.greenColor()),
-            App(name: "App 2", color: UIColor.blueColor()),
-            Folder(name: "Folder 1", apps: [
-                App(name: "App 5", color: UIColor.purpleColor()),
-                App(name: "App 6", color: UIColor.grayColor()),
-                App(name: "App 7", color: UIColor.yellowColor()),
-                App(name: "App 8", color: UIColor.yellowColor()),
-                App(name: "App 9", color: UIColor.redColor()),
-                App(name: "App 10", color: UIColor.purpleColor()),
-                App(name: "App 11", color: UIColor.blueColor()),
-            ]),
-            Folder(name: "Folder 2", apps: [
-                App(name: "App 4", color: UIColor.darkGrayColor())
-            ]),
-            App(name: "App 3", color: UIColor.redColor()),
-            App(name: "App 20", color: UIColor.redColor()),
-            App(name: "App 21", color: UIColor.redColor()),
-            App(name: "App 22", color: UIColor.redColor()),
-            App(name: "App 23", color: UIColor.redColor()),
-            App(name: "App 24", color: UIColor.redColor())
-        ]
-    }
-
     func seedViewModel() {
         var viewModels: [SwiftBoardViewModel] = [
             AppViewModel(name: "App 1", color: UIColor.greenColor()),
@@ -135,6 +117,33 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func startDrag(gesture:UIGestureRecognizer) {
+        if let gestureInfo = infoForGesture(gesture) {
+            let cell = gestureInfo.collectionViewCell
+            let indexPath = gestureInfo.indexPath
+            
+            let dragProxyView = cell.snapshotViewAfterScreenUpdates(true)
+            dragProxyView.frame = rootCollectionView.convertRect(cell.frame, fromView: cell.superview)
+            rootCollectionView.addSubview(dragProxyView)
+            
+            let startLocation = gesture.locationInView(rootCollectionView)
+            let originalCenter = dragProxyView.center
+            let addTranslation = CGPoint(x: startLocation.x - originalCenter.x, y: startLocation.y - originalCenter.y)
+            
+            currentDragState = DragState(originalCenter:originalCenter,
+                addTranslation:addTranslation,
+                dragProxyView:dragProxyView,
+                dragIndexPath:indexPath,
+                dropIndexPath:indexPath)
+            
+            UIView.animateWithDuration(0.2) {
+                dragProxyView.transform = CGAffineTransformMakeScale(1.1, 1.1)
+                dragProxyView.alpha = 0.8
+            }
+            
+            gestureInfo.viewModel.dragging = true
+        }
+        
+        /*
         let collectionView = collectionViewForGesture(gesture)
         let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
         let location = gesture.locationInView(collectionView)
@@ -164,7 +173,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 layout.hideIndexPath = indexPath
                 layout.invalidateLayout()
             }
-        }
+        }*/
     }
     
     func endDrag(collectionView:UICollectionView) {
@@ -206,17 +215,20 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     // I'm not sure this is right yet, but it's seeming better to me to have two instantiated layouts. The layout's state
     // can be confusing (to me) when the initial/final attributes methods are called on a single layout instance.
     @IBAction func handleTap(recognizer: UITapGestureRecognizer) {
+        /*
         if rootCollectionView.collectionViewLayout === regularLayout {
             let point = recognizer.locationInView(rootCollectionView)
             
             if let indexPath = rootCollectionView.indexPathForItemAtPoint(point) {
-                let item: AnyObject = items[indexPath.item]
+                let viewModel: AnyObject = items[indexPath.item]
                 
                 if let folder = item as? Folder {
                     if let folderCell = rootCollectionView.cellForItemAtIndexPath(indexPath) as? FolderCollectionViewCell {
-                        currentZoomState = ZoomState(indexPath:indexPath, collectionView:folderCell.collectionView)
-                        zoomFolder()
-                        return
+                        if let folderViewModel = rootViewModel!.childAtIndex(Int(indexPath.item)) as? FolderViewModel {
+                            currentZoomState = ZoomState(indexPath:indexPath, collectionView:folderCell.collectionView, folderViewModel: folderViewModel)
+                            zoomFolder()
+                            return
+                        }
                     }
                 }
             }
@@ -224,6 +236,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         
         currentZoomState = nil
         rootCollectionView.setCollectionViewLayout(regularLayout, animated: true)
+        */
     }
 
     @IBAction func handleLongPress(gesture: UILongPressGestureRecognizer) {
@@ -295,6 +308,35 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    private func infoForGesture(gesture:UIGestureRecognizer) -> GestureInfo? {
+        var collectionView: UICollectionView
+        var folderViewModel: FolderViewModel?
+        var viewModel: SwiftBoardViewModel
+        
+        if let zoomState = currentZoomState {
+            collectionView = zoomState.collectionView
+            folderViewModel = zoomState.folderViewModel
+        } else {
+            collectionView = rootCollectionView
+        }
+        
+        let location = gesture.locationInView(collectionView)
+        
+        if let indexPath = collectionView.indexPathForItemAtPoint(location) {
+            if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? SwiftBoardCell {
+                if folderViewModel != nil {
+                    viewModel = folderViewModel!.appViewModelAtIndex(indexPath.item)
+                } else {
+                    viewModel = rootViewModel!.childAtIndex(indexPath.item)
+                }
+                
+                return GestureInfo(collectionView: collectionView, collectionViewCell: cell, indexPath: indexPath, viewModel: viewModel)
+            }
+        }
+            
+        return nil;
+    }
+    
     func reorderCells(collectionView:UICollectionView) {
         /*
         if let dragState = currentDragState {
@@ -330,6 +372,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func dropAppOnFolder(appIndexPath: NSIndexPath, folderIndexPath: NSIndexPath, folderCell: FolderCollectionViewCell) {
+        /*
         var folder: Folder = items.objectAtIndex(folderIndexPath.item) as Folder
         var app: AnyObject = items.objectAtIndex(appIndexPath.item)
         
@@ -360,6 +403,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         // Update drag state - not right, temp
         currentDragState!.dragProxyView.removeFromSuperview()
         currentDragState = nil
+        */
     }
     
     // MARK: UIGestureRecognizerDelegate
