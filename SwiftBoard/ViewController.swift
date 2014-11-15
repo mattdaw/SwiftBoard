@@ -38,6 +38,7 @@ private struct GestureInfo {
     let collectionViewCell: UICollectionViewCell
     let indexPath: NSIndexPath
     let viewModel: SwiftBoardViewModel
+    let locationInCollectionView: CGPoint
 }
 
 class ViewController: UIViewController, UIGestureRecognizerDelegate {
@@ -145,49 +146,13 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             
             gestureInfo.viewModel.dragging = true
         }
-        
-        /*
-        let collectionView = collectionViewForGesture(gesture)
-        let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
-        let location = gesture.locationInView(collectionView)
-        
-        if let indexPath = collectionView.indexPathForItemAtPoint(location) {
-            if let cell = collectionView.cellForItemAtIndexPath(indexPath) {
-                let dragProxyView = cell.snapshotViewAfterScreenUpdates(true)
-                dragProxyView.frame = rootCollectionView.convertRect(cell.frame, fromView: cell.superview)
-                rootCollectionView.addSubview(dragProxyView)
-                
-                let startLocation = gesture.locationInView(rootCollectionView)
-                let originalCenter = dragProxyView.center
-                let addTranslation = CGPoint(x: startLocation.x - originalCenter.x, y: startLocation.y - originalCenter.y)
-                
-                currentDragState = DragState(originalCenter:originalCenter,
-                    addTranslation:addTranslation,
-                    dragProxyView:dragProxyView,
-                    dragIndexPath:indexPath,
-                    dropIndexPath:indexPath)
-                
-                UIView.animateWithDuration(0.2) {
-                    dragProxyView.transform = CGAffineTransformMakeScale(1.1, 1.1)
-                    dragProxyView.alpha = 0.8
-                }
-                
-                //layout.editingModeEnabled = true
-                layout.hideIndexPath = indexPath
-                layout.invalidateLayout()
-            }
-        }*/
     }
     
     private func endDrag(gestureInfo: GestureInfo) {
         let collectionView = gestureInfo.collectionView
         
         if let dragState = currentDragState {
-            // TEMP: should be wherever the item got dropped
-            let indexPath = dragState.dragIndexPath
-            
-            if let cell = collectionView.cellForItemAtIndexPath(indexPath) {
-            
+            if let cell = collectionView.cellForItemAtIndexPath(dragState.dropIndexPath) {
                 UIView.animateWithDuration(0.2, animations: { () -> Void in
                         dragState.dragProxyView.frame = self.rootCollectionView.convertRect(cell.frame, fromView:collectionView)
                         dragState.dragProxyView.transform = CGAffineTransformIdentity
@@ -272,43 +237,40 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func panGestureStopped(gesture: UIPanGestureRecognizer) {
-        let collectionView = collectionViewForGesture(gesture)
-        let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
-        let location = gesture.locationInView(collectionView)
-        let gestureInfo = infoForGesture(gesture)
-        
-        dropOperation = {
-            if gestureInfo != nil {
-                self.endDrag(gestureInfo!)
+        if let gestureInfo = infoForGesture(gesture) {
+            let collectionView = gestureInfo.collectionView
+            let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
+            let dropCell = gestureInfo.collectionViewCell as SwiftBoardCell
+            let dropIndexPath = gestureInfo.indexPath
+            let location = gestureInfo.locationInCollectionView
+            
+            dropOperation = {
+                self.endDrag(gestureInfo)
             }
-        }
-        
-        /*
-        if let dropIndexPath = collectionView.indexPathForItemAtPoint(location) {
-            if let dropCell = collectionView.cellForItemAtIndexPath(dropIndexPath) as? SwiftBoardCell {
-                let locationInCell = collectionView.convertPoint(location, toView: dropCell)
                 
-                if dropCell.pointInsideIcon(locationInCell) {
-                    if let folderCell = dropCell as? FolderCollectionViewCell {
-                        let dragIndexPath = currentDragState!.dragIndexPath
-                        
-                        folderCell.expand()
-                        dropOperation = {
-                            self.dropAppOnFolder(dragIndexPath, folderIndexPath: dropIndexPath, folderCell: folderCell)
-                        }
+            let locationInCell = collectionView.convertPoint(location, toView: dropCell)
+            
+            if dropCell.pointInsideIcon(locationInCell) {
+                /*
+                if let folderCell = dropCell as? FolderCollectionViewCell {
+                    let dragIndexPath = currentDragState!.dragIndexPath
+                    
+                    folderCell.expand()
+                    dropOperation = {
+                        self.dropAppOnFolder(dragIndexPath, folderIndexPath: dropIndexPath, folderCell: folderCell)
                     }
-                } else if locationInCell.x < (dropCell.bounds.width / 2) {
-                    let newPath = layout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
-                    currentDragState?.setDropIndexPath(newPath)
-                    reorderCells(collectionView)
-                } else {
-                    let newPath = layout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
-                    currentDragState?.setDropIndexPath(newPath)
-                    reorderCells(collectionView)
                 }
+                */
+            } else if locationInCell.x < (dropCell.bounds.width / 2) {
+                let newPath = layout.indexPathToMoveSourceIndexPathLeftOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
+                currentDragState?.setDropIndexPath(newPath)
+                reorderCells(collectionView)
+            } else {
+                let newPath = layout.indexPathToMoveSourceIndexPathRightOfDestIndexPath(currentDragState!.dragIndexPath, destIndexPath: dropIndexPath)
+                currentDragState?.setDropIndexPath(newPath)
+                reorderCells(collectionView)
             }
         }
-        */
     }
     
     func collectionViewForGesture(gesture:UIGestureRecognizer) -> UICollectionView {
@@ -341,7 +303,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     viewModel = rootViewModel!.childAtIndex(indexPath.item)
                 }
                 
-                return GestureInfo(collectionView: collectionView, collectionViewCell: cell, indexPath: indexPath, viewModel: viewModel)
+                return GestureInfo(collectionView: collectionView, collectionViewCell: cell, indexPath: indexPath, viewModel: viewModel, locationInCollectionView: location)
             }
         }
             
@@ -349,37 +311,26 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func reorderCells(collectionView:UICollectionView) {
-        /*
         if let dragState = currentDragState {
             if dragState.dragIndexPath == dragState.dropIndexPath {
                 return
             }
             
-            // Update data source
-            let dataSource = collectionView.dataSource as CollectionViewDataSource
-            let dataItems = dataSource.items
-            let originalIndexPath = dragState.dragIndexPath
-            
-            var item: AnyObject = dataItems[originalIndexPath.item]
-            dataItems.removeObjectAtIndex(originalIndexPath.item)
-            
-            if dragState.dropIndexPath.item >= dataItems.count {
-                dataItems.addObject(item)
+            if let zoomState = currentZoomState {
+                zoomState.folderViewModel.moveAppAtIndex(dragState.dragIndexPath.item, toIndex: dragState.dropIndexPath.item)
             } else {
-                dataItems.insertObject(item, atIndex: dragState.dropIndexPath.item)
+                rootViewModel!.moveItemAtIndex(dragState.dragIndexPath.item, toIndex: dragState.dropIndexPath.item)
             }
             
             // Update collection view
-            let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
-            layout.hideIndexPath = dragState.dropIndexPath
-            
             collectionView.performBatchUpdates({ () -> Void in
-                    collectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dragState.dropIndexPath)
-                }, completion: nil)
+                collectionView.moveItemAtIndexPath(dragState.dragIndexPath, toIndexPath:dragState.dropIndexPath)
+            }, completion: nil)
+            
             
             // Update drag state
             currentDragState!.setDragIndexPath(dragState.dropIndexPath)
-        }*/
+        }
     }
     
     func dropAppOnFolder(appIndexPath: NSIndexPath, folderIndexPath: NSIndexPath, folderCell: FolderCollectionViewCell) {

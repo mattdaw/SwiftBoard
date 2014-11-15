@@ -33,11 +33,8 @@ class RootDataSource : NSObject, UICollectionViewDelegate, UICollectionViewDataS
         switch viewModel {
         case let appViewModel as AppViewModel:
             let myCell = collectionView.dequeueReusableCellWithReuseIdentifier("App", forIndexPath: indexPath) as AppCollectionViewCell
-            
-            myCell.label.text = appViewModel.name
-            myCell.containerView.backgroundColor = appViewModel.color
-            appViewModel.delegate = myCell
-            
+            myCell.configureForAppViewModel(appViewModel)
+                        
             cell = myCell
         case let folderViewModel as FolderViewModel:
             let myCell = collectionView.dequeueReusableCellWithReuseIdentifier("Folder", forIndexPath: indexPath) as FolderCollectionViewCell

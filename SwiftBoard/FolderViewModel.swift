@@ -10,6 +10,7 @@ import Foundation
 
 protocol FolderViewModelDelegate: class {
     func folderViewModelDraggingDidChange(dragging: Bool)
+    func folderViewModelAppDidMove(fromIndex: Int, toIndex: Int)
 }
 
 class FolderViewModel: SwiftBoardViewModel {
@@ -35,5 +36,13 @@ class FolderViewModel: SwiftBoardViewModel {
     
     func appViewModelAtIndex(index: Int) -> AppViewModel {
         return appViewModels[index]
+    }
+    
+    func moveAppAtIndex(fromIndex: Int, toIndex: Int) {
+        var app: AppViewModel = appViewModels[fromIndex]
+        appViewModels.removeAtIndex(fromIndex)
+        appViewModels.insert(app, atIndex: toIndex)
+        
+        delegate?.folderViewModelAppDidMove(fromIndex, toIndex: toIndex)
     }
 }

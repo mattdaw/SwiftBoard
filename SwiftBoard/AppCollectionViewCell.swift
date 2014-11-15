@@ -18,7 +18,13 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var leftConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightConstraint: NSLayoutConstraint!
-
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        hidden = false
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -54,12 +60,16 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
         return containerView.pointInside(converted, withEvent: nil)
     }
     
+    func configureForAppViewModel(appViewModel: AppViewModel) {
+        hidden = appViewModel.dragging
+        label.text = appViewModel.name
+        containerView.backgroundColor = appViewModel.color
+        
+        appViewModel.delegate = self
+    }
+    
     // AppViewModelDelegate
     func appViewModelDraggingDidChange(dragging: Bool) {
-        if dragging {
-            alpha = 0
-        } else {
-            alpha = 1
-        }
+        hidden = dragging
     }
 }

@@ -22,4 +22,12 @@ class RootViewModel {
     func childAtIndex(index: Int) -> SwiftBoardViewModel {
         return viewModels[index]
     }
+    
+    func moveItemAtIndex(fromIndex: Int, toIndex: Int) {
+        var item: SwiftBoardViewModel = viewModels[fromIndex]
+        viewModels.removeAtIndex(fromIndex)
+        viewModels.insert(item, atIndex: toIndex)
+        
+        //delegate?.folderViewModelAppDidMove(fromIndex, toIndex: toIndex)
+    }
 }

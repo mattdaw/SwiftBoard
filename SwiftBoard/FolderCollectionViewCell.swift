@@ -63,4 +63,8 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
             alpha = 1
         }
     }
+    
+    func folderViewModelAppDidMove(fromIndex: Int, toIndex: Int) {
+        println("moved!")
+    }
 }
