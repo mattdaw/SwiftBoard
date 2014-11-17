@@ -23,6 +23,8 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     private var longPressRecognizer: UILongPressGestureRecognizer!
     private var panAndStopGestureRecognizer: PanAndStopGestureRecognizer!
     
+    private var openFolderCollectionView: SwiftBoardCollectionView?
+    
     var rootViewModel: RootViewModel? {
         didSet {
             if rootViewModel != nil {
@@ -84,27 +86,22 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     
     // TODO: Not happy with "info", come up with a better name
     func infoForGesture(gesture: UIGestureRecognizer) -> GestureInfo? {
-        var destCollectionView:SwiftBoardCollectionView?
+        var destCollectionView:SwiftBoardCollectionView
         var indexPath:NSIndexPath?
         
-        if let folderIndex = rootViewModel?.indexOfOpenFolder {
-            let indexPath = NSIndexPath(forItem: folderIndex, inSection: 0)
-            if let folderCell = cellForItemAtIndexPath(indexPath) as? FolderCollectionViewCell {
-                destCollectionView = folderCell.collectionView
-            }
+        if let folderCollectionView = openFolderCollectionView {
+            destCollectionView = folderCollectionView
         } else {
             destCollectionView = self
         }
         
-        if let collectionView = destCollectionView {
-            let location = gesture.locationInView(collectionView)
-            
-            if let indexPath = collectionView.indexPathForItemAtPoint(location) {
-                if let listViewModel = collectionView.listViewModel {
-                    let itemViewModel = listViewModel.itemAtIndex(indexPath.item)
-                    
-                    return GestureInfo(listViewModel: listViewModel, itemViewModel: itemViewModel, itemIndexInList: indexPath.item)
-                }
+        let location = gesture.locationInView(destCollectionView)
+        
+        if let indexPath = destCollectionView.indexPathForItemAtPoint(location) {
+            if let listViewModel = destCollectionView.listViewModel {
+                let itemViewModel = listViewModel.itemAtIndex(indexPath.item)
+                
+                return GestureInfo(listViewModel: listViewModel, itemViewModel: itemViewModel, itemIndexInList: indexPath.item)
             }
         }
         
@@ -118,7 +115,11 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     }
     
     func rootViewModelFolderOpenedAtIndex(index: Int) {
-        println("OPEN!!!")
+        if let cell = cellForItemAtIndexPath(NSIndexPath(forItem: index, inSection: 0)) as? FolderCollectionViewCell {
+            openFolderCollectionView = cell.collectionView
+            zoomedLayout.zoomToIndex = index
+            setCollectionViewLayout(zoomedLayout, animated: true)
+        }
     }
     
     // MARK: UIGestureRecognizerDelegate

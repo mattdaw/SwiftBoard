@@ -13,7 +13,7 @@ class CollectionViewLayout: DroppableCollectionViewLayout {
     let itemSize = CGFloat(96)
     var itemFrames: [CGRect] = []
     var numberOfItems = 0
-    var zoomToIndexPath: NSIndexPath?
+    var zoomToIndex: Int?
     var overrideSize: CGSize?
     var editingModeEnabled = false
     
@@ -57,7 +57,7 @@ class CollectionViewLayout: DroppableCollectionViewLayout {
         var rowOffset = myItemSize
         var columnOffset = myItemSize
         
-        if let zoomIndex = zoomToIndexPath {
+        if let zoomIndex = zoomToIndex {
             if availableWidth < availableHeight {
                 zoomedSize = availableWidth - 10
                 rowOffset = zoomedSize + (availableHeight - zoomedSize) / 2
@@ -86,8 +86,8 @@ class CollectionViewLayout: DroppableCollectionViewLayout {
             }
         }
         
-        if let zoomIndex = zoomToIndexPath {
-            var frame = itemFrames[zoomIndex.item]
+        if let zoomIndex = zoomToIndex {
+            var frame = itemFrames[zoomIndex]
             var transform = CGAffineTransformMakeTranslation(-frame.origin.x, -frame.origin.y)
             transform = CGAffineTransformTranslate(transform, (availableWidth - zoomedSize) / 2, (availableHeight - zoomedSize) / 2)
             
