@@ -30,6 +30,15 @@ class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
         appViewModels = apps
     }
     
+    func numberOfItems() -> Int {
+        return appViewModels.count
+    }
+    
+    func itemAtIndex(index: Int) -> SwiftBoardItemViewModel {
+        return appViewModels[index]
+    }
+
+    
     func numberOfAppViewModels() -> Int {
         return appViewModels.count
     }
@@ -47,6 +56,6 @@ class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
     }
     
     func open() {
-        println("Tapped folder!")
+        println("Opened folder!")
     }
 }

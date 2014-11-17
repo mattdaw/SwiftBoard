@@ -9,5 +9,6 @@
 import Foundation
 
 protocol SwiftBoardListViewModel: class {
-    
+    func numberOfItems() -> Int
+    func itemAtIndex(index: Int) -> SwiftBoardItemViewModel
 }

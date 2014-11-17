@@ -16,11 +16,11 @@ class RootViewModel: SwiftBoardListViewModel {
         viewModels = rootViewModels
     }
     
-    func numberOfChildren() -> Int {
+    func numberOfItems() -> Int {
         return viewModels.count
     }
     
-    func childAtIndex(index: Int) -> SwiftBoardItemViewModel {
+    func itemAtIndex(index: Int) -> SwiftBoardItemViewModel {
         return viewModels[index]
     }
     

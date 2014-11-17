@@ -29,7 +29,7 @@ class AppViewModel: SwiftBoardItemViewModel {
     }
     
     func open() {
-        // nothing for now
+        println("Opened app!")
     }
     
 }

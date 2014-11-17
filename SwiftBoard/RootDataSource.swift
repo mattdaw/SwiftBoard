@@ -23,12 +23,12 @@ class RootDataSource : NSObject, UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return rootViewModel.numberOfChildren()
+        return rootViewModel.numberOfItems()
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         var cell:UICollectionViewCell
-        var viewModel = rootViewModel.childAtIndex(indexPath.item)
+        var viewModel = rootViewModel.itemAtIndex(indexPath.item)
         
         switch viewModel {
         case let appViewModel as AppViewModel:

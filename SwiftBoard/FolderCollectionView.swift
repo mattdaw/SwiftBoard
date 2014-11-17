@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FolderCollectionView: UICollectionView, SwiftBoardCollectionView {
+class FolderCollectionView: SwiftBoardCollectionView {
     var folderDataSource: FolderDataSource?
     
     var folderViewModel: FolderViewModel? {
@@ -23,7 +23,7 @@ class FolderCollectionView: UICollectionView, SwiftBoardCollectionView {
         }
     }
     
-    var listViewModel: SwiftBoardListViewModel? {
+    override var listViewModel: SwiftBoardListViewModel? {
         return folderViewModel
     }
     

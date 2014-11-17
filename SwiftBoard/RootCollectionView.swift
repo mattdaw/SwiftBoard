@@ -14,7 +14,7 @@ struct GestureInfo {
     let itemIndexInList: Int
 }
 
-class RootCollectionView: UICollectionView, SwiftBoardCollectionView, UIGestureRecognizerDelegate {
+class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate {
     private var rootDataSource: RootDataSource?
     private var zoomedLayout = CollectionViewLayout()
     private var regularLayout = CollectionViewLayout()
@@ -35,7 +35,7 @@ class RootCollectionView: UICollectionView, SwiftBoardCollectionView, UIGestureR
         }
     }
     
-    var listViewModel: SwiftBoardListViewModel? {
+    override var listViewModel: SwiftBoardListViewModel? {
         return rootViewModel
     }
     
@@ -55,6 +55,7 @@ class RootCollectionView: UICollectionView, SwiftBoardCollectionView, UIGestureR
             (gesture:PanAndStopGestureRecognizer) in self.handlePanGestureStopped(gesture)
         }
         
+        addGestureRecognizer(tapGestureRecognizer)
         addGestureRecognizer(longPressRecognizer)
         addGestureRecognizer(panAndStopGestureRecognizer)
     }
@@ -96,8 +97,14 @@ class RootCollectionView: UICollectionView, SwiftBoardCollectionView, UIGestureR
         }
         
         if let collectionView = destCollectionView {
-            if let listViewModel = collectionView.listViewModel {
-                
+            let location = gesture.locationInView(collectionView)
+            
+            if let indexPath = collectionView.indexPathForItemAtPoint(location) {
+                if let listViewModel = collectionView.listViewModel {
+                    let itemViewModel = listViewModel.itemAtIndex(indexPath.item)
+                    
+                    return GestureInfo(listViewModel: listViewModel, itemViewModel: itemViewModel, itemIndexInList: indexPath.item)
+                }
             }
         }
         

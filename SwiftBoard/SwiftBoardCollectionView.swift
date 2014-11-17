@@ -8,6 +8,6 @@
 
 import UIKit
 
-protocol SwiftBoardCollectionView: class {
-    var listViewModel: SwiftBoardListViewModel? { get }
+class SwiftBoardCollectionView: UICollectionView {
+    var listViewModel: SwiftBoardListViewModel? { return nil }
 }
