@@ -8,9 +8,8 @@
 
 import Foundation
 
-protocol FolderViewModelDelegate: class {
+protocol FolderViewModelDelegate: SwiftBoardListViewModelDelegate {
     func folderViewModelDraggingDidChange(dragging: Bool)
-    func folderViewModelAppDidMove(fromIndex: Int, toIndex: Int)
 }
 
 class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
@@ -37,11 +36,6 @@ class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
     func itemAtIndex(index: Int) -> SwiftBoardItemViewModel {
         return appViewModels[index]
     }
-
-    
-    func numberOfAppViewModels() -> Int {
-        return appViewModels.count
-    }
     
     func appViewModelAtIndex(index: Int) -> AppViewModel {
         return appViewModels[index]
@@ -52,7 +46,7 @@ class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
         appViewModels.removeAtIndex(fromIndex)
         appViewModels.insert(app, atIndex: toIndex)
         
-        delegate?.folderViewModelAppDidMove(fromIndex, toIndex: toIndex)
+        delegate?.listViewModelItemMoved(fromIndex, toIndex: toIndex)
     }
     
     func open() {

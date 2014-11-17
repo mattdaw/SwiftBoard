@@ -65,11 +65,11 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     
     // FolderViewModelDelegate
     
-    func folderViewModelDraggingDidChange(dragging: Bool) {
-        hidden = dragging
+    func listViewModelItemMoved(fromIndex: Int, toIndex: Int) {
+        println("moved!")
     }
     
-    func folderViewModelAppDidMove(fromIndex: Int, toIndex: Int) {
-        println("moved!")
+    func folderViewModelDraggingDidChange(dragging: Bool) {
+        hidden = dragging
     }
 }

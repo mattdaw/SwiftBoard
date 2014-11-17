@@ -8,9 +8,15 @@
 
 import Foundation
 
+protocol RootViewModelDelegate: SwiftBoardListViewModelDelegate {
+    
+}
+
 class RootViewModel: SwiftBoardListViewModel {
-    var zoomedFolderIndex: Int?
+    var indexOfOpenFolder: Int?
     private var viewModels: [SwiftBoardItemViewModel]
+    
+    private weak var delegate: RootViewModelDelegate?
     
     init(viewModels rootViewModels:[SwiftBoardItemViewModel]) {
         viewModels = rootViewModels
@@ -29,6 +35,10 @@ class RootViewModel: SwiftBoardListViewModel {
         viewModels.removeAtIndex(fromIndex)
         viewModels.insert(item, atIndex: toIndex)
         
-        //delegate?.folderViewModelAppDidMove(fromIndex, toIndex: toIndex)
+        delegate?.listViewModelItemMoved(fromIndex, toIndex: toIndex)
+    }
+    
+    func openItemAtIndex(index: Int) {
+        
     }
 }

@@ -132,9 +132,9 @@
 		C9DAE69819C73EC0007CF518 /* SwiftBoard */ = {
 			isa = PBXGroup;
 			children = (
+				C9DAE69B19C73EC0007CF518 /* AppDelegate.swift */,
 				C972A7751A17BDFE00EDC404 /* View Models */,
 				C9DAE69F19C73EC0007CF518 /* Main.storyboard */,
-				C9DAE69B19C73EC0007CF518 /* AppDelegate.swift */,
 				C9981F7019C7765900804558 /* App.swift */,
 				C9981F7419C7814300804558 /* Folder.swift */,
 				C9DAE69D19C73EC0007CF518 /* ViewController.swift */,

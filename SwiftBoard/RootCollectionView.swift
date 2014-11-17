@@ -87,7 +87,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate 
         var destCollectionView:SwiftBoardCollectionView?
         var indexPath:NSIndexPath?
         
-        if let folderIndex = rootViewModel?.zoomedFolderIndex {
+        if let folderIndex = rootViewModel?.indexOfOpenFolder {
             let indexPath = NSIndexPath(forItem: folderIndex, inSection: 0)
             if let folderCell = cellForItemAtIndexPath(indexPath) as? FolderCollectionViewCell {
                 destCollectionView = folderCell.collectionView
