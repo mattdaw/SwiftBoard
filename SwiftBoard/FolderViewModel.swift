@@ -52,8 +52,4 @@ class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
     func openItemAtIndex(index: Int) {
         // nothing for now
     }
-    
-    func open() {
-        println("Opened folder!")
-    }
 }

@@ -41,7 +41,6 @@ class RootViewModel: SwiftBoardListViewModel {
     
     func openItemAtIndex(index: Int) {
         var item = viewModels[index]
-        item.open()
         
         if let folder = item as? FolderViewModel {
             delegate?.rootViewModelFolderOpenedAtIndex(index)

@@ -10,6 +10,4 @@ import Foundation
 
 protocol SwiftBoardItemViewModel: class {
     var dragging: Bool { get set }
-    
-    func open()
 }

@@ -27,9 +27,4 @@ class AppViewModel: SwiftBoardItemViewModel {
         name = appName
         color = appColor
     }
-    
-    func open() {
-        println("Opened app!")
-    }
-    
 }
