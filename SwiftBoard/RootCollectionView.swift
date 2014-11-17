@@ -15,7 +15,7 @@ struct GestureInfo {
 }
 
 class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate {
-    private var rootDataSource: RootDataSource?
+    private var listDataSource: SwiftBoardListViewModelDataSource?
     private var zoomedLayout = CollectionViewLayout()
     private var regularLayout = CollectionViewLayout()
     
@@ -28,9 +28,9 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate 
             println("Gotcha!")
             
             if rootViewModel != nil {
-                rootDataSource = RootDataSource(rootViewModel: rootViewModel!)
-                dataSource = rootDataSource
-                delegate = rootDataSource
+                listDataSource = SwiftBoardListViewModelDataSource(rootViewModel!)
+                dataSource = listDataSource
+                delegate = listDataSource
             }
         }
     }

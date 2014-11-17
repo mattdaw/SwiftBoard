@@ -8,12 +8,12 @@
 
 import UIKit
 
-class RootDataSource : NSObject, UICollectionViewDelegate, UICollectionViewDataSource {
+class SwiftBoardListViewModelDataSource : NSObject, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    var rootViewModel: RootViewModel
+    var listViewModel: SwiftBoardListViewModel
     
-    init(rootViewModel initViewModel: RootViewModel) {
-        rootViewModel = initViewModel
+    init(_ initViewModel: SwiftBoardListViewModel) {
+        listViewModel = initViewModel
         
         super.init()
     }
@@ -23,14 +23,14 @@ class RootDataSource : NSObject, UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return rootViewModel.numberOfItems()
+        return listViewModel.numberOfItems()
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         var cell:UICollectionViewCell
-        var viewModel = rootViewModel.itemAtIndex(indexPath.item)
+        var itemViewModel = listViewModel.itemAtIndex(indexPath.item)
         
-        switch viewModel {
+        switch itemViewModel {
         case let appViewModel as AppViewModel:
             let myCell = collectionView.dequeueReusableCellWithReuseIdentifier("App", forIndexPath: indexPath) as AppCollectionViewCell
             myCell.configureForAppViewModel(appViewModel)

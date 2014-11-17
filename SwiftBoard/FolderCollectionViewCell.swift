@@ -13,7 +13,7 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     @IBOutlet weak var collectionView: FolderCollectionView!
     @IBOutlet weak var label: UILabel!
     
-    var dataSource: FolderDataSource?
+    var listDataSource: SwiftBoardListViewModelDataSource?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -25,7 +25,7 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
         super.prepareForReuse()
         
         hidden = false
-        dataSource = nil
+        listDataSource = nil
     }
     
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes!) {

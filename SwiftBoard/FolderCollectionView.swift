@@ -9,16 +9,16 @@
 import UIKit
 
 class FolderCollectionView: SwiftBoardCollectionView {
-    var folderDataSource: FolderDataSource?
+    var listDataSource: SwiftBoardListViewModelDataSource?
     
     var folderViewModel: FolderViewModel? {
         didSet {
             println("Gotcha!")
             
             if folderViewModel != nil {
-                folderDataSource = FolderDataSource(folderViewModel: folderViewModel!)
-                dataSource = folderDataSource
-                delegate = folderDataSource
+                listDataSource = SwiftBoardListViewModelDataSource(folderViewModel!)
+                dataSource = listDataSource
+                delegate = listDataSource
             }
         }
     }
