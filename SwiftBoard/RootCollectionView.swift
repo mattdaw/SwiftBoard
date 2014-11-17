@@ -14,7 +14,7 @@ struct GestureInfo {
     let itemIndexInList: Int
 }
 
-class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate {
+class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate, RootViewModelDelegate {
     private var listDataSource: SwiftBoardListViewModelDataSource?
     private var zoomedLayout = CollectionViewLayout()
     private var regularLayout = CollectionViewLayout()
@@ -25,9 +25,9 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate 
     
     var rootViewModel: RootViewModel? {
         didSet {
-            println("Gotcha!")
-            
             if rootViewModel != nil {
+                rootViewModel!.delegate = self
+                
                 listDataSource = SwiftBoardListViewModelDataSource(rootViewModel!)
                 dataSource = listDataSource
                 delegate = listDataSource
@@ -66,7 +66,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate 
     
     func handleTapGesture(gesture: UITapGestureRecognizer) {
         if let gestureInfo = infoForGesture(gesture) {
-            gestureInfo.itemViewModel.open()
+            gestureInfo.listViewModel.openItemAtIndex(gestureInfo.itemIndexInList)
         }
     }
     
@@ -109,6 +109,16 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate 
         }
         
         return nil
+    }
+    
+    // MARK: RootViewModelDelegate
+    
+    func listViewModelItemMoved(fromIndex: Int, toIndex: Int) {
+        println("MOVED!!")
+    }
+    
+    func rootViewModelFolderOpenedAtIndex(index: Int) {
+        println("OPEN!!!")
     }
     
     // MARK: UIGestureRecognizerDelegate

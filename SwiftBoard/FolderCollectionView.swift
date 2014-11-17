@@ -13,8 +13,6 @@ class FolderCollectionView: SwiftBoardCollectionView {
     
     var folderViewModel: FolderViewModel? {
         didSet {
-            println("Gotcha!")
-            
             if folderViewModel != nil {
                 listDataSource = SwiftBoardListViewModelDataSource(folderViewModel!)
                 dataSource = listDataSource
