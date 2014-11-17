@@ -1,5 +1,5 @@
 //
-//  SwiftBoardViewModel.swift
+//  SwiftBoardItemViewModel.swift
 //  SwiftBoard
 //
 //  Created by Matt Daw on 2014-11-15.
@@ -8,6 +8,8 @@
 
 import Foundation
 
-protocol SwiftBoardViewModel: class {
+protocol SwiftBoardItemViewModel: class {
     var dragging: Bool { get set }
+    
+    func open()
 }

@@ -8,10 +8,11 @@
 
 import Foundation
 
-class RootViewModel {
-    private var viewModels: [SwiftBoardViewModel]
+class RootViewModel: SwiftBoardListViewModel {
+    var zoomedFolderIndex: Int?
+    private var viewModels: [SwiftBoardItemViewModel]
     
-    init(viewModels rootViewModels:[SwiftBoardViewModel]) {
+    init(viewModels rootViewModels:[SwiftBoardItemViewModel]) {
         viewModels = rootViewModels
     }
     
@@ -19,12 +20,12 @@ class RootViewModel {
         return viewModels.count
     }
     
-    func childAtIndex(index: Int) -> SwiftBoardViewModel {
+    func childAtIndex(index: Int) -> SwiftBoardItemViewModel {
         return viewModels[index]
     }
     
     func moveItemAtIndex(fromIndex: Int, toIndex: Int) {
-        var item: SwiftBoardViewModel = viewModels[fromIndex]
+        var item: SwiftBoardItemViewModel = viewModels[fromIndex]
         viewModels.removeAtIndex(fromIndex)
         viewModels.insert(item, atIndex: toIndex)
         

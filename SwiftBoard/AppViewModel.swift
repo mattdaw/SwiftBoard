@@ -12,9 +12,10 @@ protocol AppViewModelDelegate: class {
     func appViewModelDraggingDidChange(dragging: Bool)
 }
 
-class AppViewModel: SwiftBoardViewModel {
+class AppViewModel: SwiftBoardItemViewModel {
     var name: String
     var color: UIColor
+    weak var delegate: AppViewModelDelegate?
     
     var dragging: Bool = false {
         didSet {
@@ -22,10 +23,13 @@ class AppViewModel: SwiftBoardViewModel {
         }
     }
     
-    weak var delegate: AppViewModelDelegate?
-    
     init(name appName:String, color appColor:UIColor) {
         name = appName
         color = appColor
     }
+    
+    func open() {
+        // nothing for now
+    }
+    
 }

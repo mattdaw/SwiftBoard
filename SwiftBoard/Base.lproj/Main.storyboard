@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14A388a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="s2V-eg-KGn">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14A388a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="s2V-eg-KGn">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6246"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -19,17 +19,11 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Background" translatesAutoresizingMaskIntoConstraints="NO" id="8kk-F4-jIe">
                                 <rect key="frame" x="0.0" y="20" width="600" height="580"/>
                             </imageView>
-                            <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="d6y-1U-Anl">
+                            <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="d6y-1U-Anl" customClass="RootCollectionView" customModule="SwiftBoard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="20" width="600" height="580"/>
                                 <gestureRecognizers/>
                                 <collectionViewLayout key="collectionViewLayout" id="Lg2-z8-5Px" customClass="CollectionViewLayout" customModule="SwiftBoard" customModuleProvider="target"/>
                                 <cells/>
-                                <connections>
-                                    <outlet property="dataSource" destination="s2V-eg-KGn" id="bEo-Gg-A95"/>
-                                    <outlet property="delegate" destination="s2V-eg-KGn" id="BHj-ph-EgN"/>
-                                    <outletCollection property="gestureRecognizers" destination="0aG-aN-S2M" appends="YES" id="5Zj-dW-p4a"/>
-                                    <outletCollection property="gestureRecognizers" destination="IVZ-Yk-chc" appends="YES" id="jea-xr-h2z"/>
-                                </connections>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xtK-gL-nzo">
                                 <rect key="frame" x="277" y="562" width="46" height="30"/>
@@ -61,22 +55,10 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="longPressRecognizer" destination="0aG-aN-S2M" id="0RV-PF-mbO"/>
                         <outlet property="rootCollectionView" destination="d6y-1U-Anl" id="QO2-uz-xgH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hzk-jR-dXQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="0aG-aN-S2M">
-                    <connections>
-                        <action selector="handleLongPress:" destination="s2V-eg-KGn" id="2kx-gh-1uP"/>
-                        <outlet property="delegate" destination="s2V-eg-KGn" id="V6p-yt-B4a"/>
-                    </connections>
-                </pongPressGestureRecognizer>
-                <tapGestureRecognizer id="IVZ-Yk-chc">
-                    <connections>
-                        <action selector="handleTap:" destination="s2V-eg-KGn" id="pTU-HT-tBx"/>
-                    </connections>
-                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="452" y="564"/>
         </scene>

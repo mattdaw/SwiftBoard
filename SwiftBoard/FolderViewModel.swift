@@ -13,7 +13,7 @@ protocol FolderViewModelDelegate: class {
     func folderViewModelAppDidMove(fromIndex: Int, toIndex: Int)
 }
 
-class FolderViewModel: SwiftBoardViewModel {
+class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
     var name: String
     var appViewModels: [AppViewModel]
     
@@ -44,5 +44,9 @@ class FolderViewModel: SwiftBoardViewModel {
         appViewModels.insert(app, atIndex: toIndex)
         
         delegate?.folderViewModelAppDidMove(fromIndex, toIndex: toIndex)
+    }
+    
+    func open() {
+        println("Tapped folder!")
     }
 }

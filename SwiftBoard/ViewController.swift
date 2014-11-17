@@ -13,7 +13,7 @@ private struct DragState {
     let addTranslation: CGPoint
     let dragProxyView: UIView
     
-    var viewModel: SwiftBoardViewModel
+    var viewModel: SwiftBoardItemViewModel
     
     var dragIndexPath: NSIndexPath
     var dropIndexPath: NSIndexPath
@@ -33,27 +33,20 @@ private struct ZoomState {
     let folderViewModel: FolderViewModel
 }
 
-private struct GestureInfo {
+private struct OldGestureInfo {
     let collectionView: UICollectionView
     let collectionViewCell: UICollectionViewCell
     let indexPath: NSIndexPath
-    let viewModel: SwiftBoardViewModel
+    let viewModel: SwiftBoardItemViewModel
     let locationInCollectionView: CGPoint
 }
 
 class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
-    @IBOutlet weak var rootCollectionView: UICollectionView!
-    @IBOutlet var longPressRecognizer: UILongPressGestureRecognizer!
-    var panAndStopGestureRecognizer: PanAndStopGestureRecognizer!
-    
-    var rootViewModel: RootViewModel?
-    var rootDataSource: RootDataSource?
-    var zoomedLayout = CollectionViewLayout()
-    var regularLayout = CollectionViewLayout()
+    @IBOutlet weak var rootCollectionView: RootCollectionView!
+    var rootViewModel: RootViewModel!
     
     private var currentDragState: DragState?
-    private var currentZoomState: ZoomState?
     private var dropOperation: (() -> ())?
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -64,27 +57,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         super.viewDidLoad()
         
         // TODO: Move to AppDelegate and pass in
-        seedViewModel()
-        
-        rootDataSource = RootDataSource(rootViewModel: rootViewModel!)
-        rootCollectionView.dataSource = rootDataSource
-        rootCollectionView.delegate = rootDataSource
-        
-        rootCollectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
-        rootCollectionView.registerNib(UINib(nibName: "FolderCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "Folder")
-        
-        rootCollectionView.backgroundColor = UIColor.clearColor()
-        rootCollectionView.setCollectionViewLayout(regularLayout, animated: false)
-        rootCollectionView.scrollEnabled = false
-        
-        panAndStopGestureRecognizer = PanAndStopGestureRecognizer(target: self, action: "handlePan:", stopAfterSecondsWithoutMovement: 0.2) {
-            (gesture:UIPanGestureRecognizer) in self.panGestureStopped(gesture)
-        }
-        rootCollectionView.addGestureRecognizer(panAndStopGestureRecognizer)
-    }
-    
-    func seedViewModel() {
-        var viewModels: [SwiftBoardViewModel] = [
+        var viewModels: [SwiftBoardItemViewModel] = [
             AppViewModel(name: "App 1", color: UIColor.greenColor()),
             AppViewModel(name: "App 2", color: UIColor.blueColor()),
             FolderViewModel(name: "Folder 1", appViewModels: [
@@ -108,17 +81,10 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         ]
         
         rootViewModel = RootViewModel(viewModels: viewModels)
-    }
-
-    // Not sure this is right, but try to get the layout to assume its new size early so that in the animated rotation we don't
-    // see neighbour items animating off-screen.
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        if let layout = rootCollectionView.collectionViewLayout as? CollectionViewLayout {
-            layout.overrideSize = size
-            rootCollectionView.reloadData()
-        }
+        rootCollectionView.rootViewModel = rootViewModel
     }
     
+    /*
     func startDrag(gesture:UIGestureRecognizer) {
         if let gestureInfo = infoForGesture(gesture) {
             let cell = gestureInfo.collectionViewCell
@@ -167,12 +133,14 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
 
+    /*
     func zoomFolder() {
         if let zoomState = currentZoomState {
             zoomedLayout.zoomToIndexPath = zoomState.indexPath
             rootCollectionView.setCollectionViewLayout(zoomedLayout, animated: true)
         }
     }
+    */
     
     @IBAction func handleHomeButton(sender: AnyObject) {
         if regularLayout.editingModeEnabled {
@@ -185,7 +153,16 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     // I'm not sure this is right yet, but it's seeming better to me to have two instantiated layouts. The layout's state
     // can be confusing (to me) when the initial/final attributes methods are called on a single layout instance.
-    @IBAction func handleTap(recognizer: UITapGestureRecognizer) {
+    @IBAction func handleTap(gesture: UITapGestureRecognizer) {
+        if let zoomIndex = rootViewModel.zoomedFolderIndex {
+            rootViewModel.zoomedFolderIndex = nil
+        } else {
+            if let gestureInfo = infoForGesture(gesture) {
+                gestureInfo.viewModel.open()
+            }
+        }
+        
+        
         /*
         if rootCollectionView.collectionViewLayout === regularLayout {
             let point = recognizer.locationInView(rootCollectionView)
@@ -195,7 +172,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 
                 if let folder = item as? Folder {
                     if let folderCell = rootCollectionView.cellForItemAtIndexPath(indexPath) as? FolderCollectionViewCell {
-                        if let folderViewModel = rootViewModel!.childAtIndex(Int(indexPath.item)) as? FolderViewModel {
+                        if let folderViewModel = rootViewModel!.childAtIndex(indexPath.item) as? FolderViewModel {
                             currentZoomState = ZoomState(indexPath:indexPath, collectionView:folderCell.collectionView, folderViewModel: folderViewModel)
                             zoomFolder()
                             return
@@ -273,6 +250,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    /*
     func collectionViewForGesture(gesture:UIGestureRecognizer) -> UICollectionView {
         if let zoomState = currentZoomState {
             return zoomState.collectionView
@@ -280,11 +258,12 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             return rootCollectionView
         }
     }
+*/
     
     private func infoForGesture(gesture:UIGestureRecognizer) -> GestureInfo? {
         var collectionView: UICollectionView
         var folderViewModel: FolderViewModel?
-        var viewModel: SwiftBoardViewModel
+        var viewModel: SwiftBoardItemViewModel
         
         if let zoomState = currentZoomState {
             collectionView = zoomState.collectionView
@@ -300,7 +279,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 if folderViewModel != nil {
                     viewModel = folderViewModel!.appViewModelAtIndex(indexPath.item)
                 } else {
-                    viewModel = rootViewModel!.childAtIndex(indexPath.item)
+                    viewModel = rootViewModel.childAtIndex(indexPath.item)
                 }
                 
                 return GestureInfo(collectionView: collectionView, collectionViewCell: cell, indexPath: indexPath, viewModel: viewModel, locationInCollectionView: location)
@@ -311,6 +290,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func reorderCells(collectionView:UICollectionView) {
+        /*
         if let dragState = currentDragState {
             if dragState.dragIndexPath == dragState.dropIndexPath {
                 return
@@ -319,7 +299,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             if let zoomState = currentZoomState {
                 zoomState.folderViewModel.moveAppAtIndex(dragState.dragIndexPath.item, toIndex: dragState.dropIndexPath.item)
             } else {
-                rootViewModel!.moveItemAtIndex(dragState.dragIndexPath.item, toIndex: dragState.dropIndexPath.item)
+                rootViewModel.moveItemAtIndex(dragState.dragIndexPath.item, toIndex: dragState.dropIndexPath.item)
             }
             
             // Update collection view
@@ -331,6 +311,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             // Update drag state
             currentDragState!.setDragIndexPath(dragState.dropIndexPath)
         }
+        */
     }
     
     func dropAppOnFolder(appIndexPath: NSIndexPath, folderIndexPath: NSIndexPath, folderCell: FolderCollectionViewCell) {
@@ -368,29 +349,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         */
     }
     
-    // MARK: UIGestureRecognizerDelegate
-    
-    func gestureRecognizerShouldBegin(gesture: UIGestureRecognizer) -> Bool {
-        switch gesture {
-        case longPressRecognizer:
-            return true
-        case panAndStopGestureRecognizer:
-            return currentDragState != nil
-        default:
-            return false
-        }
-    }
-    
-    func gestureRecognizer(gesture: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGesture: UIGestureRecognizer) -> Bool {
-        switch gesture {
-        case longPressRecognizer:
-            return otherGesture === panAndStopGestureRecognizer
-        case panAndStopGestureRecognizer:
-            return otherGesture === longPressRecognizer
-        default:
-            return false
-        }
-    }
+    */
 }
 
 

@@ -10,7 +10,7 @@ import UIKit
 
 class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var collectionView: FolderCollectionView!
     @IBOutlet weak var label: UILabel!
     
     var dataSource: FolderDataSource?
@@ -58,11 +58,7 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     func configureForFolderViewModel(folderViewModel: FolderViewModel) {
         hidden = folderViewModel.dragging
         label.text = folderViewModel.name
-        
-        dataSource = FolderDataSource(folderViewModel: folderViewModel)
-        collectionView.registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
-        collectionView.dataSource = dataSource
-        collectionView.delegate = dataSource
+        collectionView.folderViewModel = folderViewModel
         
         folderViewModel.delegate = self
     }

@@ -12,10 +12,10 @@ class PanAndStopGestureRecognizer: UIPanGestureRecognizer {
     let stopAfterSecondsWithoutMovement: Double
     
     private var stopTimer: NSTimer?
-    private var stopFunction:UIPanGestureRecognizer -> ()
+    private var stopFunction:PanAndStopGestureRecognizer -> ()
     private var lastLocation:CGPoint
     
-    init(target:AnyObject, action:Selector, stopAfterSecondsWithoutMovement stopAfterSeconds:Double, stopFunction stopFn:UIPanGestureRecognizer -> ()) {
+    init(target:AnyObject, action:Selector, stopAfterSecondsWithoutMovement stopAfterSeconds:Double, stopFunction stopFn:PanAndStopGestureRecognizer -> ()) {
         stopAfterSecondsWithoutMovement = stopAfterSeconds
         stopFunction = stopFn
         lastLocation = CGPoint(x:0, y:0)
