@@ -9,12 +9,11 @@
 import Foundation
 
 protocol RootViewModelDelegate: SwiftBoardListViewModelDelegate {
-    func rootViewModelFolderOpenedAtIndex(index: Int)
+    func rootViewModelFolderOpened(folderViewModel: FolderViewModel)
+    func rootViewModelFolderClosed(folderViewModel: FolderViewModel)
 }
 
 class RootViewModel: SwiftBoardListViewModel {
-    // TODO: probably can go? Root collection view can keep the current collection view instead?
-    var indexOfOpenFolder: Int?
     weak var delegate: RootViewModelDelegate?
 
     private var viewModels: [SwiftBoardItemViewModel]
@@ -31,6 +30,16 @@ class RootViewModel: SwiftBoardListViewModel {
         return viewModels[index]
     }
     
+    func indexOfItem(item: SwiftBoardItemViewModel) -> Int? {
+        for (index, compareItem) in enumerate(viewModels) {
+            if item === compareItem {
+                return index
+            }
+        }
+        
+        return nil
+    }
+    
     func moveItemAtIndex(fromIndex: Int, toIndex: Int) {
         var item: SwiftBoardItemViewModel = viewModels[fromIndex]
         viewModels.removeAtIndex(fromIndex)
@@ -39,11 +48,11 @@ class RootViewModel: SwiftBoardListViewModel {
         delegate?.listViewModelItemMoved(fromIndex, toIndex: toIndex)
     }
     
-    func openItemAtIndex(index: Int) {
-        var item = viewModels[index]
-        
-        if let folder = item as? FolderViewModel {
-            delegate?.rootViewModelFolderOpenedAtIndex(index)
-        }
+    func openFolder(folderViewModel: FolderViewModel) {
+        delegate?.rootViewModelFolderOpened(folderViewModel)
+    }
+    
+    func closeFolder(folderViewModel: FolderViewModel) {
+        delegate?.rootViewModelFolderClosed(folderViewModel)
     }
 }

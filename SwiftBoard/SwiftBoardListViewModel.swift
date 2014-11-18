@@ -11,7 +11,7 @@ import Foundation
 protocol SwiftBoardListViewModel: class {
     func numberOfItems() -> Int
     func itemAtIndex(index: Int) -> SwiftBoardItemViewModel
-    func openItemAtIndex(index: Int)
+    func indexOfItem(item: SwiftBoardItemViewModel) -> Int?
 }
 
 protocol SwiftBoardListViewModelDelegate: class {

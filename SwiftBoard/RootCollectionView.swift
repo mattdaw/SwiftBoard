@@ -68,7 +68,14 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     
     func handleTapGesture(gesture: UITapGestureRecognizer) {
         if let gestureInfo = infoForGesture(gesture) {
-            gestureInfo.listViewModel.openItemAtIndex(gestureInfo.itemIndexInList)
+            if let folderViewModel = gestureInfo.itemViewModel as? FolderViewModel {
+                rootViewModel?.openFolder(folderViewModel)
+            }
+            
+        } else if openFolderCollectionView != nil {
+            if let folderViewModel = openFolderCollectionView!.listViewModel as? FolderViewModel {
+                rootViewModel?.closeFolder(folderViewModel)
+            }
         }
     }
     
@@ -114,11 +121,21 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         println("MOVED!!")
     }
     
-    func rootViewModelFolderOpenedAtIndex(index: Int) {
-        if let cell = cellForItemAtIndexPath(NSIndexPath(forItem: index, inSection: 0)) as? FolderCollectionViewCell {
-            openFolderCollectionView = cell.collectionView
-            zoomedLayout.zoomToIndex = index
-            setCollectionViewLayout(zoomedLayout, animated: true)
+    func rootViewModelFolderOpened(folderViewModel: FolderViewModel) {
+        if let index = rootViewModel?.indexOfItem(folderViewModel) {
+            if let cell = cellForItemAtIndexPath(NSIndexPath(forItem: index, inSection: 0)) as? FolderCollectionViewCell {
+                openFolderCollectionView = cell.collectionView
+                zoomedLayout.zoomToIndex = index
+                setCollectionViewLayout(zoomedLayout, animated: true)
+            }
+        }
+    }
+    
+    func rootViewModelFolderClosed(folderViewModel: FolderViewModel) {
+        if let index = rootViewModel?.indexOfItem(folderViewModel) {
+            openFolderCollectionView = nil
+            zoomedLayout.zoomToIndex = nil
+            setCollectionViewLayout(regularLayout, animated: true)
         }
     }
     

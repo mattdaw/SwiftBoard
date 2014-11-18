@@ -37,6 +37,16 @@ class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
         return appViewModels[index]
     }
     
+    func indexOfItem(item: SwiftBoardItemViewModel) -> Int? {
+        for (index, compareItem) in enumerate(appViewModels) {
+            if item === compareItem {
+                return index
+            }
+        }
+        
+        return nil
+    }
+    
     func appViewModelAtIndex(index: Int) -> AppViewModel {
         return appViewModels[index]
     }
