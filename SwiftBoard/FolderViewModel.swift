@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol FolderViewModelDelegate: SwiftBoardListViewModelDelegate {
+protocol FolderViewModelDelegate: class {
     func folderViewModelDraggingDidChange(dragging: Bool)
 }
 

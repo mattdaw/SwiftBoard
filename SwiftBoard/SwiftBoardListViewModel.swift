@@ -17,4 +17,6 @@ protocol SwiftBoardListViewModel: class {
 
 protocol SwiftBoardListViewModelDelegate: class {
     func listViewModelItemMoved(fromIndex: Int, toIndex: Int)
+    func listViewModelItemAddedAtIndex(index: Int)
+    func listViewModelItemRemovedAtIndex(index: Int)
 }

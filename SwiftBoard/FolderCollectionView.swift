@@ -32,15 +32,4 @@ class FolderCollectionView: SwiftBoardCollectionView, SwiftBoardListViewModelDel
         
         registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
     }
-    
-    // MARK: SwiftBoardItemViewModelDelegate
-    
-    func listViewModelItemMoved(fromIndex: Int, toIndex: Int) {
-        let fromIndexPath = NSIndexPath(forItem: fromIndex, inSection: 0)
-        let toIndexPath = NSIndexPath(forItem: toIndex, inSection: 0)
-        
-        performBatchUpdates({ () -> Void in
-            self.moveItemAtIndexPath(fromIndexPath, toIndexPath: toIndexPath)
-            }, completion: nil)
-    }
 }

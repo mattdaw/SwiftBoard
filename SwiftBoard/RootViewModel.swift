@@ -48,6 +48,21 @@ class RootViewModel: SwiftBoardListViewModel {
         delegate?.listViewModelItemMoved(fromIndex, toIndex: toIndex)
     }
     
+    func moveAppToFolder(appViewModel: AppViewModel, folderViewModel: FolderViewModel) {
+        if let index = indexOfItem(appViewModel) {
+            let addIndex = folderViewModel.numberOfItems()
+            
+            viewModels.removeAtIndex(index)
+            folderViewModel.appViewModels.append(appViewModel)
+            
+            delegate?.listViewModelItemRemovedAtIndex(index)
+            delegate?.listViewModelItemAddedAtIndex(addIndex)
+        } else {
+            assertionFailure("moveAppToFolder: AppViewModel isn't in the RootViewModel")
+        }
+        
+    }
+    
     func openFolder(folderViewModel: FolderViewModel) {
         delegate?.rootViewModelFolderOpened(folderViewModel)
     }
