@@ -12,6 +12,15 @@ struct GestureInfo {
     let listViewModel:SwiftBoardListViewModel
     let itemViewModel:SwiftBoardItemViewModel
     let itemIndexInList: Int
+    
+    let cell: SwiftBoardCell
+}
+
+struct DragState {
+    let dragProxyView: UIView
+    let originalCenter: CGPoint
+    
+    let gestureInfo: GestureInfo
 }
 
 class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate, RootViewModelDelegate {
@@ -24,6 +33,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     private var panAndStopGestureRecognizer: PanAndStopGestureRecognizer!
     
     private var openFolderCollectionView: SwiftBoardCollectionView?
+    private var currentDragState: DragState?
     
     var rootViewModel: RootViewModel? {
         didSet {
@@ -80,7 +90,14 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     }
     
     func handleLongPressGesture(gesture: UILongPressGestureRecognizer) {
-        
+        switch gesture.state {
+        case UIGestureRecognizerState.Began:
+            startDrag(gesture)
+        case UIGestureRecognizerState.Ended, UIGestureRecognizerState.Cancelled:
+            endDrag()
+        default:
+            break
+        }
     }
     
     func handlePanGesture(gesture: PanAndStopGestureRecognizer) {
@@ -105,20 +122,63 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         let location = gesture.locationInView(destCollectionView)
         
         if let indexPath = destCollectionView.indexPathForItemAtPoint(location) {
-            if let listViewModel = destCollectionView.listViewModel {
-                let itemViewModel = listViewModel.itemAtIndex(indexPath.item)
-                
-                return GestureInfo(listViewModel: listViewModel, itemViewModel: itemViewModel, itemIndexInList: indexPath.item)
+            if let cell = destCollectionView.cellForItemAtIndexPath(indexPath) as? SwiftBoardCell {
+                if let listViewModel = destCollectionView.listViewModel {
+                    let itemViewModel = listViewModel.itemAtIndex(indexPath.item)
+                    
+                    return GestureInfo(listViewModel: listViewModel, itemViewModel: itemViewModel, itemIndexInList: indexPath.item, cell: cell)
+                }
             }
         }
         
         return nil
     }
     
+    func startDrag(gesture: UIGestureRecognizer) {
+        if let gestureInfo = infoForGesture(gesture) {
+            let cell = gestureInfo.cell
+            
+            let dragProxyView = cell.snapshotViewAfterScreenUpdates(true)
+            dragProxyView.frame = convertRect(cell.frame, fromView: cell.superview)
+            addSubview(dragProxyView)
+            
+            currentDragState = DragState(dragProxyView: dragProxyView, originalCenter: dragProxyView.center, gestureInfo: gestureInfo)
+            gestureInfo.itemViewModel.dragging = true
+            
+            UIView.animateWithDuration(0.2) {
+                dragProxyView.transform = CGAffineTransformMakeScale(1.1, 1.1)
+                dragProxyView.alpha = 0.8
+            }
+        }
+    }
+    
+    private func endDrag() {
+        if let dragState = currentDragState {
+            let cell = dragState.gestureInfo.cell
+            let collectionView = self
+            
+            UIView.animateWithDuration(0.2, animations: { () -> Void in
+                dragState.dragProxyView.transform = CGAffineTransformIdentity
+                dragState.dragProxyView.alpha = 1
+                dragState.dragProxyView.frame = collectionView.convertRect(cell.frame, fromView: cell.superview)
+            }, completion: { (Bool) -> Void in
+                dragState.gestureInfo.itemViewModel.dragging = false
+                    
+                dragState.dragProxyView.removeFromSuperview()
+                self.currentDragState = nil
+            })
+        }
+    }
+
     // MARK: RootViewModelDelegate
     
     func listViewModelItemMoved(fromIndex: Int, toIndex: Int) {
-        println("MOVED!!")
+        let fromIndexPath = NSIndexPath(forItem: fromIndex, inSection: 0)
+        let toIndexPath = NSIndexPath(forItem: toIndex, inSection: 0)
+        
+        performBatchUpdates({ () -> Void in
+            self.moveItemAtIndexPath(fromIndexPath, toIndexPath: toIndexPath)
+        }, completion: nil)
     }
     
     func rootViewModelFolderOpened(folderViewModel: FolderViewModel) {

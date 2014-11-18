@@ -8,7 +8,7 @@
 
 import UIKit
 
-private struct DragState {
+private struct OldDragState {
     let originalCenter: CGPoint
     let addTranslation: CGPoint
     let dragProxyView: UIView
@@ -46,7 +46,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet weak var rootCollectionView: RootCollectionView!
     var rootViewModel: RootViewModel!
     
-    private var currentDragState: DragState?
+    //private var currentDragState: DragState?
     private var dropOperation: (() -> ())?
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
