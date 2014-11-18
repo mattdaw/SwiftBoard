@@ -19,10 +19,12 @@ struct GestureInfo {
 }
 
 struct DragState {
-    let dragProxyView: UIView
-    let originalCenter: CGPoint
-    
     let gestureInfo: GestureInfo
+}
+
+struct DragProxyState {
+    let view: UIView
+    let originalCenter: CGPoint
 }
 
 class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate, RootViewModelDelegate {
@@ -35,6 +37,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     private var panAndStopGestureRecognizer: PanAndStopGestureRecognizer!
     
     private var openFolderCollectionView: SwiftBoardCollectionView?
+    private var dragProxyState: DragProxyState?
     private var currentDragState: DragState?
     
     var rootViewModel: RootViewModel? {
@@ -107,13 +110,10 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     
     func handlePanGesture(gesture: PanAndStopGestureRecognizer) {
         if gesture.state == .Began || gesture.state == .Changed {
-            if let dragState = currentDragState {
+            if dragProxyState != nil {
                 let translation = gesture.translationInView(self)
-                
-                // TODO: I don't think this is right yet... Re-check this math, do we really need both originalCenter and addTranslation
-                // saved too?
-                dragState.dragProxyView.center = CGPoint(x: dragState.originalCenter.x + translation.x,
-                    y: dragState.originalCenter.y + translation.y)
+                dragProxyState!.view.center = CGPoint(x: dragProxyState!.originalCenter.x + translation.x,
+                    y: dragProxyState!.originalCenter.y + translation.y)
             }
         }
     }
@@ -132,6 +132,8 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             if dropCell.pointInsideIcon(locationInCell) {
                 // TODO
             } else if locationInCell.x < (dropCell.bounds.width / 2) {
+                // TODO: Switch to asking the layout for the current number of rows... and move the fancy logic
+                // inside the drag (or drop) operation?
                 let newIndex = layout.indexToMoveSourceIndexLeftOfDestIndex(dragIndex, destIndex: dropIndex)
                 currentDragState?.gestureInfo.listViewModel.moveItemAtIndex(dragIndex, toIndex: newIndex)
             } else {
@@ -181,7 +183,9 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             dragProxyView.frame = convertRect(cell.frame, fromView: cell.superview)
             addSubview(dragProxyView)
             
-            currentDragState = DragState(dragProxyView: dragProxyView, originalCenter: dragProxyView.center, gestureInfo: gestureInfo)
+            dragProxyState = DragProxyState(view: dragProxyView, originalCenter: dragProxyView.center)
+            
+            currentDragState = DragState(gestureInfo: gestureInfo)
             gestureInfo.itemViewModel.dragging = true
             
             UIView.animateWithDuration(0.2) {
@@ -193,17 +197,18 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     
     private func endDrag() {
         if let dragState = currentDragState {
+            let proxyState = dragProxyState!
             let cell = dragState.gestureInfo.cell
             let collectionView = self
             
             UIView.animateWithDuration(0.2, animations: { () -> Void in
-                dragState.dragProxyView.transform = CGAffineTransformIdentity
-                dragState.dragProxyView.alpha = 1
-                dragState.dragProxyView.frame = collectionView.convertRect(cell.frame, fromView: cell.superview)
+                proxyState.view.transform = CGAffineTransformIdentity
+                proxyState.view.alpha = 1
+                proxyState.view.frame = collectionView.convertRect(cell.frame, fromView: cell.superview)
             }, completion: { (Bool) -> Void in
                 dragState.gestureInfo.itemViewModel.dragging = false
                 
-                dragState.dragProxyView.removeFromSuperview()
+                proxyState.view.removeFromSuperview()
                 self.currentDragState = nil
             })
         }
