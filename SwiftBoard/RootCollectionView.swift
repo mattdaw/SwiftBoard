@@ -62,13 +62,16 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         setCollectionViewLayout(regularLayout, animated: false)
         
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: "handleTapGesture:")
+        addGestureRecognizer(tapGestureRecognizer)
+        
         longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPressGesture:")
+        longPressRecognizer.delegate = self
+        addGestureRecognizer(longPressRecognizer)
+        
         panAndStopGestureRecognizer = PanAndStopGestureRecognizer(target: self, action: "handlePanGesture:", stopAfterSecondsWithoutMovement: 0.2) {
             (gesture:PanAndStopGestureRecognizer) in self.handlePanGestureStopped(gesture)
         }
-        
-        addGestureRecognizer(tapGestureRecognizer)
-        addGestureRecognizer(longPressRecognizer)
+        panAndStopGestureRecognizer.delegate = self
         addGestureRecognizer(panAndStopGestureRecognizer)
     }
     
@@ -101,11 +104,20 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     }
     
     func handlePanGesture(gesture: PanAndStopGestureRecognizer) {
-        
+        if gesture.state == .Began || gesture.state == .Changed {
+            if let dragState = currentDragState {
+                let translation = gesture.translationInView(self)
+                
+                // TODO: I don't think this is right yet... Re-check this math, do we really need both originalCenter and addTranslation
+                // saved too?
+                dragState.dragProxyView.center = CGPoint(x: dragState.originalCenter.x + translation.x,
+                    y: dragState.originalCenter.y + translation.y)
+            }
+        }
     }
     
     func handlePanGestureStopped(gesture: PanAndStopGestureRecognizer) {
-        
+        println("Pan stopped!")
     }
     
     // TODO: Not happy with "info", come up with a better name
@@ -163,7 +175,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
                 dragState.dragProxyView.frame = collectionView.convertRect(cell.frame, fromView: cell.superview)
             }, completion: { (Bool) -> Void in
                 dragState.gestureInfo.itemViewModel.dragging = false
-                    
+                
                 dragState.dragProxyView.removeFromSuperview()
                 self.currentDragState = nil
             })
@@ -206,7 +218,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         case longPressRecognizer:
             return true
         case panAndStopGestureRecognizer:
-            return true //currentDragState != nil
+            return currentDragState != nil
         default:
             return super.gestureRecognizerShouldBegin(gesture)
         }
