@@ -13,7 +13,9 @@ struct GestureInfo {
     let itemViewModel:SwiftBoardItemViewModel
     let itemIndexInList: Int
     
+    let collectionView: UICollectionView
     let cell: SwiftBoardCell
+    let locationInCollectionView: CGPoint
 }
 
 struct DragState {
@@ -117,7 +119,26 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     }
     
     func handlePanGestureStopped(gesture: PanAndStopGestureRecognizer) {
-        println("Pan stopped!")
+        if let gestureInfo = infoForGesture(gesture) {
+            let collectionView = gestureInfo.collectionView
+            let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
+            let dropCell = gestureInfo.cell
+            let dragIndex = currentDragState!.gestureInfo.itemIndexInList
+            let dropIndex = gestureInfo.itemIndexInList
+            let location = gestureInfo.locationInCollectionView
+            
+            let locationInCell = collectionView.convertPoint(location, toView: dropCell)
+            
+            if dropCell.pointInsideIcon(locationInCell) {
+                // TODO
+            } else if locationInCell.x < (dropCell.bounds.width / 2) {
+                let newIndex = layout.indexToMoveSourceIndexLeftOfDestIndex(dragIndex, destIndex: dropIndex)
+                currentDragState?.gestureInfo.listViewModel.moveItemAtIndex(dragIndex, toIndex: newIndex)
+            } else {
+                let newIndex = layout.indexToMoveSourceIndexRightOfDestIndex(dragIndex, destIndex: dropIndex)
+                currentDragState?.gestureInfo.listViewModel.moveItemAtIndex(dragIndex, toIndex: newIndex)
+            }
+        }
     }
     
     // TODO: Not happy with "info", come up with a better name
@@ -137,8 +158,14 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             if let cell = destCollectionView.cellForItemAtIndexPath(indexPath) as? SwiftBoardCell {
                 if let listViewModel = destCollectionView.listViewModel {
                     let itemViewModel = listViewModel.itemAtIndex(indexPath.item)
+                    let gestureInfo = GestureInfo(listViewModel: listViewModel,
+                        itemViewModel: itemViewModel,
+                        itemIndexInList: indexPath.item,
+                        collectionView: destCollectionView,
+                        cell: cell,
+                        locationInCollectionView: location)
                     
-                    return GestureInfo(listViewModel: listViewModel, itemViewModel: itemViewModel, itemIndexInList: indexPath.item, cell: cell)
+                    return gestureInfo
                 }
             }
         }

@@ -22,11 +22,16 @@ class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
         }
     }
     
+    weak var listModelDelegate: SwiftBoardListViewModelDelegate?
     weak var delegate: FolderViewModelDelegate?
     
     init(name folderName: String, appViewModels apps: [AppViewModel]) {
         name = folderName
         appViewModels = apps
+    }
+    
+    func appViewModelAtIndex(index: Int) -> AppViewModel {
+        return appViewModels[index]
     }
     
     func numberOfItems() -> Int {
@@ -46,17 +51,13 @@ class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
         
         return nil
     }
-    
-    func appViewModelAtIndex(index: Int) -> AppViewModel {
-        return appViewModels[index]
-    }
-    
-    func moveAppAtIndex(fromIndex: Int, toIndex: Int) {
+
+    func moveItemAtIndex(fromIndex: Int, toIndex: Int) {
         var app: AppViewModel = appViewModels[fromIndex]
         appViewModels.removeAtIndex(fromIndex)
         appViewModels.insert(app, atIndex: toIndex)
         
-        delegate?.listViewModelItemMoved(fromIndex, toIndex: toIndex)
+        listModelDelegate?.listViewModelItemMoved(fromIndex, toIndex: toIndex)
     }
     
     func openItemAtIndex(index: Int) {

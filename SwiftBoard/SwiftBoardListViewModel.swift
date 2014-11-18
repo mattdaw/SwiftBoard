@@ -12,6 +12,7 @@ protocol SwiftBoardListViewModel: class {
     func numberOfItems() -> Int
     func itemAtIndex(index: Int) -> SwiftBoardItemViewModel
     func indexOfItem(item: SwiftBoardItemViewModel) -> Int?
+    func moveItemAtIndex(fromIndex: Int, toIndex: Int)
 }
 
 protocol SwiftBoardListViewModelDelegate: class {

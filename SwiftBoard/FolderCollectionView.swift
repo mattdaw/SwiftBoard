@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FolderCollectionView: SwiftBoardCollectionView {
+class FolderCollectionView: SwiftBoardCollectionView, SwiftBoardListViewModelDelegate {
     var listDataSource: SwiftBoardListViewModelDataSource?
     
     var folderViewModel: FolderViewModel? {
@@ -17,6 +17,8 @@ class FolderCollectionView: SwiftBoardCollectionView {
                 listDataSource = SwiftBoardListViewModelDataSource(folderViewModel!)
                 dataSource = listDataSource
                 delegate = listDataSource
+                
+                folderViewModel!.listModelDelegate = self
             }
         }
     }
@@ -29,5 +31,16 @@ class FolderCollectionView: SwiftBoardCollectionView {
         super.awakeFromNib()
         
         registerNib(UINib(nibName: "AppCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "App")
+    }
+    
+    // MARK: SwiftBoardItemViewModelDelegate
+    
+    func listViewModelItemMoved(fromIndex: Int, toIndex: Int) {
+        let fromIndexPath = NSIndexPath(forItem: fromIndex, inSection: 0)
+        let toIndexPath = NSIndexPath(forItem: toIndex, inSection: 0)
+        
+        performBatchUpdates({ () -> Void in
+            self.moveItemAtIndexPath(fromIndexPath, toIndexPath: toIndexPath)
+            }, completion: nil)
     }
 }

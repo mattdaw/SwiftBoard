@@ -11,22 +11,22 @@ import Foundation
 class DroppableCollectionViewLayout: UICollectionViewLayout {
     var itemsPerRow = 1
     
-    func indexPathToMoveSourceIndexPathLeftOfDestIndexPath(sourceIndexPath:NSIndexPath, destIndexPath:NSIndexPath) -> NSIndexPath {
-        let column = destIndexPath.item % itemsPerRow
+    func indexToMoveSourceIndexLeftOfDestIndex(sourceIndex: Int, destIndex: Int) -> Int {
+        let column = destIndex % itemsPerRow
         var offset = 0
-        if sourceIndexPath.item < destIndexPath.item && column != 0 {
+        if sourceIndex < destIndex && column != 0 {
             offset = -1
         }
         
-        return NSIndexPath(forItem:destIndexPath.item + offset, inSection:destIndexPath.section)
+        return destIndex + offset
     }
     
-    func indexPathToMoveSourceIndexPathRightOfDestIndexPath(sourceIndexPath:NSIndexPath, destIndexPath:NSIndexPath) -> NSIndexPath {
+    func indexToMoveSourceIndexRightOfDestIndex(sourceIndex: Int, destIndex: Int) -> Int {
         var offset = 1
-        if sourceIndexPath.item < destIndexPath.item {
+        if sourceIndex < destIndex {
             offset = 0
         }
         
-        return NSIndexPath(forItem:destIndexPath.item + offset, inSection:destIndexPath.section)
+        return destIndex + offset
     }
 }
