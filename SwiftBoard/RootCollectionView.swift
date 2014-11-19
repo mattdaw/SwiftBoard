@@ -129,8 +129,12 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             
             let locationInCell = collectionView.convertPoint(location, toView: dropCell)
             
-            if dropCell.pointInsideIcon(locationInCell) {
-                // TODO
+            if dropCell.pointInsideIcon(locationInCell) && dropCell is FolderCollectionViewCell {
+                if let appViewModel = currentDragState?.gestureInfo.itemViewModel as? AppViewModel {
+                    if let folderViewModel = rootViewModel?.itemAtIndex(dropIndex) as? FolderViewModel {
+                        rootViewModel!.moveAppToFolder(appViewModel, folderViewModel: folderViewModel)
+                    }
+                }
             } else if locationInCell.x < (dropCell.bounds.width / 2) {
                 // TODO: Switch to asking the layout for the current number of rows... and move the fancy logic
                 // inside the drag (or drop) operation?

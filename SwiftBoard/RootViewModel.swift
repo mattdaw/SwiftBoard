@@ -55,8 +55,9 @@ class RootViewModel: SwiftBoardListViewModel {
             viewModels.removeAtIndex(index)
             folderViewModel.appViewModels.append(appViewModel)
             
+            // TODO: call into folder view model rather than manipulating it directly
             delegate?.listViewModelItemRemovedAtIndex(index)
-            delegate?.listViewModelItemAddedAtIndex(addIndex)
+            folderViewModel.listModelDelegate?.listViewModelItemAddedAtIndex(addIndex)
         } else {
             assertionFailure("moveAppToFolder: AppViewModel isn't in the RootViewModel")
         }
