@@ -175,6 +175,12 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
                         rootViewModel?.closeFolder(folderViewModel)
                         rootViewModel?.moveAppFromFolder(appViewModel, folderViewModel: folderViewModel)
                         
+                        if let newIndex = rootViewModel?.indexOfItem(appViewModel) {
+                            if let newCell = cellForItemAtIndexPath(NSIndexPath(forItem: newIndex, inSection: 0)) {
+                                dragProxyReturnToRect = convertRect(newCell.frame, fromView: newCell.superview)
+                            }
+                        }
+                        
                         currentDragState = DragState(listViewModel: rootViewModel!, itemViewModel: appViewModel)
                     }
                 }
