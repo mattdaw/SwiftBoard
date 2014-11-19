@@ -142,10 +142,29 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
                     if let folderViewModel = rootViewModel?.itemAtIndex(dropIndex) as? FolderViewModel {
                         dropOperation = {
                             self.rootViewModel!.moveAppToFolder(appViewModel, folderViewModel: folderViewModel)
-                            appViewModel.dragging = false
                             
-                            self.dragProxyState!.view.removeFromSuperview()
-                            self.currentDragState = nil
+                            // Heh, ugly! Clean up.
+                            if let newIndex = folderViewModel.indexOfItem(appViewModel) {
+                                if let folderCell = dropCell as? FolderCollectionViewCell {
+                                    let newIndexPath = NSIndexPath(forItem: newIndex, inSection: 0)
+                                    if let newAppCell = folderCell.collectionView.cellForItemAtIndexPath(newIndexPath) {
+                                        let newFrame = self.convertRect(newAppCell.frame, fromView: newAppCell.superview)
+                                        let proxyState = self.dragProxyState!
+                                        
+                                        UIView.animateWithDuration(0.2, animations: { () -> Void in
+                                            proxyState.view.transform = CGAffineTransformIdentity
+                                            proxyState.view.alpha = 1
+                                            proxyState.view.frame = newFrame
+                                        }, completion: { (Bool) -> Void in
+                                            appViewModel.dragging = false
+                                                
+                                            proxyState.view.removeFromSuperview()
+                                            self.currentDragState = nil
+                                        })
+
+                                    }
+                                }
+                            }
                         }
                     }
                 }
