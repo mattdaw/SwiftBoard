@@ -172,8 +172,9 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
                 if let folderViewModel = openFolderCollectionView!.listViewModel as? FolderViewModel {
                     // "Promote to root", update the drag state to be in the root
                     if let appViewModel = currentDragState!.itemViewModel as? AppViewModel {
-                        rootViewModel?.moveAppFromFolder(appViewModel, folderViewModel: folderViewModel)
                         rootViewModel?.closeFolder(folderViewModel)
+                        rootViewModel?.moveAppFromFolder(appViewModel, folderViewModel: folderViewModel)
+                        
                         currentDragState = DragState(listViewModel: rootViewModel!, itemViewModel: appViewModel)
                     }
                 }
