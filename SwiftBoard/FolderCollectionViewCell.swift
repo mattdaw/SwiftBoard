@@ -57,7 +57,7 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
         label.text = folderViewModel.name
         collectionView.folderViewModel = folderViewModel
         
-        folderViewModel.delegate = self
+        folderViewModel.itemModelDelegate = self
     }
     
     // FolderViewModelDelegate

@@ -22,14 +22,6 @@ class RootViewModel: SwiftBoardListViewModel {
             
             removeItemAtIndex(index)
             folderViewModel.appendItem(appViewModel)
-            
-            /*
-            folderViewModel.appViewModels.append(appViewModel)
-            
-            // TODO: call into folder view model rather than manipulating it directly
-            delegate?.listViewModelItemRemovedAtIndex(index)
-            folderViewModel.listModelDelegate?.listViewModelItemAddedAtIndex(addIndex)
-            */
         } else {
             assertionFailure("moveAppToFolder: AppViewModel isn't in the RootViewModel")
         }

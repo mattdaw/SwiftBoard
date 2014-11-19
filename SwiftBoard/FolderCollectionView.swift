@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FolderCollectionView: SwiftBoardCollectionView, SwiftBoardListViewModelDelegate {
+class FolderCollectionView: SwiftBoardCollectionView {
     var listDataSource: SwiftBoardListViewModelDataSource?
     
     var folderViewModel: FolderViewModel? {
@@ -18,7 +18,7 @@ class FolderCollectionView: SwiftBoardCollectionView, SwiftBoardListViewModelDel
                 dataSource = listDataSource
                 delegate = listDataSource
                 
-                folderViewModel!.listModelDelegate = self
+                folderViewModel!.listViewModelDelegate = self
             }
         }
     }

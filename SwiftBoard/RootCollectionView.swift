@@ -40,6 +40,8 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     private var dragProxyState: DragProxyState?
     private var currentDragState: DragState?
     
+    private var dropOperation: (() -> ())?
+    
     var rootViewModel: RootViewModel? {
         didSet {
             if rootViewModel != nil {
@@ -103,7 +105,10 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         case UIGestureRecognizerState.Began:
             startDrag(gesture)
         case UIGestureRecognizerState.Ended, UIGestureRecognizerState.Cancelled:
-            endDrag()
+            if let dropFn = dropOperation {
+                dropFn()
+                dropOperation = nil
+            }
         default:
             break
         }
@@ -130,10 +135,18 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             
             let locationInCell = collectionView.convertPoint(location, toView: dropCell)
             
+            dropOperation = { self.endDrag() }
+            
             if dropCell.pointInsideIcon(locationInCell) && dropCell is FolderCollectionViewCell {
                 if let appViewModel = currentDragState?.gestureInfo.itemViewModel as? AppViewModel {
                     if let folderViewModel = rootViewModel?.itemAtIndex(dropIndex) as? FolderViewModel {
-                        rootViewModel!.moveAppToFolder(appViewModel, folderViewModel: folderViewModel)
+                        dropOperation = {
+                            self.rootViewModel!.moveAppToFolder(appViewModel, folderViewModel: folderViewModel)
+                            appViewModel.dragging = false
+                            
+                            self.dragProxyState!.view.removeFromSuperview()
+                            self.currentDragState = nil
+                        }
                     }
                 }
             } else if locationInCell.x < (dropCell.bounds.width / 2) {
