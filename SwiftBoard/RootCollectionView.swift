@@ -19,7 +19,11 @@ struct GestureInfo {
 }
 
 struct DragState {
-    let gestureInfo: GestureInfo
+    let listViewModel:SwiftBoardListViewModel
+    let itemViewModel:SwiftBoardItemViewModel
+    let itemIndexInList: Int
+    
+    let cell: SwiftBoardCell
 }
 
 struct DropState {
@@ -135,7 +139,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             let collectionView = gestureInfo.collectionView
             let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
             let dropCell = gestureInfo.cell
-            let dragIndex = currentDragState!.gestureInfo.itemIndexInList
+            let dragIndex = currentDragState!.itemIndexInList
             let dropIndex = gestureInfo.itemIndexInList
             let location = gestureInfo.locationInCollectionView
             
@@ -150,11 +154,13 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
                 // TODO: Switch to asking the layout for the current number of rows... and move the fancy logic
                 // inside the drag (or drop) operation?
                 let newIndex = layout.indexToMoveSourceIndexLeftOfDestIndex(dragIndex, destIndex: dropIndex)
-                currentDragState?.gestureInfo.listViewModel.moveItemAtIndex(dragIndex, toIndex: newIndex)
+                currentDragState?.listViewModel.moveItemAtIndex(dragIndex, toIndex: newIndex)
             } else {
                 let newIndex = layout.indexToMoveSourceIndexRightOfDestIndex(dragIndex, destIndex: dropIndex)
-                currentDragState?.gestureInfo.listViewModel.moveItemAtIndex(dragIndex, toIndex: newIndex)
+                currentDragState?.listViewModel.moveItemAtIndex(dragIndex, toIndex: newIndex)
             }
+        } else {
+            println("No info")
         }
     }
     
@@ -200,8 +206,11 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             
             dragProxyState = DragProxyState(view: dragProxyView, originalCenter: dragProxyView.center)
             
-            currentDragState = DragState(gestureInfo: gestureInfo)
-            gestureInfo.itemViewModel.dragging = true
+            currentDragState = DragState(listViewModel: gestureInfo.listViewModel,
+                itemViewModel: gestureInfo.itemViewModel,
+                itemIndexInList: gestureInfo.itemIndexInList,
+                cell: gestureInfo.cell)
+            currentDragState!.itemViewModel.dragging = true
             
             UIView.animateWithDuration(0.2) {
                 dragProxyView.transform = CGAffineTransformMakeScale(1.1, 1.1)
@@ -213,7 +222,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     private func endDrag() {
         if let dragState = currentDragState {
             let proxyState = dragProxyState!
-            let cell = dragState.gestureInfo.cell
+            let cell = dragState.cell
             let collectionView = self
             
             UIView.animateWithDuration(0.2, animations: { () -> Void in
@@ -221,7 +230,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
                 proxyState.view.alpha = 1
                 proxyState.view.frame = collectionView.convertRect(cell.frame, fromView: cell.superview)
             }, completion: { (Bool) -> Void in
-                dragState.gestureInfo.itemViewModel.dragging = false
+                dragState.itemViewModel.dragging = false
                 
                 proxyState.view.removeFromSuperview()
                 self.currentDragState = nil
@@ -233,7 +242,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     // Heh, ugly! Clean up.
     private func moveAppIntoFolder() {
         if let dropState = currentDropState {
-            if let appViewModel = currentDragState?.gestureInfo.itemViewModel as? AppViewModel {
+            if let appViewModel = currentDragState?.itemViewModel as? AppViewModel {
                 if let folderViewModel = rootViewModel?.itemAtIndex(dropState.index) as? FolderViewModel {
                     rootViewModel!.moveAppToFolder(appViewModel, folderViewModel: folderViewModel)
                     
