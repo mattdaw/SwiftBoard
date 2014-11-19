@@ -14,7 +14,6 @@ protocol FolderViewModelDelegate: class {
 
 class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
     var name: String
-    var appViewModels: [AppViewModel]
     
     var dragging: Bool = false {
         didSet {
@@ -25,39 +24,9 @@ class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
     weak var listModelDelegate: SwiftBoardListViewModelDelegate?
     weak var delegate: FolderViewModelDelegate?
     
-    init(name folderName: String, appViewModels apps: [AppViewModel]) {
+    init(name folderName: String, viewModels initViewModels: [SwiftBoardItemViewModel]) {
         name = folderName
-        appViewModels = apps
-    }
-    
-    func appViewModelAtIndex(index: Int) -> AppViewModel {
-        return appViewModels[index]
-    }
-    
-    func numberOfItems() -> Int {
-        return appViewModels.count
-    }
-    
-    func itemAtIndex(index: Int) -> SwiftBoardItemViewModel {
-        return appViewModels[index]
-    }
-    
-    func indexOfItem(item: SwiftBoardItemViewModel) -> Int? {
-        for (index, compareItem) in enumerate(appViewModels) {
-            if item === compareItem {
-                return index
-            }
-        }
-        
-        return nil
-    }
-
-    func moveItemAtIndex(fromIndex: Int, toIndex: Int) {
-        var app: AppViewModel = appViewModels[fromIndex]
-        appViewModels.removeAtIndex(fromIndex)
-        appViewModels.insert(app, atIndex: toIndex)
-        
-        listModelDelegate?.listViewModelItemMoved(fromIndex, toIndex: toIndex)
+        super.init(viewModels: initViewModels)
     }
     
     func openItemAtIndex(index: Int) {

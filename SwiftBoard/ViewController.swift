@@ -60,7 +60,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         var viewModels: [SwiftBoardItemViewModel] = [
             AppViewModel(name: "App 1", color: UIColor.greenColor()),
             AppViewModel(name: "App 2", color: UIColor.blueColor()),
-            FolderViewModel(name: "Folder 1", appViewModels: [
+            FolderViewModel(name: "Folder 1", viewModels: [
                 AppViewModel(name: "App 5", color: UIColor.purpleColor()),
                 AppViewModel(name: "App 6", color: UIColor.grayColor()),
                 AppViewModel(name: "App 7", color: UIColor.yellowColor()),
@@ -69,7 +69,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 AppViewModel(name: "App 10", color: UIColor.purpleColor()),
                 AppViewModel(name: "App 11", color: UIColor.blueColor()),
                 ]),
-            FolderViewModel(name: "Folder 2", appViewModels: [
+            FolderViewModel(name: "Folder 2", viewModels: [
                 AppViewModel(name: "App 4", color: UIColor.darkGrayColor())
                 ]),
             AppViewModel(name: "App 3", color: UIColor.redColor()),

@@ -27,7 +27,7 @@ struct DragProxyState {
     let originalCenter: CGPoint
 }
 
-class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate, RootViewModelDelegate {
+class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate, SwiftBoardListViewModelDelegate, RootViewModelDelegate {
     private var listDataSource: SwiftBoardListViewModelDataSource?
     private var zoomedLayout = CollectionViewLayout()
     private var regularLayout = CollectionViewLayout()
@@ -43,7 +43,8 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     var rootViewModel: RootViewModel? {
         didSet {
             if rootViewModel != nil {
-                rootViewModel!.delegate = self
+                rootViewModel!.listViewModelDelegate = self
+                rootViewModel!.rootViewModelDelegate = self
                 
                 listDataSource = SwiftBoardListViewModelDataSource(rootViewModel!)
                 dataSource = listDataSource
