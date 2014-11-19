@@ -11,9 +11,7 @@ import UIKit
 class ViewController: UIViewController {
     
     @IBOutlet weak var rootCollectionView: RootCollectionView!
-    
     private var rootViewModel: RootViewModel?
-    private var dropOperation: (() -> ())?
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
