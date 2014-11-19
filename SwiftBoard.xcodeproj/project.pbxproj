@@ -20,8 +20,6 @@
 		C972A7791A17C16400EDC404 /* FolderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C972A7781A17C16400EDC404 /* FolderViewModel.swift */; };
 		C972A77B1A17C25C00EDC404 /* SwiftBoardItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C972A77A1A17C25C00EDC404 /* SwiftBoardItemViewModel.swift */; };
 		C972A77D1A17C2B300EDC404 /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C972A77C1A17C2B300EDC404 /* RootViewModel.swift */; };
-		C9981F7119C7765900804558 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9981F7019C7765900804558 /* App.swift */; };
-		C9981F7519C7814300804558 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9981F7419C7814300804558 /* Folder.swift */; };
 		C9981F7719C798C600804558 /* CollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9981F7619C798C600804558 /* CollectionViewLayout.swift */; };
 		C9989ABA1A113E2000799596 /* PanAndStopGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9989AB91A113E2000799596 /* PanAndStopGestureRecognizer.swift */; };
 		C99E408F19CB41AC003DE57D /* FolderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99E408E19CB41AC003DE57D /* FolderCollectionViewCell.swift */; };
@@ -60,8 +58,6 @@
 		C972A7781A17C16400EDC404 /* FolderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderViewModel.swift; sourceTree = "<group>"; };
 		C972A77A1A17C25C00EDC404 /* SwiftBoardItemViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBoardItemViewModel.swift; sourceTree = "<group>"; };
 		C972A77C1A17C2B300EDC404 /* RootViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
-		C9981F7019C7765900804558 /* App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
-		C9981F7419C7814300804558 /* Folder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		C9981F7619C798C600804558 /* CollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewLayout.swift; sourceTree = "<group>"; };
 		C9989AB91A113E2000799596 /* PanAndStopGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanAndStopGestureRecognizer.swift; sourceTree = "<group>"; };
 		C9989ABB1A1143A300799596 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
@@ -111,6 +107,49 @@
 			name = "View Models";
 			sourceTree = "<group>";
 		};
+		C9AAE6EC1A1CF8A700CE1E35 /* Collection View Cells */ = {
+			isa = PBXGroup;
+			children = (
+				C908190B19D485EA0091A58C /* SwiftBoardCell.swift */,
+				C99E409019CB9187003DE57D /* AppCollectionViewCell.swift */,
+				C96A381119CA0F650069F5D9 /* AppCollectionViewCell.xib */,
+				C99E408E19CB41AC003DE57D /* FolderCollectionViewCell.swift */,
+				C96A381319CA10120069F5D9 /* FolderCollectionViewCell.xib */,
+			);
+			name = "Collection View Cells";
+			sourceTree = "<group>";
+		};
+		C9AAE6ED1A1CF8BB00CE1E35 /* Collection View Layouts */ = {
+			isa = PBXGroup;
+			children = (
+				C933C67C1A144FC6004F7703 /* DroppableCollectionViewLayout.swift */,
+				C9981F7619C798C600804558 /* CollectionViewLayout.swift */,
+				C9A33FC619D09976004E8B62 /* FolderCollectionViewLayout.swift */,
+				C96664A519DCA3CD00247FC4 /* CollectionViewLayoutAttributes.swift */,
+			);
+			name = "Collection View Layouts";
+			sourceTree = "<group>";
+		};
+		C9AAE6EE1A1CF8C700CE1E35 /* Gestures */ = {
+			isa = PBXGroup;
+			children = (
+				C9989ABB1A1143A300799596 /* Bridging-Header.h */,
+				C9989AB91A113E2000799596 /* PanAndStopGestureRecognizer.swift */,
+			);
+			name = Gestures;
+			sourceTree = "<group>";
+		};
+		C9AAE6EF1A1CF8D900CE1E35 /* Collection Views */ = {
+			isa = PBXGroup;
+			children = (
+				C9473F481A1A967F006D0CB3 /* SwiftBoardCollectionView.swift */,
+				C9F94B421A1A68FA00119BCA /* RootCollectionView.swift */,
+				C9473F4A1A1A97A9006D0CB3 /* FolderCollectionView.swift */,
+				C94803F919F70C2B000A4FB0 /* SwiftBoardListViewModelDataSource.swift */,
+			);
+			name = "Collection Views";
+			sourceTree = "<group>";
+		};
 		C9DAE68D19C73EC0007CF518 = {
 			isa = PBXGroup;
 			children = (
@@ -135,24 +174,11 @@
 				C9DAE69B19C73EC0007CF518 /* AppDelegate.swift */,
 				C972A7751A17BDFE00EDC404 /* View Models */,
 				C9DAE69F19C73EC0007CF518 /* Main.storyboard */,
-				C9981F7019C7765900804558 /* App.swift */,
-				C9981F7419C7814300804558 /* Folder.swift */,
 				C9DAE69D19C73EC0007CF518 /* ViewController.swift */,
-				C9473F481A1A967F006D0CB3 /* SwiftBoardCollectionView.swift */,
-				C9F94B421A1A68FA00119BCA /* RootCollectionView.swift */,
-				C9473F4A1A1A97A9006D0CB3 /* FolderCollectionView.swift */,
-				C94803F919F70C2B000A4FB0 /* SwiftBoardListViewModelDataSource.swift */,
-				C908190B19D485EA0091A58C /* SwiftBoardCell.swift */,
-				C99E409019CB9187003DE57D /* AppCollectionViewCell.swift */,
-				C96A381119CA0F650069F5D9 /* AppCollectionViewCell.xib */,
-				C99E408E19CB41AC003DE57D /* FolderCollectionViewCell.swift */,
-				C96A381319CA10120069F5D9 /* FolderCollectionViewCell.xib */,
-				C933C67C1A144FC6004F7703 /* DroppableCollectionViewLayout.swift */,
-				C9981F7619C798C600804558 /* CollectionViewLayout.swift */,
-				C9A33FC619D09976004E8B62 /* FolderCollectionViewLayout.swift */,
-				C96664A519DCA3CD00247FC4 /* CollectionViewLayoutAttributes.swift */,
-				C9989ABB1A1143A300799596 /* Bridging-Header.h */,
-				C9989AB91A113E2000799596 /* PanAndStopGestureRecognizer.swift */,
+				C9AAE6EF1A1CF8D900CE1E35 /* Collection Views */,
+				C9AAE6EC1A1CF8A700CE1E35 /* Collection View Cells */,
+				C9AAE6ED1A1CF8BB00CE1E35 /* Collection View Layouts */,
+				C9AAE6EE1A1CF8C700CE1E35 /* Gestures */,
 				C9DAE6A219C73EC0007CF518 /* Images.xcassets */,
 				C9DAE6A419C73EC0007CF518 /* LaunchScreen.xib */,
 				C9DAE69919C73EC0007CF518 /* Supporting Files */,
@@ -293,7 +319,6 @@
 				C9473F491A1A967F006D0CB3 /* SwiftBoardCollectionView.swift in Sources */,
 				C9473F471A1A93A4006D0CB3 /* SwiftBoardListViewModel.swift in Sources */,
 				C9A33FC719D09976004E8B62 /* FolderCollectionViewLayout.swift in Sources */,
-				C9981F7119C7765900804558 /* App.swift in Sources */,
 				C9F94B431A1A68FA00119BCA /* RootCollectionView.swift in Sources */,
 				C972A7771A17BE1700EDC404 /* AppViewModel.swift in Sources */,
 				C9DAE69E19C73EC0007CF518 /* ViewController.swift in Sources */,
@@ -302,7 +327,6 @@
 				C99E409119CB9187003DE57D /* AppCollectionViewCell.swift in Sources */,
 				C972A7791A17C16400EDC404 /* FolderViewModel.swift in Sources */,
 				C9989ABA1A113E2000799596 /* PanAndStopGestureRecognizer.swift in Sources */,
-				C9981F7519C7814300804558 /* Folder.swift in Sources */,
 				C933C67D1A144FC6004F7703 /* DroppableCollectionViewLayout.swift in Sources */,
 				C94803FA19F70C2B000A4FB0 /* SwiftBoardListViewModelDataSource.swift in Sources */,
 				C99E408F19CB41AC003DE57D /* FolderCollectionViewCell.swift in Sources */,

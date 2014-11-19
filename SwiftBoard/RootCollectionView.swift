@@ -22,6 +22,11 @@ struct DragState {
     let gestureInfo: GestureInfo
 }
 
+struct DropState {
+    let index: Int
+    let cell: SwiftBoardCell
+}
+
 struct DragProxyState {
     let view: UIView
     let originalCenter: CGPoint
@@ -39,6 +44,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     private var openFolderCollectionView: SwiftBoardCollectionView?
     private var dragProxyState: DragProxyState?
     private var currentDragState: DragState?
+    private var currentDropState: DropState?
     
     private var dropOperation: (() -> ())?
     
@@ -135,39 +141,11 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             
             let locationInCell = collectionView.convertPoint(location, toView: dropCell)
             
-            dropOperation = { self.endDrag() }
+            currentDropState = DropState(index: dropIndex, cell: dropCell)
+            dropOperation = endDrag
             
             if dropCell.pointInsideIcon(locationInCell) && dropCell is FolderCollectionViewCell {
-                if let appViewModel = currentDragState?.gestureInfo.itemViewModel as? AppViewModel {
-                    if let folderViewModel = rootViewModel?.itemAtIndex(dropIndex) as? FolderViewModel {
-                        dropOperation = {
-                            self.rootViewModel!.moveAppToFolder(appViewModel, folderViewModel: folderViewModel)
-                            
-                            // Heh, ugly! Clean up.
-                            if let newIndex = folderViewModel.indexOfItem(appViewModel) {
-                                if let folderCell = dropCell as? FolderCollectionViewCell {
-                                    let newIndexPath = NSIndexPath(forItem: newIndex, inSection: 0)
-                                    if let newAppCell = folderCell.collectionView.cellForItemAtIndexPath(newIndexPath) {
-                                        let newFrame = self.convertRect(newAppCell.frame, fromView: newAppCell.superview)
-                                        let proxyState = self.dragProxyState!
-                                        
-                                        UIView.animateWithDuration(0.2, animations: { () -> Void in
-                                            proxyState.view.transform = CGAffineTransformIdentity
-                                            proxyState.view.alpha = 1
-                                            proxyState.view.frame = newFrame
-                                        }, completion: { (Bool) -> Void in
-                                            appViewModel.dragging = false
-                                                
-                                            proxyState.view.removeFromSuperview()
-                                            self.currentDragState = nil
-                                        })
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                dropOperation = moveAppIntoFolder
             } else if locationInCell.x < (dropCell.bounds.width / 2) {
                 // TODO: Switch to asking the layout for the current number of rows... and move the fancy logic
                 // inside the drag (or drop) operation?
@@ -247,7 +225,42 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
                 
                 proxyState.view.removeFromSuperview()
                 self.currentDragState = nil
+                self.currentDropState = nil
             })
+        }
+    }
+    
+    // Heh, ugly! Clean up.
+    private func moveAppIntoFolder() {
+        if let dropState = currentDropState {
+            if let appViewModel = currentDragState?.gestureInfo.itemViewModel as? AppViewModel {
+                if let folderViewModel = rootViewModel?.itemAtIndex(dropState.index) as? FolderViewModel {
+                    rootViewModel!.moveAppToFolder(appViewModel, folderViewModel: folderViewModel)
+                    
+                    if let newIndex = folderViewModel.indexOfItem(appViewModel) {
+                        if let folderCell = dropState.cell as? FolderCollectionViewCell {
+                            let newIndexPath = NSIndexPath(forItem: newIndex, inSection: 0)
+                            if let newAppCell = folderCell.collectionView.cellForItemAtIndexPath(newIndexPath) {
+                                let newFrame = convertRect(newAppCell.frame, fromView: newAppCell.superview)
+                                let proxyState = dragProxyState!
+                                
+                                UIView.animateWithDuration(0.4, animations: { () -> Void in
+                                    proxyState.view.transform = CGAffineTransformIdentity
+                                    proxyState.view.alpha = 1
+                                    proxyState.view.frame = newFrame
+                                }, completion: { (Bool) -> Void in
+                                    appViewModel.dragging = false
+                                        
+                                    proxyState.view.removeFromSuperview()
+                                    self.currentDragState = nil
+                                    self.currentDropState = nil
+                                })
+                            }
+                        }
+                    }
+                }
+            }
+
         }
     }
 
