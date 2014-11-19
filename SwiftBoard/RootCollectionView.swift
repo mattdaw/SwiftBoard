@@ -21,9 +21,11 @@ struct GestureInfo {
 struct DragState {
     let listViewModel:SwiftBoardListViewModel
     let itemViewModel:SwiftBoardItemViewModel
-    let itemIndexInList: Int
-    
     let cell: SwiftBoardCell
+    
+    func indexOfItemInList() -> Int {
+        return listViewModel.indexOfItem(itemViewModel)!
+    }
 }
 
 struct DropState {
@@ -139,7 +141,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             let collectionView = gestureInfo.collectionView
             let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
             let dropCell = gestureInfo.cell
-            let dragIndex = currentDragState!.itemIndexInList
+            let dragIndex = currentDragState!.indexOfItemInList()
             let dropIndex = gestureInfo.itemIndexInList
             let location = gestureInfo.locationInCollectionView
             
@@ -208,7 +210,6 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             
             currentDragState = DragState(listViewModel: gestureInfo.listViewModel,
                 itemViewModel: gestureInfo.itemViewModel,
-                itemIndexInList: gestureInfo.itemIndexInList,
                 cell: gestureInfo.cell)
             currentDragState!.itemViewModel.dragging = true
             
