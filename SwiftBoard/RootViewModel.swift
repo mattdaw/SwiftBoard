@@ -25,7 +25,17 @@ class RootViewModel: SwiftBoardListViewModel {
         } else {
             assertionFailure("moveAppToFolder: AppViewModel isn't in the RootViewModel")
         }
-        
+    }
+    
+    func moveAppFromFolder(appViewModel: AppViewModel, folderViewModel: FolderViewModel) {
+        if let removeIndex = folderViewModel.indexOfItem(appViewModel) {
+            let addIndex = numberOfItems()
+            
+            folderViewModel.removeItemAtIndex(removeIndex)
+            appendItem(appViewModel)
+        } else {
+            assertionFailure("moveAppFromFolder: AppViewModel isn't in the FolderViewModel")
+        }
     }
     
     func openFolder(folderViewModel: FolderViewModel) {

@@ -149,11 +149,10 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             let locationInCell = collectionView.convertPoint(location, toView: dropCell)
             
             currentDropState = DropState(index: dropIndex, cell: dropCell)
-            dropOperation = endDrag
             
             if dropCell.pointInsideIcon(locationInCell) && dropCell is FolderCollectionViewCell {
                 dropOperation = moveAppIntoFolder
-            } else {
+            } else if dragIndex != dropIndex {
                 var newIndex: Int
                 
                 if locationInCell.x < (dropCell.bounds.width / 2) {
@@ -171,7 +170,12 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         } else {
             if openFolderCollectionView != nil {
                 if let folderViewModel = openFolderCollectionView!.listViewModel as? FolderViewModel {
-                    rootViewModel?.closeFolder(folderViewModel)
+                    // "Promote to root", update the drag state to be in the root
+                    if let appViewModel = currentDragState!.itemViewModel as? AppViewModel {
+                        rootViewModel?.moveAppFromFolder(appViewModel, folderViewModel: folderViewModel)
+                        rootViewModel?.closeFolder(folderViewModel)
+                        currentDragState = DragState(listViewModel: rootViewModel!, itemViewModel: appViewModel)
+                    }
                 }
             }
         }
@@ -218,6 +222,9 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             addSubview(dragProxyView)
             
             dragProxyState = DragProxyState(view: dragProxyView, originalCenter: dragProxyView.center)
+            dragProxyReturnToRect = dragProxyView.frame
+            
+            dropOperation = endDrag
             
             currentDragState = DragState(listViewModel: gestureInfo.listViewModel, itemViewModel: gestureInfo.itemViewModel)
             currentDragState!.itemViewModel.dragging = true
