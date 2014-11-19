@@ -150,7 +150,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             
             currentDropState = DropState(index: dropIndex, cell: dropCell)
             
-            if dropCell.pointInsideIcon(locationInCell) && dropCell is FolderCollectionViewCell {
+            if currentDragState!.itemViewModel is AppViewModel && dropCell.pointInsideIcon(locationInCell) && dropCell is FolderCollectionViewCell {
                 dropOperation = moveAppIntoFolder
             } else if dragIndex != dropIndex {
                 var newIndex: Int
