@@ -153,8 +153,6 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             if dropCell.pointInsideIcon(locationInCell) && dropCell is FolderCollectionViewCell {
                 dropOperation = moveAppIntoFolder
             } else if locationInCell.x < (dropCell.bounds.width / 2) {
-                // TODO: Switch to asking the layout for the current number of rows... and move the fancy logic
-                // inside the drag (or drop) operation?
                 let newIndex = layout.indexToMoveSourceIndexLeftOfDestIndex(dragIndex, destIndex: dropIndex)
                 currentDragState?.listViewModel.moveItemAtIndex(dragIndex, toIndex: newIndex)
             } else {
