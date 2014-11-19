@@ -8,39 +8,6 @@
 
 import UIKit
 
-private struct OldDragState {
-    let originalCenter: CGPoint
-    let addTranslation: CGPoint
-    let dragProxyView: UIView
-    
-    var viewModel: SwiftBoardItemViewModel
-    
-    var dragIndexPath: NSIndexPath
-    var dropIndexPath: NSIndexPath
-    
-    mutating func setDragIndexPath(indexPath:NSIndexPath) {
-        dragIndexPath = indexPath
-    }
-    
-    mutating func setDropIndexPath(indexPath:NSIndexPath) {
-        dropIndexPath = indexPath
-    }
-}
-
-private struct ZoomState {
-    let indexPath: NSIndexPath
-    let collectionView: UICollectionView
-    let folderViewModel: FolderViewModel
-}
-
-private struct OldGestureInfo {
-    let collectionView: UICollectionView
-    let collectionViewCell: UICollectionViewCell
-    let indexPath: NSIndexPath
-    let viewModel: SwiftBoardItemViewModel
-    let locationInCollectionView: CGPoint
-}
-
 class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var rootCollectionView: RootCollectionView!
