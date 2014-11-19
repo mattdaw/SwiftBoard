@@ -17,11 +17,11 @@ class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
     
     var dragging: Bool = false {
         didSet {
-            itemModelDelegate?.folderViewModelDraggingDidChange(dragging)
+            itemViewModelDelegate?.folderViewModelDraggingDidChange(dragging)
         }
     }
     
-    weak var itemModelDelegate: FolderViewModelDelegate?
+    weak var itemViewModelDelegate: FolderViewModelDelegate?
     
     init(name folderName: String, viewModels initViewModels: [SwiftBoardItemViewModel]) {
         name = folderName
