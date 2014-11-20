@@ -138,6 +138,8 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     func handlePanGestureStopped(gesture: PanAndStopGestureRecognizer) {
         // Idea -> classes for gesture "hits", different for hit on folder, app, collection view.
         // Then something like "drop operation for" drag hit + drop hit
+        //
+        // How should the two states be differentiated? Is this a hover vs a drop?
         if let gestureInfo = infoForGesture(gesture) {
             let collectionView = gestureInfo.collectionView
             let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
@@ -151,8 +153,11 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             currentDropState = DropState(index: dropIndex, cell: dropCell)
             
             if currentDragState!.itemViewModel is AppViewModel && dropCell.pointInsideIcon(locationInCell) && dropCell is FolderCollectionViewCell {
+                // Hover operation needs to tell folder to "expand", it also has a timer to go off that opens the folder?
+                // Drag: App -> Drop: Folder
                 dropOperation = moveAppIntoFolder
             } else if dragIndex != dropIndex {
+                // Drag: App -> Drop: Cell? It's not really "on" the app/folder
                 var newIndex: Int
                 
                 if locationInCell.x < (dropCell.bounds.width / 2) {
@@ -168,6 +173,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
                 }
             }
         } else {
+            // Drag: App Inside Folder -> Drop: Root Collection View (outside its folders collection view)
             if openFolderCollectionView != nil {
                 if let folderViewModel = openFolderCollectionView!.listViewModel as? FolderViewModel {
                     // "Promote to root", update the drag state to be in the root
