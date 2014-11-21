@@ -18,14 +18,12 @@ protocol SwiftBoardListViewModelDelegate: class {
 // of any further calculations? Or should the layout itself actually happen in the view model, since it's not UIKit
 // specific, I just need the "available" width?
 
-class SwiftBoardListViewModel: NSObject {
+class SwiftBoardListViewModel {
     private var viewModels: [SwiftBoardItemViewModel]
     weak var listViewModelDelegate: SwiftBoardListViewModelDelegate?
     
     init(viewModels initViewModels:[SwiftBoardItemViewModel]) {
         viewModels = initViewModels
-        
-        super.init()
         
         for itemViewModel in viewModels {
             itemViewModel.listViewModel = self

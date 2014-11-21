@@ -163,7 +163,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     func handlePanGestureStopped(gesture: PanAndStopGestureRecognizer) {
         if let dragAndDropOp = dragAndDropOperationForGesture(gesture) {
             dragAndDropOperation = dragAndDropOp
-            dragAndDropOperation!.drag()
+            dragAndDropOperation!.dragStart()
         }
     }
     
@@ -271,7 +271,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         
         if let appViewModel = draggingItemViewModel as? AppViewModel {
             if let folderHit = gestureHit as? FolderGestureHit {
-                return DragAppOnFolder()
+                return DragAppOnFolder(rootViewModel: rootViewModel!, appViewModel: appViewModel, folderViewModel: folderHit.folderViewModel)
             }
         }
         

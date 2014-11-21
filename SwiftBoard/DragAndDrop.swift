@@ -9,14 +9,20 @@
 import Foundation
 
 protocol DragAndDropOperation {
-    func drag()
+    func dragStart()
+    func dragEnd()
     func drop()
 }
 
-class DragAppOnFolder: DragAndDropOperation {
+class DragAppOnFolder: NSObject, DragAndDropOperation {
+    let prepareToOpenFolderAfterSeconds = 2.0
+    let openFolderAfterSeconds = 2.0
+    
     let rootViewModel: RootViewModel
     let appViewModel: AppViewModel
     let folderViewModel: FolderViewModel
+    
+    private var openFolderTimer: NSTimer?
     
     init(rootViewModel initRoot: RootViewModel, appViewModel initApp: AppViewModel, folderViewModel initFolder: FolderViewModel) {
         rootViewModel = initRoot
@@ -24,11 +30,43 @@ class DragAppOnFolder: DragAndDropOperation {
         folderViewModel = initFolder
     }
     
-    func drag() {
-        println("Drag!")
+    func dragStart() {
+        folderViewModel.state = .AppHovering
+        openFolderTimer = NSTimer.scheduledTimerWithTimeInterval(prepareToOpenFolderAfterSeconds, target: self, selector: "prepareToOpenFolder", userInfo: nil, repeats: false)
+    }
+    
+    func dragEnd() {
+        cancelTimer()
+        resetFolderState()
     }
     
     func drop() {
-        println("Drop!")
+        cancelTimer()
+        rootViewModel.moveAppToFolder(appViewModel, folderViewModel: folderViewModel)
+        resetFolderState()
+    }
+    
+    func cancelTimer() {
+        openFolderTimer?.invalidate()
+        openFolderTimer = nil
+    }
+    
+    func prepareToOpenFolder() {
+        cancelTimer()
+        
+        folderViewModel.state = .PreparingToOpen
+        openFolderTimer = NSTimer.scheduledTimerWithTimeInterval(openFolderAfterSeconds, target: self, selector: "openFolder", userInfo: nil, repeats: false)
+    }
+    
+    func openFolder() {
+        cancelTimer()
+        
+        rootViewModel.moveAppToFolder(appViewModel, folderViewModel: folderViewModel)
+        rootViewModel.openFolder(folderViewModel)
+        resetFolderState()
+    }
+    
+    func resetFolderState() {
+        folderViewModel.state = .Normal
     }
 }
