@@ -52,11 +52,6 @@ class FolderGestureHit: CellGestureHit, GestureHit {
     }
 }
 
-struct DropState {
-    let index: Int
-    let cell: SwiftBoardCell
-}
-
 struct DragProxyState {
     let view: UIView
     let originalCenter: CGPoint
@@ -75,10 +70,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     private var dragProxyState: DragProxyState?
     private var dragProxyReturnToRect: CGRect?
     private var draggingItemViewModel: SwiftBoardItemViewModel?
-    private var currentDropState: DropState?
-    
     private var dragAndDropOperation: DragAndDropOperation?
-    private var dropOperation: (() -> ())?
     
     var rootViewModel: RootViewModel? {
         didSet {
@@ -327,8 +319,6 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
                 dragProxyView.alpha = 0.8
             }
             
-            dropOperation = endDrag
-            
             if let appHit = cellHit as? AppGestureHit {
                 draggingItemViewModel = appHit.appViewModel
             } else if let folderHit = cellHit as? FolderGestureHit {
@@ -364,7 +354,6 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             }
         
             draggingItemViewModel = nil
-            currentDropState = nil
         }
     }
     
