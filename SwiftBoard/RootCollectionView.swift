@@ -274,10 +274,8 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         
         if let appViewModel = draggingItemViewModel as? AppViewModel {
             if let folderHit = gestureHit as? FolderGestureHit {
-                if let folderCell = folderHit.cell as? FolderCollectionViewCell {
-                    if folderCell.pointInsideIcon(folderHit.locationInCell) {
-                        return DragAppOnFolder(rootViewModel: rootViewModel!, appViewModel: appViewModel, folderViewModel: folderHit.folderViewModel)
-                    }
+                if folderHit.cell.pointInsideIcon(folderHit.locationInCell) {
+                    return DragAppOnFolder(rootViewModel: rootViewModel!, appViewModel: appViewModel, folderViewModel: folderHit.folderViewModel)
                 }
             }
         }
