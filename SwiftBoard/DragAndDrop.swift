@@ -14,7 +14,7 @@ protocol DragAndDropOperation {
     func drop()
 }
 
-class DragAppOnFolder: NSObject, DragAndDropOperation {
+class MoveAppToFolder: NSObject, DragAndDropOperation {
     let prepareToOpenFolderAfterSeconds = 2.0
     let openFolderAfterSeconds = 2.0
     

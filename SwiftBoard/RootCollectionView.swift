@@ -275,9 +275,11 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         if let appViewModel = draggingItemViewModel as? AppViewModel {
             if let folderHit = gestureHit as? FolderGestureHit {
                 if folderHit.cell.pointInsideIcon(folderHit.locationInCell) {
-                    return DragAppOnFolder(rootViewModel: rootViewModel!, appViewModel: appViewModel, folderViewModel: folderHit.folderViewModel)
+                    return MoveAppToFolder(rootViewModel: rootViewModel!, appViewModel: appViewModel, folderViewModel: folderHit.folderViewModel)
                 }
             }
+            
+            // TODO: Handle dragging an app on top of an app and creating a folder?
         }
         
         if let itemViewModel = draggingItemViewModel {
