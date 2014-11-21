@@ -8,16 +8,46 @@
 
 import UIKit
 
-struct GestureInfo {
-    let listViewModel:SwiftBoardListViewModel
-    let itemViewModel:SwiftBoardItemViewModel
-    let itemIndexInList: Int
-    
+protocol GestureHit {}
+
+class CollectionViewGestureHit: GestureHit {
     let collectionView: UICollectionView
-    let cell: SwiftBoardCell
-    
     let locationInCollectionView: CGPoint
+    
+    init(collectionView initCollectionView: UICollectionView, locationInCollectionView initViewLocation: CGPoint) {
+        collectionView = initCollectionView
+        locationInCollectionView = initViewLocation
+    }
+}
+
+class CellGestureHit: GestureHit {
+    let collectionViewHit: CollectionViewGestureHit
+    let cell: SwiftBoardCell
     let locationInCell: CGPoint
+    
+    init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: SwiftBoardCell, locationInCell initCellLocation: CGPoint) {
+        collectionViewHit = initHit
+        cell = initCell
+        locationInCell = initCellLocation
+    }
+}
+
+class AppGestureHit: CellGestureHit, GestureHit {
+    let appViewModel: AppViewModel
+    
+    init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: SwiftBoardCell, locationInCell initCellLocation: CGPoint, appViewModel initApp: AppViewModel) {
+        appViewModel = initApp
+        super.init(collectionViewHit: initHit, cell: initCell, locationInCell: initCellLocation)
+    }
+}
+
+class FolderGestureHit: CellGestureHit, GestureHit {
+    let folderViewModel: FolderViewModel
+    
+    init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: SwiftBoardCell, locationInCell initCellLocation: CGPoint, folderViewModel initFolder: FolderViewModel) {
+        folderViewModel = initFolder
+        super.init(collectionViewHit: initHit, cell: initCell, locationInCell: initCellLocation)
+    }
 }
 
 struct DropState {
@@ -39,12 +69,13 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     private var longPressRecognizer: UILongPressGestureRecognizer!
     private var panAndStopGestureRecognizer: PanAndStopGestureRecognizer!
     
-    private var openFolderCollectionView: SwiftBoardCollectionView?
+    private var openFolderCollectionView: FolderCollectionView?
     private var dragProxyState: DragProxyState?
     private var dragProxyReturnToRect: CGRect?
     private var draggingItemViewModel: SwiftBoardItemViewModel?
     private var currentDropState: DropState?
     
+    private var dragAndDropOperation: DragAndDropOperation?
     private var dropOperation: (() -> ())?
     
     var rootViewModel: RootViewModel? {
@@ -93,13 +124,13 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     }
     
     func handleTapGesture(gesture: UITapGestureRecognizer) {
-        if let gestureInfo = infoForGesture(gesture) {
-            if let folderViewModel = gestureInfo.itemViewModel as? FolderViewModel {
-                rootViewModel?.openFolder(folderViewModel)
-            }
-        } else if openFolderCollectionView != nil {
-            if let folderViewModel = openFolderCollectionView!.listViewModel as? FolderViewModel {
-                rootViewModel?.closeFolder(folderViewModel)
+        let gestureHit = gestureHitForGesture(gesture)
+        
+        if let folderHit = gestureHit as? FolderGestureHit {
+            rootViewModel?.openFolder(folderHit.folderViewModel)
+        } else if let viewHit = gestureHit as? CollectionViewGestureHit {
+            if openFolderCollectionView != nil {
+                rootViewModel?.closeFolder(openFolderCollectionView!.folderViewModel!)
             }
         }
     }
@@ -109,10 +140,11 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         case UIGestureRecognizerState.Began:
             startDrag(gesture)
         case UIGestureRecognizerState.Ended, UIGestureRecognizerState.Cancelled:
-            if let dropFn = dropOperation {
-                dropFn()
-                dropOperation = nil
+            if let dragAndDropOp = dragAndDropOperation {
+                dragAndDropOp.drop()
             }
+            
+            endDrag()
         default:
             break
         }
@@ -128,6 +160,14 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         }
     }
     
+    func handlePanGestureStopped(gesture: PanAndStopGestureRecognizer) {
+        if let dragAndDropOp = dragAndDropOperationForGesture(gesture) {
+            dragAndDropOperation = dragAndDropOp
+            dragAndDropOperation!.drag()
+        }
+    }
+    
+    /*
     func handlePanGestureStopped(gesture: PanAndStopGestureRecognizer) {
         // Idea -> classes for gesture "hits", different for hit on folder, app, collection view.
         // Then something like "drop operation for" drag hit + drop hit
@@ -191,36 +231,47 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             }
         }
     }
+*/
     
-    // TODO: Not happy with "info", come up with a better name
-    func infoForGesture(gesture: UIGestureRecognizer) -> GestureInfo? {
-        var destCollectionView:SwiftBoardCollectionView
-        var indexPath:NSIndexPath?
-        
+    func gestureHitForGesture(gesture: UIGestureRecognizer) -> GestureHit {
+        var destCollectionView: SwiftBoardCollectionView = self
         if let folderCollectionView = openFolderCollectionView {
             destCollectionView = folderCollectionView
-        } else {
-            destCollectionView = self
         }
         
-        let location = gesture.locationInView(destCollectionView)
+        let locationInCollectionView = gesture.locationInView(destCollectionView)
+        let collectionViewHit = CollectionViewGestureHit(collectionView: destCollectionView, locationInCollectionView: locationInCollectionView)
         
-        if let indexPath = destCollectionView.indexPathForItemAtPoint(location) {
+        if let indexPath = destCollectionView.indexPathForItemAtPoint(locationInCollectionView) {
             if let cell = destCollectionView.cellForItemAtIndexPath(indexPath) as? SwiftBoardCell {
                 if let listViewModel = destCollectionView.listViewModel {
                     let itemViewModel = listViewModel.itemAtIndex(indexPath.item)
-                    let locationInCell = destCollectionView.convertPoint(location, toView: cell)
+                    let locationInCell = destCollectionView.convertPoint(locationInCollectionView, toView: cell)
                     
-                    let gestureInfo = GestureInfo(listViewModel: listViewModel,
-                        itemViewModel: itemViewModel,
-                        itemIndexInList: indexPath.item,
-                        collectionView: destCollectionView,
-                        cell: cell,
-                        locationInCollectionView: location,
-                        locationInCell: locationInCell)
-                    
-                    return gestureInfo
+                    if let appViewModel = itemViewModel as? AppViewModel {
+                        return AppGestureHit(collectionViewHit: collectionViewHit,
+                                             cell: cell,
+                                             locationInCell: locationInCell,
+                                             appViewModel: appViewModel)
+                    } else if let folderViewModel = itemViewModel as? FolderViewModel {
+                        return FolderGestureHit(collectionViewHit: collectionViewHit,
+                                                cell: cell,
+                                                locationInCell: locationInCell,
+                                                folderViewModel: folderViewModel)
+                    }
                 }
+            }
+        }
+        
+        return collectionViewHit
+    }
+    
+    func dragAndDropOperationForGesture(gesture: UIGestureRecognizer) -> DragAndDropOperation? {
+        let gestureHit = gestureHitForGesture(gesture)
+        
+        if let appViewModel = draggingItemViewModel as? AppViewModel {
+            if let folderHit = gestureHit as? FolderGestureHit {
+                return DragAppOnFolder()
             }
         }
         
@@ -228,8 +279,8 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     }
     
     func startDrag(gesture: UIGestureRecognizer) {
-        if let gestureInfo = infoForGesture(gesture) {
-            let cell = gestureInfo.cell
+        if let cellHit = gestureHitForGesture(gesture) as? CellGestureHit {
+            let cell = cellHit.cell
             
             let dragProxyView = cell.snapshotViewAfterScreenUpdates(true)
             dragProxyView.frame = convertRect(cell.frame, fromView: cell.superview)
@@ -237,16 +288,20 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             
             dragProxyState = DragProxyState(view: dragProxyView, originalCenter: dragProxyView.center)
             dragProxyReturnToRect = dragProxyView.frame
-            
-            dropOperation = endDrag
-            
-            draggingItemViewModel = gestureInfo.itemViewModel
-            draggingItemViewModel!.dragging = true
-            
             UIView.animateWithDuration(0.2) {
                 dragProxyView.transform = CGAffineTransformMakeScale(1.1, 1.1)
                 dragProxyView.alpha = 0.8
             }
+            
+            dropOperation = endDrag
+            
+            if let appHit = cellHit as? AppGestureHit {
+                draggingItemViewModel = appHit.appViewModel
+            } else if let folderHit = cellHit as? FolderGestureHit {
+                draggingItemViewModel = folderHit.folderViewModel
+            }
+            
+            draggingItemViewModel!.dragging = true
         }
     }
     
@@ -286,7 +341,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             let newIndexPath = NSIndexPath(forItem: newIndex, inSection: 0)
             if let newAppCell = folderCell.collectionView.cellForItemAtIndexPath(newIndexPath) {
                 dragProxyReturnToRect = convertRect(newAppCell.frame, fromView: newAppCell.superview)
-                endDrag()
+                //endDrag()
             }
         }
     }
@@ -294,8 +349,8 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     // MARK: RootViewModelDelegate
     
     func rootViewModelFolderOpened(folderViewModel: FolderViewModel) {
-        // TODO: Not right, but this is temporary
-        dropOperation = { self.endDrag() }
+        // ?
+        dragAndDropOperation = nil
         
         if let index = rootViewModel?.indexOfItem(folderViewModel) {
             if let cell = cellForItemAtIndexPath(NSIndexPath(forItem: index, inSection: 0)) as? FolderCollectionViewCell {
@@ -307,6 +362,9 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     }
     
     func rootViewModelFolderClosed(folderViewModel: FolderViewModel) {
+        // ?
+        dragAndDropOperation = nil
+        
         if let index = rootViewModel?.indexOfItem(folderViewModel) {
             openFolderCollectionView = nil
             zoomedLayout.zoomToIndex = nil

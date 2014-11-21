@@ -20,6 +20,7 @@
 		C972A7791A17C16400EDC404 /* FolderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C972A7781A17C16400EDC404 /* FolderViewModel.swift */; };
 		C972A77B1A17C25C00EDC404 /* SwiftBoardItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C972A77A1A17C25C00EDC404 /* SwiftBoardItemViewModel.swift */; };
 		C972A77D1A17C2B300EDC404 /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C972A77C1A17C2B300EDC404 /* RootViewModel.swift */; };
+		C997CF7C1A1FD94400AAB2A8 /* DragAndDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = C997CF7B1A1FD94400AAB2A8 /* DragAndDrop.swift */; };
 		C9981F7719C798C600804558 /* CollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9981F7619C798C600804558 /* CollectionViewLayout.swift */; };
 		C9989ABA1A113E2000799596 /* PanAndStopGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9989AB91A113E2000799596 /* PanAndStopGestureRecognizer.swift */; };
 		C99E408F19CB41AC003DE57D /* FolderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99E408E19CB41AC003DE57D /* FolderCollectionViewCell.swift */; };
@@ -58,6 +59,7 @@
 		C972A7781A17C16400EDC404 /* FolderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderViewModel.swift; sourceTree = "<group>"; };
 		C972A77A1A17C25C00EDC404 /* SwiftBoardItemViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBoardItemViewModel.swift; sourceTree = "<group>"; };
 		C972A77C1A17C2B300EDC404 /* RootViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
+		C997CF7B1A1FD94400AAB2A8 /* DragAndDrop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragAndDrop.swift; sourceTree = "<group>"; };
 		C9981F7619C798C600804558 /* CollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewLayout.swift; sourceTree = "<group>"; };
 		C9989AB91A113E2000799596 /* PanAndStopGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanAndStopGestureRecognizer.swift; sourceTree = "<group>"; };
 		C9989ABB1A1143A300799596 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 				C972A77C1A17C2B300EDC404 /* RootViewModel.swift */,
 				C972A7781A17C16400EDC404 /* FolderViewModel.swift */,
 				C972A7761A17BE1700EDC404 /* AppViewModel.swift */,
+				C997CF7B1A1FD94400AAB2A8 /* DragAndDrop.swift */,
 			);
 			name = "View Models";
 			sourceTree = "<group>";
@@ -324,6 +327,7 @@
 				C9DAE69E19C73EC0007CF518 /* ViewController.swift in Sources */,
 				C9DAE69C19C73EC0007CF518 /* AppDelegate.swift in Sources */,
 				C972A77B1A17C25C00EDC404 /* SwiftBoardItemViewModel.swift in Sources */,
+				C997CF7C1A1FD94400AAB2A8 /* DragAndDrop.swift in Sources */,
 				C99E409119CB9187003DE57D /* AppCollectionViewCell.swift in Sources */,
 				C972A7791A17C16400EDC404 /* FolderViewModel.swift in Sources */,
 				C9989ABA1A113E2000799596 /* PanAndStopGestureRecognizer.swift in Sources */,
