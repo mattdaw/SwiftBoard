@@ -8,8 +8,13 @@
 
 import Foundation
 
+enum FolderViewModelState {
+    case Normal, AppHovering, PreparingToOpen
+}
+
 protocol FolderViewModelDelegate: class {
     func folderViewModelDraggingDidChange(dragging: Bool)
+    func folderViewModelStateDidChange(state: FolderViewModelState)
 }
 
 class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
@@ -21,10 +26,17 @@ class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
         }
     }
     
+    var state: FolderViewModelState {
+        didSet {
+            itemViewModelDelegate?.folderViewModelStateDidChange(state)
+        }
+    }
+    
     weak var itemViewModelDelegate: FolderViewModelDelegate?
     
     init(name folderName: String, viewModels initViewModels: [SwiftBoardItemViewModel]) {
         name = folderName
+        state = .Normal
         super.init(viewModels: initViewModels)
     }
     

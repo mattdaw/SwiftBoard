@@ -14,8 +14,15 @@ protocol RootViewModelDelegate: class {
 }
 
 class RootViewModel: SwiftBoardListViewModel {
+    let prepareToOpenFolderAfterSeconds = 2.0
+    let openFolderAfterSeconds = 2.0
+    
     weak var rootViewModelDelegate: RootViewModelDelegate?
-        
+    
+    private var openFolderTimer: NSTimer?
+    private var draggingApp: AppViewModel?
+    private var draggingFolder: FolderViewModel?
+    
     func moveAppToFolder(appViewModel: AppViewModel, folderViewModel: FolderViewModel) {
         if let index = indexOfItem(appViewModel) {
             let addIndex = folderViewModel.numberOfItems()
@@ -45,4 +52,62 @@ class RootViewModel: SwiftBoardListViewModel {
     func closeFolder(folderViewModel: FolderViewModel) {
         rootViewModelDelegate?.rootViewModelFolderClosed(folderViewModel)
     }
+    
+    // Drag/drop for an app on a folder
+    
+    func appDragEnter(appViewModel: AppViewModel, folderViewModel: FolderViewModel) {
+        if draggingApp != nil {
+            assertionFailure("Tried to start a drag while another was in progress or not properly cleaned up.")
+        }
+        
+        draggingFolder = folderViewModel
+        draggingApp = appViewModel
+        folderViewModel.state = .AppHovering
+        
+        openFolderTimer = NSTimer.scheduledTimerWithTimeInterval(prepareToOpenFolderAfterSeconds, target: self, selector: "appDragPrepareToOpenFolder", userInfo: nil, repeats: false)
+    }
+    
+    func appDragExit() {
+        appDragCancelTimer()
+        appDragReset()
+    }
+    
+    func appDragDrop() {
+        if draggingApp == nil {
+            assertionFailure("Tried to drop an app when there was no drag in progress.")
+        }
+        
+        appDragCancelTimer()
+        moveAppToFolder(draggingApp!, folderViewModel: draggingFolder!)
+        appDragReset()
+    }
+    
+    private func appDragCancelTimer() {
+        openFolderTimer?.invalidate()
+        openFolderTimer = nil
+    }
+    
+    func appDragPrepareToOpenFolder() {
+        appDragCancelTimer()
+        
+        draggingFolder!.state = .PreparingToOpen
+        openFolderTimer = NSTimer.scheduledTimerWithTimeInterval(openFolderAfterSeconds, target: self, selector: "appDragOpenFolder", userInfo: nil, repeats: false)
+    }
+    
+    func appDragOpenFolder() {
+        appDragCancelTimer()
+        
+        moveAppToFolder(draggingApp!, folderViewModel: draggingFolder!)
+        openFolder(draggingFolder!)
+        
+        appDragReset()
+    }
+    
+    private func appDragReset () {
+        draggingFolder!.state = .Normal
+        
+        draggingApp = nil
+        draggingFolder = nil
+    }
+
 }

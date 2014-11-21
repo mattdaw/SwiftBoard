@@ -154,13 +154,13 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             currentDropState = DropState(index: dropIndex, cell: dropCell)
             
             if currentDragState!.itemViewModel is AppViewModel && dropCell.pointInsideIcon(locationInCell) && dropCell is FolderCollectionViewCell {
-                // Hover operation needs to tell folder to "expand", it also has a timer to go off that opens the folder?
-                // Drag: App -> Drop: Folder
-                let folderCell = dropCell as FolderCollectionViewCell
                 if let folderViewModel = gestureInfo.itemViewModel as? FolderViewModel {
                     if let appViewModel = currentDragState!.itemViewModel as? AppViewModel {
+                        rootViewModel?.appDragEnter(appViewModel, folderViewModel: folderViewModel)
+                        
                         dropOperation = {
-                            self.moveAppIntoFolder(appViewModel, folderViewModel: folderViewModel, folderCell: folderCell)
+                            self.rootViewModel?.appDragDrop()
+                            self.endDrag()
                         }
                     }
                 }
@@ -304,6 +304,9 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     // MARK: RootViewModelDelegate
     
     func rootViewModelFolderOpened(folderViewModel: FolderViewModel) {
+        // TODO: Not right, but this is temporary
+        dropOperation = { self.endDrag() }
+        
         if let index = rootViewModel?.indexOfItem(folderViewModel) {
             if let cell = cellForItemAtIndexPath(NSIndexPath(forItem: index, inSection: 0)) as? FolderCollectionViewCell {
                 openFolderCollectionView = cell.collectionView

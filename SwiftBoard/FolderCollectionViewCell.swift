@@ -65,4 +65,8 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     func folderViewModelDraggingDidChange(dragging: Bool) {
         hidden = dragging
     }
+    
+    func folderViewModelStateDidChange(state: FolderViewModelState) {
+        println("State changed")
+    }
 }

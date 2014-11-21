@@ -10,4 +10,5 @@ import Foundation
 
 protocol SwiftBoardItemViewModel: class {
     var dragging: Bool { get set }
+    var listViewModel: SwiftBoardListViewModel { get set }
 }
