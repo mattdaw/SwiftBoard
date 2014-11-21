@@ -14,11 +14,8 @@ protocol SwiftBoardListViewModelDelegate: class {
     func listViewModelItemRemovedAtIndex(index: Int)
 }
 
-// TODO: Question, would moving numberOfRows onto each list be really dirty? It does take the layout out
-// of any further calculations? Or should the layout itself actually happen in the view model, since it's not UIKit
-// specific, I just need the "available" width?
-
 class SwiftBoardListViewModel {
+    var numberOfRows: Int = 1
     private var viewModels: [SwiftBoardItemViewModel]
     weak var listViewModelDelegate: SwiftBoardListViewModelDelegate?
     

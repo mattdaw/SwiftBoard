@@ -24,11 +24,13 @@ class CellGestureHit: GestureHit {
     let collectionViewHit: CollectionViewGestureHit
     let cell: SwiftBoardCell
     let locationInCell: CGPoint
+    let itemViewModel: SwiftBoardItemViewModel
     
-    init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: SwiftBoardCell, locationInCell initCellLocation: CGPoint) {
+    init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: SwiftBoardCell, locationInCell initCellLocation: CGPoint, itemViewModel initItem: SwiftBoardItemViewModel) {
         collectionViewHit = initHit
         cell = initCell
         locationInCell = initCellLocation
+        itemViewModel = initItem
     }
 }
 
@@ -37,7 +39,7 @@ class AppGestureHit: CellGestureHit, GestureHit {
     
     init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: SwiftBoardCell, locationInCell initCellLocation: CGPoint, appViewModel initApp: AppViewModel) {
         appViewModel = initApp
-        super.init(collectionViewHit: initHit, cell: initCell, locationInCell: initCellLocation)
+        super.init(collectionViewHit: initHit, cell: initCell, locationInCell: initCellLocation, itemViewModel: initApp)
     }
 }
 
@@ -46,7 +48,7 @@ class FolderGestureHit: CellGestureHit, GestureHit {
     
     init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: SwiftBoardCell, locationInCell initCellLocation: CGPoint, folderViewModel initFolder: FolderViewModel) {
         folderViewModel = initFolder
-        super.init(collectionViewHit: initHit, cell: initCell, locationInCell: initCellLocation)
+        super.init(collectionViewHit: initHit, cell: initCell, locationInCell: initCellLocation, itemViewModel: initFolder)
     }
 }
 
@@ -266,14 +268,46 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         return collectionViewHit
     }
     
+    // How do I get the view proxy to know where to return to?
     func dragAndDropOperationForGesture(gesture: UIGestureRecognizer) -> DragAndDropOperation? {
         let gestureHit = gestureHitForGesture(gesture)
         
         if let appViewModel = draggingItemViewModel as? AppViewModel {
             if let folderHit = gestureHit as? FolderGestureHit {
-                return DragAppOnFolder(rootViewModel: rootViewModel!, appViewModel: appViewModel, folderViewModel: folderHit.folderViewModel)
+                if let folderCell = folderHit.cell as? FolderCollectionViewCell {
+                    if folderCell.pointInsideIcon(folderHit.locationInCell) {
+                        return DragAppOnFolder(rootViewModel: rootViewModel!, appViewModel: appViewModel, folderViewModel: folderHit.folderViewModel)
+                    }
+                }
             }
         }
+        
+        if let itemViewModel = draggingItemViewModel {
+            if let listViewModel = draggingItemViewModel?.listViewModel {
+                if let cellHit = gestureHit as? CellGestureHit {
+                    if itemViewModel === cellHit.itemViewModel {
+                        return nil
+                    }
+                    
+                    let layout = cellHit.collectionViewHit.collectionView.collectionViewLayout as DroppableCollectionViewLayout
+                    var dragIndex = listViewModel.indexOfItem(itemViewModel)
+                    var dropIndex = listViewModel.indexOfItem(cellHit.itemViewModel)
+                    var newIndex: Int
+                    
+                    if dragIndex != nil && dropIndex != nil {
+                        if cellHit.locationInCell.x < (cellHit.cell.bounds.width / 2) {
+                            newIndex = layout.indexToMoveSourceIndexLeftOfDestIndex(dragIndex!, destIndex: dropIndex!)
+                        } else {
+                            newIndex = layout.indexToMoveSourceIndexRightOfDestIndex(dragIndex!, destIndex: dropIndex!)
+                        }
+                        
+                        return MoveItem(listViewModel: listViewModel, fromIndex: dragIndex!, toIndex: newIndex)
+                    }
+                }
+            }
+        }
+        
+        // TODO: Handle promoting an app out of a folder
         
         return nil
     }
@@ -334,6 +368,8 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         }
     }
     
+    // TODO: Need to get DragProxyReturnToRect set in another way now...
+    /*
     private func moveAppIntoFolder(appViewModel: AppViewModel, folderViewModel: FolderViewModel, folderCell: FolderCollectionViewCell) {
         rootViewModel!.moveAppToFolder(appViewModel, folderViewModel: folderViewModel)
         
@@ -345,6 +381,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             }
         }
     }
+    */
 
     // MARK: RootViewModelDelegate
     

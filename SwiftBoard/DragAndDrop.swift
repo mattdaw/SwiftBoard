@@ -70,3 +70,27 @@ class DragAppOnFolder: NSObject, DragAndDropOperation {
         folderViewModel.state = .Normal
     }
 }
+
+class MoveItem: DragAndDropOperation {
+    let listViewModel: SwiftBoardListViewModel
+    let fromIndex: Int
+    let toIndex: Int
+    
+    init(listViewModel initList: SwiftBoardListViewModel, fromIndex initFrom: Int, toIndex initTo: Int) {
+        listViewModel = initList
+        fromIndex = initFrom
+        toIndex = initTo
+    }
+    
+    func dragStart() {
+        listViewModel.moveItemAtIndex(fromIndex, toIndex: toIndex)
+    }
+    
+    func dragEnd() {
+    
+    }
+    
+    func drop() {
+        
+    }
+}
