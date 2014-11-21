@@ -15,7 +15,9 @@ struct GestureInfo {
     
     let collectionView: UICollectionView
     let cell: SwiftBoardCell
+    
     let locationInCollectionView: CGPoint
+    let locationInCell: CGPoint
 }
 
 struct DragState {
@@ -147,15 +149,21 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             let dragIndex = currentDragState!.indexOfItemInList()
             let dropIndex = gestureInfo.itemIndexInList
             let location = gestureInfo.locationInCollectionView
-            
-            let locationInCell = collectionView.convertPoint(location, toView: dropCell)
+            let locationInCell = gestureInfo.locationInCell
             
             currentDropState = DropState(index: dropIndex, cell: dropCell)
             
             if currentDragState!.itemViewModel is AppViewModel && dropCell.pointInsideIcon(locationInCell) && dropCell is FolderCollectionViewCell {
                 // Hover operation needs to tell folder to "expand", it also has a timer to go off that opens the folder?
                 // Drag: App -> Drop: Folder
-                dropOperation = moveAppIntoFolder
+                let folderCell = dropCell as FolderCollectionViewCell
+                if let folderViewModel = gestureInfo.itemViewModel as? FolderViewModel {
+                    if let appViewModel = currentDragState!.itemViewModel as? AppViewModel {
+                        dropOperation = {
+                            self.moveAppIntoFolder(appViewModel, folderViewModel: folderViewModel, folderCell: folderCell)
+                        }
+                    }
+                }
             } else if dragIndex != dropIndex {
                 // Drag: App -> Drop: Cell? It's not really "on" the app/folder
                 var newIndex: Int
@@ -211,12 +219,15 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             if let cell = destCollectionView.cellForItemAtIndexPath(indexPath) as? SwiftBoardCell {
                 if let listViewModel = destCollectionView.listViewModel {
                     let itemViewModel = listViewModel.itemAtIndex(indexPath.item)
+                    let locationInCell = destCollectionView.convertPoint(location, toView: cell)
+                    
                     let gestureInfo = GestureInfo(listViewModel: listViewModel,
                         itemViewModel: itemViewModel,
                         itemIndexInList: indexPath.item,
                         collectionView: destCollectionView,
                         cell: cell,
-                        locationInCollectionView: location)
+                        locationInCollectionView: location,
+                        locationInCell: locationInCell)
                     
                     return gestureInfo
                 }
@@ -278,25 +289,15 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         }
     }
     
-    // Heh, ugly! Clean up.
-    private func moveAppIntoFolder() {
-        if let dropState = currentDropState {
-            if let appViewModel = currentDragState?.itemViewModel as? AppViewModel {
-                if let folderViewModel = rootViewModel?.itemAtIndex(dropState.index) as? FolderViewModel {
-                    rootViewModel!.moveAppToFolder(appViewModel, folderViewModel: folderViewModel)
-                    
-                    if let newIndex = folderViewModel.indexOfItem(appViewModel) {
-                        if let folderCell = dropState.cell as? FolderCollectionViewCell {
-                            let newIndexPath = NSIndexPath(forItem: newIndex, inSection: 0)
-                            if let newAppCell = folderCell.collectionView.cellForItemAtIndexPath(newIndexPath) {
-                                dragProxyReturnToRect = convertRect(newAppCell.frame, fromView: newAppCell.superview)
-                                endDrag()
-                            }
-                        }
-                    }
-                }
+    private func moveAppIntoFolder(appViewModel: AppViewModel, folderViewModel: FolderViewModel, folderCell: FolderCollectionViewCell) {
+        rootViewModel!.moveAppToFolder(appViewModel, folderViewModel: folderViewModel)
+        
+        if let newIndex = folderViewModel.indexOfItem(appViewModel) {
+            let newIndexPath = NSIndexPath(forItem: newIndex, inSection: 0)
+            if let newAppCell = folderCell.collectionView.cellForItemAtIndexPath(newIndexPath) {
+                dragProxyReturnToRect = convertRect(newAppCell.frame, fromView: newAppCell.superview)
+                endDrag()
             }
-
         }
     }
 
