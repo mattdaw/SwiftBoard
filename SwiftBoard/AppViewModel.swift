@@ -15,6 +15,7 @@ protocol AppViewModelDelegate: class {
 class AppViewModel: SwiftBoardItemViewModel {
     var name: String
     var color: UIColor
+    var listViewModel: SwiftBoardListViewModel?
     weak var delegate: AppViewModelDelegate?
     
     var dragging: Bool = false {

@@ -24,6 +24,12 @@ class SwiftBoardListViewModel: NSObject {
     
     init(viewModels initViewModels:[SwiftBoardItemViewModel]) {
         viewModels = initViewModels
+        
+        super.init()
+        
+        for itemViewModel in viewModels {
+            itemViewModel.listViewModel = self
+        }
     }
     
     func numberOfItems() -> Int {

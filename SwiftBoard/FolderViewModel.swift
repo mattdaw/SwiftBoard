@@ -19,6 +19,7 @@ protocol FolderViewModelDelegate: class {
 
 class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
     var name: String
+    var listViewModel: SwiftBoardListViewModel?
     
     var dragging: Bool = false {
         didSet {

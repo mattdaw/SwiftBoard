@@ -27,6 +27,7 @@ class RootViewModel: SwiftBoardListViewModel {
         if let index = indexOfItem(appViewModel) {
             let addIndex = folderViewModel.numberOfItems()
             
+            appViewModel.listViewModel = folderViewModel
             removeItemAtIndex(index)
             folderViewModel.appendItem(appViewModel)
         } else {
@@ -38,6 +39,7 @@ class RootViewModel: SwiftBoardListViewModel {
         if let removeIndex = folderViewModel.indexOfItem(appViewModel) {
             let addIndex = numberOfItems()
             
+            appViewModel.listViewModel = self
             folderViewModel.removeItemAtIndex(removeIndex)
             appendItem(appViewModel)
         } else {

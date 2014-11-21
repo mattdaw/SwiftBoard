@@ -21,11 +21,11 @@ struct GestureInfo {
 }
 
 struct DragState {
-    let listViewModel:SwiftBoardListViewModel
     let itemViewModel:SwiftBoardItemViewModel
     
+    // TODO: hopefully not needed after refactoring to drag operations
     func indexOfItemInList() -> Int {
-        return listViewModel.indexOfItem(itemViewModel)!
+        return itemViewModel.listViewModel!.indexOfItem(itemViewModel)!
     }
 }
 
@@ -174,7 +174,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
                     newIndex = layout.indexToMoveSourceIndexRightOfDestIndex(dragIndex, destIndex: dropIndex)
                 }
                 
-                currentDragState?.listViewModel.moveItemAtIndex(dragIndex, toIndex: newIndex)
+                currentDragState?.itemViewModel.listViewModel!.moveItemAtIndex(dragIndex, toIndex: newIndex)
                 
                 if let newCell = collectionView.cellForItemAtIndexPath(NSIndexPath(forItem: newIndex, inSection: 0)) {
                     dragProxyReturnToRect = convertRect(newCell.frame, fromView: newCell.superview)
@@ -184,7 +184,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             // Drag: App Inside Folder -> Drop: Root Collection View (outside its folders collection view)
             if openFolderCollectionView != nil {
                 if let folderViewModel = openFolderCollectionView!.listViewModel as? FolderViewModel {
-                    // "Promote to root", update the drag state to be in the root
+                    // "Promote to root"
                     if let appViewModel = currentDragState!.itemViewModel as? AppViewModel {
                         rootViewModel?.closeFolder(folderViewModel)
                         rootViewModel?.moveAppFromFolder(appViewModel, folderViewModel: folderViewModel)
@@ -194,8 +194,6 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
                                 dragProxyReturnToRect = convertRect(newCell.frame, fromView: newCell.superview)
                             }
                         }
-                        
-                        currentDragState = DragState(listViewModel: rootViewModel!, itemViewModel: appViewModel)
                     }
                 }
             }
@@ -250,7 +248,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             
             dropOperation = endDrag
             
-            currentDragState = DragState(listViewModel: gestureInfo.listViewModel, itemViewModel: gestureInfo.itemViewModel)
+            currentDragState = DragState(itemViewModel: gestureInfo.itemViewModel)
             currentDragState!.itemViewModel.dragging = true
             
             UIView.animateWithDuration(0.2) {
