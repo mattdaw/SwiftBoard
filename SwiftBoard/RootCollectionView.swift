@@ -244,35 +244,12 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     
     private func endDrag(gesture: UIGestureRecognizer) {
         if let proxyState = dragProxyState {
-            var returnToRect: CGRect?
             
-            if let itemViewModel = draggingItemViewModel {
-                if itemViewModel.listViewModel is RootViewModel {
-                    if let index = itemViewModel.listViewModel?.indexOfItem(itemViewModel) {
-                        if let cell = cellForItemAtIndexPath(index.toIndexPath()) {
-                            returnToRect = cell.frame
-                        }
-                    }
-                } else if let folderViewModel = itemViewModel.listViewModel as? FolderViewModel {
-                    if let indexOfFolder = rootViewModel?.indexOfItem(folderViewModel) {
-                        if let folderCell = cellForItemAtIndexPath(indexOfFolder.toIndexPath()) as? FolderCollectionViewCell {
-                            if let indexOfItem = itemViewModel.listViewModel?.indexOfItem(itemViewModel) {
-                                
-                                if let cell = folderCell.collectionView.cellForItemAtIndexPath(indexOfItem.toIndexPath()) {
-                                    returnToRect = convertRect(cell.frame, fromView: cell.superview)
-                                }
-                            }
-                        }
-                    }
-                    
-                }
-            }
-            
-            if returnToRect != nil {
+            if let returnToRect = dragProxyReturnToRect() {
                 UIView.animateWithDuration(0.2, animations: { () -> Void in
                     proxyState.view.transform = CGAffineTransformIdentity
                     proxyState.view.alpha = 1
-                    proxyState.view.frame = returnToRect!
+                    proxyState.view.frame = returnToRect
                 }, completion: { (Bool) -> Void in
                     self.resetDrag()
                 })
@@ -292,6 +269,34 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         
             draggingItemViewModel = nil
         }
+    }
+    
+    private func dragProxyReturnToRect() -> CGRect? {
+        var returnToRect: CGRect?
+        
+        if let itemViewModel = draggingItemViewModel {
+            if itemViewModel.listViewModel is RootViewModel {
+                if let index = itemViewModel.listViewModel?.indexOfItem(itemViewModel) {
+                    if let cell = cellForItemAtIndexPath(index.toIndexPath()) {
+                        returnToRect = cell.frame
+                    }
+                }
+            } else if let folderViewModel = itemViewModel.listViewModel as? FolderViewModel {
+                if let indexOfFolder = rootViewModel?.indexOfItem(folderViewModel) {
+                    if let folderCell = cellForItemAtIndexPath(indexOfFolder.toIndexPath()) as? FolderCollectionViewCell {
+                        if let indexOfItem = itemViewModel.listViewModel?.indexOfItem(itemViewModel) {
+                            
+                            if let cell = folderCell.collectionView.cellForItemAtIndexPath(indexOfItem.toIndexPath()) {
+                                returnToRect = convertRect(cell.frame, fromView: cell.superview)
+                            }
+                        }
+                    }
+                }
+                
+            }
+        }
+        
+        return returnToRect
     }
     
     // MARK: RootViewModelDelegate
