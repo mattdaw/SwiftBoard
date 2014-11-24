@@ -231,17 +231,14 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
                 dragProxyView.alpha = 0.8
             }
             
-            if let appHit = cellHit as? AppGestureHit {
-                draggingItemViewModel = appHit.appViewModel
-            } else if let folderHit = cellHit as? FolderGestureHit {
-                draggingItemViewModel = folderHit.folderViewModel
-            }
-            
+            draggingItemViewModel = cellHit.itemViewModel
             draggingItemViewModel!.dragging = true
         }
     }
     
     private func endDrag(gesture: UIGestureRecognizer) {
+        dragAndDropOperation = nil
+        
         if let proxyState = dragProxyState {
             if let returnToRect = dragProxyReturnToRect() {
                 UIView.animateWithDuration(0.4, animations: { () -> Void in
