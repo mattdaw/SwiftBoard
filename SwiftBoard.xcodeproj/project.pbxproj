@@ -16,7 +16,7 @@
 		C9473F471A1A93A4006D0CB3 /* SwiftBoardListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9473F461A1A93A4006D0CB3 /* SwiftBoardListViewModel.swift */; };
 		C9473F491A1A967F006D0CB3 /* SwiftBoardCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9473F481A1A967F006D0CB3 /* SwiftBoardCollectionView.swift */; };
 		C9473F4B1A1A97A9006D0CB3 /* FolderCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9473F4A1A1A97A9006D0CB3 /* FolderCollectionView.swift */; };
-		C94803FA19F70C2B000A4FB0 /* SwiftBoardListViewModelDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94803F919F70C2B000A4FB0 /* SwiftBoardListViewModelDataSource.swift */; };
+		C94803FA19F70C2B000A4FB0 /* ListViewModelDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94803F919F70C2B000A4FB0 /* ListViewModelDataSource.swift */; };
 		C96664A619DCA3CD00247FC4 /* CollectionViewLayoutAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96664A519DCA3CD00247FC4 /* CollectionViewLayoutAttributes.swift */; };
 		C96A381219CA0F650069F5D9 /* AppCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C96A381119CA0F650069F5D9 /* AppCollectionViewCell.xib */; };
 		C96A381419CA10120069F5D9 /* FolderCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C96A381319CA10120069F5D9 /* FolderCollectionViewCell.xib */; };
@@ -59,7 +59,7 @@
 		C9473F461A1A93A4006D0CB3 /* SwiftBoardListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBoardListViewModel.swift; sourceTree = "<group>"; };
 		C9473F481A1A967F006D0CB3 /* SwiftBoardCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBoardCollectionView.swift; sourceTree = "<group>"; };
 		C9473F4A1A1A97A9006D0CB3 /* FolderCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderCollectionView.swift; sourceTree = "<group>"; };
-		C94803F919F70C2B000A4FB0 /* SwiftBoardListViewModelDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBoardListViewModelDataSource.swift; sourceTree = "<group>"; };
+		C94803F919F70C2B000A4FB0 /* ListViewModelDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewModelDataSource.swift; sourceTree = "<group>"; };
 		C96664A519DCA3CD00247FC4 /* CollectionViewLayoutAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewLayoutAttributes.swift; sourceTree = "<group>"; };
 		C96A381119CA0F650069F5D9 /* AppCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AppCollectionViewCell.xib; sourceTree = "<group>"; };
 		C96A381319CA10120069F5D9 /* FolderCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FolderCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -166,7 +166,7 @@
 				C9473F481A1A967F006D0CB3 /* SwiftBoardCollectionView.swift */,
 				C9F94B421A1A68FA00119BCA /* RootCollectionView.swift */,
 				C9473F4A1A1A97A9006D0CB3 /* FolderCollectionView.swift */,
-				C94803F919F70C2B000A4FB0 /* SwiftBoardListViewModelDataSource.swift */,
+				C94803F919F70C2B000A4FB0 /* ListViewModelDataSource.swift */,
 				C941E8021A23A6A6006D3085 /* GestureHit.swift */,
 			);
 			name = "Collection Views";
@@ -354,7 +354,7 @@
 				C972A7791A17C16400EDC404 /* FolderViewModel.swift in Sources */,
 				C9989ABA1A113E2000799596 /* PanAndStopGestureRecognizer.swift in Sources */,
 				C933C67D1A144FC6004F7703 /* DroppableCollectionViewLayout.swift in Sources */,
-				C94803FA19F70C2B000A4FB0 /* SwiftBoardListViewModelDataSource.swift in Sources */,
+				C94803FA19F70C2B000A4FB0 /* ListViewModelDataSource.swift in Sources */,
 				C99E408F19CB41AC003DE57D /* FolderCollectionViewCell.swift in Sources */,
 				C941E8051A23B03D006D3085 /* Extensions.swift in Sources */,
 				C908190C19D485EA0091A58C /* SwiftBoardCell.swift in Sources */,

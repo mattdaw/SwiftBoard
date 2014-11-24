@@ -1,5 +1,5 @@
 //
-//  RootDataSource.swift
+//  ListViewModelDataSource.swift
 //  SwiftBoard
 //
 //  Created by Matt Daw on 2014-10-21.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SwiftBoardListViewModelDataSource : NSObject, UICollectionViewDelegate, UICollectionViewDataSource {
+class ListViewModelDataSource : NSObject, UICollectionViewDelegate, UICollectionViewDataSource {
     
     var listViewModel: SwiftBoardListViewModel
     

@@ -9,12 +9,12 @@
 import UIKit
 
 class FolderCollectionView: SwiftBoardCollectionView {
-    var listDataSource: SwiftBoardListViewModelDataSource?
+    var listDataSource: ListViewModelDataSource?
     
     var folderViewModel: FolderViewModel? {
         didSet {
             if folderViewModel != nil {
-                listDataSource = SwiftBoardListViewModelDataSource(folderViewModel!)
+                listDataSource = ListViewModelDataSource(folderViewModel!)
                 dataSource = listDataSource
                 delegate = listDataSource
                 
