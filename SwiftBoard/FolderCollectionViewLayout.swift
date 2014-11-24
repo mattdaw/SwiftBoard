@@ -54,8 +54,7 @@ class FolderCollectionViewLayout: DroppableCollectionViewLayout {
         
         if let myCollectionView = collectionView {
             for itemIndex in 0..<numberOfItems {
-                let indexPath = NSIndexPath(forItem: itemIndex, inSection: 0)
-                attributes.append(layoutAttributesForItemAtIndexPath(indexPath))
+                attributes.append(layoutAttributesForItemAtIndexPath(itemIndex.toIndexPath()))
             }
         }
         

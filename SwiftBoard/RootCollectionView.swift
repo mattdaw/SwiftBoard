@@ -306,16 +306,16 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             if let itemViewModel = draggingItemViewModel {
                 if itemViewModel.listViewModel is RootViewModel {
                     if let index = itemViewModel.listViewModel?.indexOfItem(itemViewModel) {
-                        if let cell = cellForItemAtIndexPath(NSIndexPath(forItem: index, inSection: 0)) {
+                        if let cell = cellForItemAtIndexPath(index.toIndexPath()) {
                             returnToRect = cell.frame
                         }
                     }
                 } else if let folderViewModel = itemViewModel.listViewModel as? FolderViewModel {
                     if let indexOfFolder = rootViewModel?.indexOfItem(folderViewModel) {
-                        if let folderCell = cellForItemAtIndexPath(NSIndexPath(forItem: indexOfFolder, inSection: 0)) as? FolderCollectionViewCell {
+                        if let folderCell = cellForItemAtIndexPath(indexOfFolder.toIndexPath()) as? FolderCollectionViewCell {
                             if let indexOfItem = itemViewModel.listViewModel?.indexOfItem(itemViewModel) {
                                 
-                                if let cell = folderCell.collectionView.cellForItemAtIndexPath(NSIndexPath(forItem: indexOfItem, inSection: 0)) {
+                                if let cell = folderCell.collectionView.cellForItemAtIndexPath(indexOfItem.toIndexPath()) {
                                     returnToRect = convertRect(cell.frame, fromView: cell.superview)
                                 }
                             }
@@ -358,7 +358,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         dragAndDropOperation = nil
         
         if let index = rootViewModel?.indexOfItem(folderViewModel) {
-            if let cell = cellForItemAtIndexPath(NSIndexPath(forItem: index, inSection: 0)) as? FolderCollectionViewCell {
+            if let cell = cellForItemAtIndexPath(index.toIndexPath()) as? FolderCollectionViewCell {
                 openFolderCollectionView = cell.collectionView
                 zoomedLayout.zoomToIndex = index
                 setCollectionViewLayout(zoomedLayout, animated: true)

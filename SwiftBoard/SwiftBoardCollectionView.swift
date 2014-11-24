@@ -14,27 +14,20 @@ class SwiftBoardCollectionView: UICollectionView, SwiftBoardListViewModelDelegat
     // MARK: SwiftBoardListViewModelDelegate
     
     func listViewModelItemMoved(fromIndex: Int, toIndex: Int) {
-        let fromIndexPath = NSIndexPath(forItem: fromIndex, inSection: 0)
-        let toIndexPath = NSIndexPath(forItem: toIndex, inSection: 0)
-        
         performBatchUpdates({ () -> Void in
-            self.moveItemAtIndexPath(fromIndexPath, toIndexPath: toIndexPath)
-            }, completion: nil)
+            self.moveItemAtIndexPath(fromIndex.toIndexPath(), toIndexPath: toIndex.toIndexPath())
+        }, completion: nil)
     }
     
     func listViewModelItemAddedAtIndex(index: Int) {
-        let indexPath = NSIndexPath(forItem: index, inSection: 0)
-        
         performBatchUpdates({ () -> Void in
-            self.insertItemsAtIndexPaths([indexPath])
-            }, completion: nil)
+            self.insertItemsAtIndexPaths([index.toIndexPath()])
+        }, completion: nil)
     }
     
     func listViewModelItemRemovedAtIndex(index: Int) {
-        let indexPath = NSIndexPath(forItem: index, inSection: 0)
-        
         performBatchUpdates({ () -> Void in
-            self.deleteItemsAtIndexPaths([indexPath])
-            }, completion: nil)
+            self.deleteItemsAtIndexPaths([index.toIndexPath()])
+        }, completion: nil)
     }
 }
