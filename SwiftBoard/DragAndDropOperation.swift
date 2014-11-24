@@ -9,13 +9,7 @@
 import Foundation
 
 protocol DragAndDropOperation {
-    weak var delegate: DragAndDropOperationDelegate? { get set }
-    
     func dragStart()
     func dragEnd()
     func drop()
-}
-
-protocol DragAndDropOperationDelegate: class {
-    func dragAndDropOperationMovedAppViewModel(AppViewModel)
 }

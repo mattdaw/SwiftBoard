@@ -9,8 +9,6 @@
 import Foundation
 
 class MoveItemInList: DragAndDropOperation {
-    weak var delegate: DragAndDropOperationDelegate?
-    
     let listViewModel: SwiftBoardListViewModel
     let fromIndex: Int
     let toIndex: Int

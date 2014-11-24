@@ -9,8 +9,6 @@
 import Foundation
 
 class MoveAppToFolder: NSObject, DragAndDropOperation {
-    weak var delegate: DragAndDropOperationDelegate?
-    
     let prepareToOpenFolderAfterSeconds = 2.0
     let openFolderAfterSeconds = 2.0
     

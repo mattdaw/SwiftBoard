@@ -8,50 +8,6 @@
 
 import UIKit
 
-protocol GestureHit {}
-
-class CollectionViewGestureHit: GestureHit {
-    let collectionView: UICollectionView
-    let locationInCollectionView: CGPoint
-    
-    init(collectionView initCollectionView: UICollectionView, locationInCollectionView initViewLocation: CGPoint) {
-        collectionView = initCollectionView
-        locationInCollectionView = initViewLocation
-    }
-}
-
-class CellGestureHit: GestureHit {
-    let collectionViewHit: CollectionViewGestureHit
-    let cell: SwiftBoardCell
-    let locationInCell: CGPoint
-    let itemViewModel: SwiftBoardItemViewModel
-    
-    init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: SwiftBoardCell, locationInCell initCellLocation: CGPoint, itemViewModel initItem: SwiftBoardItemViewModel) {
-        collectionViewHit = initHit
-        cell = initCell
-        locationInCell = initCellLocation
-        itemViewModel = initItem
-    }
-}
-
-class AppGestureHit: CellGestureHit, GestureHit {
-    let appViewModel: AppViewModel
-    
-    init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: SwiftBoardCell, locationInCell initCellLocation: CGPoint, appViewModel initApp: AppViewModel) {
-        appViewModel = initApp
-        super.init(collectionViewHit: initHit, cell: initCell, locationInCell: initCellLocation, itemViewModel: initApp)
-    }
-}
-
-class FolderGestureHit: CellGestureHit, GestureHit {
-    let folderViewModel: FolderViewModel
-    
-    init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: SwiftBoardCell, locationInCell initCellLocation: CGPoint, folderViewModel initFolder: FolderViewModel) {
-        folderViewModel = initFolder
-        super.init(collectionViewHit: initHit, cell: initCell, locationInCell: initCellLocation, itemViewModel: initFolder)
-    }
-}
-
 struct DragProxyState {
     let view: UIView
     let originalCenter: CGPoint
@@ -68,7 +24,6 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     
     private var openFolderCollectionView: FolderCollectionView?
     private var dragProxyState: DragProxyState?
-    private var dragProxyReturnToRect: CGRect?
     private var draggingItemViewModel: SwiftBoardItemViewModel?
     private var dragAndDropOperation: DragAndDropOperation?
     
@@ -138,7 +93,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
                 dragAndDropOp.drop()
             }
             
-            endDrag()
+            endDrag(gesture)
         default:
             break
         }
@@ -264,11 +219,11 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     func dragAndDropOperationForGesture(gesture: UIGestureRecognizer) -> DragAndDropOperation? {
         let gestureHit = gestureHitForGesture(gesture)
         
-        if let dragOperation = dragAndDropOperationForAppOnFolder(gestureHit) {
+        if var dragOperation = dragAndDropOperationForAppOnFolder(gestureHit) {
             return dragOperation
         }
         
-        if let dragOperation = dragAndDropOperationForMoveItem(gestureHit) {
+        if var dragOperation = dragAndDropOperationForMoveItem(gestureHit) {
             return dragOperation
         }
         
@@ -329,7 +284,6 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             addSubview(dragProxyView)
             
             dragProxyState = DragProxyState(view: dragProxyView, originalCenter: dragProxyView.center)
-            dragProxyReturnToRect = dragProxyView.frame
             UIView.animateWithDuration(0.2) {
                 dragProxyView.transform = CGAffineTransformMakeScale(1.1, 1.1)
                 dragProxyView.alpha = 0.8
@@ -345,13 +299,37 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         }
     }
     
-    private func endDrag() {
+    private func endDrag(gesture: UIGestureRecognizer) {
         if let proxyState = dragProxyState {
-            if let returnToRect = dragProxyReturnToRect {
+            var returnToRect: CGRect?
+            
+            if let itemViewModel = draggingItemViewModel {
+                if itemViewModel.listViewModel is RootViewModel {
+                    if let index = itemViewModel.listViewModel?.indexOfItem(itemViewModel) {
+                        if let cell = cellForItemAtIndexPath(NSIndexPath(forItem: index, inSection: 0)) {
+                            returnToRect = cell.frame
+                        }
+                    }
+                } else if let folderViewModel = itemViewModel.listViewModel as? FolderViewModel {
+                    if let indexOfFolder = rootViewModel?.indexOfItem(folderViewModel) {
+                        if let folderCell = cellForItemAtIndexPath(NSIndexPath(forItem: indexOfFolder, inSection: 0)) as? FolderCollectionViewCell {
+                            if let indexOfItem = itemViewModel.listViewModel?.indexOfItem(itemViewModel) {
+                                
+                                if let cell = folderCell.collectionView.cellForItemAtIndexPath(NSIndexPath(forItem: indexOfItem, inSection: 0)) {
+                                    returnToRect = convertRect(cell.frame, fromView: cell.superview)
+                                }
+                            }
+                        }
+                    }
+                    
+                }
+            }
+            
+            if returnToRect != nil {
                 UIView.animateWithDuration(0.2, animations: { () -> Void in
                     proxyState.view.transform = CGAffineTransformIdentity
                     proxyState.view.alpha = 1
-                    proxyState.view.frame = returnToRect
+                    proxyState.view.frame = returnToRect!
                 }, completion: { (Bool) -> Void in
                     self.resetDrag()
                 })
@@ -373,21 +351,6 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         }
     }
     
-    // TODO: Need to get DragProxyReturnToRect set in another way now...
-    /*
-    private func moveAppIntoFolder(appViewModel: AppViewModel, folderViewModel: FolderViewModel, folderCell: FolderCollectionViewCell) {
-        rootViewModel!.moveAppToFolder(appViewModel, folderViewModel: folderViewModel)
-        
-        if let newIndex = folderViewModel.indexOfItem(appViewModel) {
-            let newIndexPath = NSIndexPath(forItem: newIndex, inSection: 0)
-            if let newAppCell = folderCell.collectionView.cellForItemAtIndexPath(newIndexPath) {
-                dragProxyReturnToRect = convertRect(newAppCell.frame, fromView: newAppCell.superview)
-                //endDrag()
-            }
-        }
-    }
-    */
-
     // MARK: RootViewModelDelegate
     
     func rootViewModelFolderOpened(folderViewModel: FolderViewModel) {
