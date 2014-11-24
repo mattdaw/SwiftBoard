@@ -19,6 +19,7 @@ class SwiftBoardCell : UICollectionViewCell {
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes!) {
         super.applyLayoutAttributes(layoutAttributes)
         
+        /*
         if let myAttributes = layoutAttributes as? CollectionViewLayoutAttributes {
             if myAttributes.editingModeEnabled {
                 startAnimating()
@@ -26,6 +27,7 @@ class SwiftBoardCell : UICollectionViewCell {
                 stopAnimating()
             }
         }
+        */
     }
     
     func startAnimating() {
