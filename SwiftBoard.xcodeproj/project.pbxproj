@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		C908190C19D485EA0091A58C /* SwiftBoardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C908190B19D485EA0091A58C /* SwiftBoardCell.swift */; };
 		C933C67D1A144FC6004F7703 /* DroppableCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C933C67C1A144FC6004F7703 /* DroppableCollectionViewLayout.swift */; };
+		C941E7FD1A23A148006D3085 /* MoveAppToFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C941E7FC1A23A148006D3085 /* MoveAppToFolder.swift */; };
+		C941E7FF1A23A160006D3085 /* MoveItemInList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C941E7FE1A23A160006D3085 /* MoveItemInList.swift */; };
 		C9473F471A1A93A4006D0CB3 /* SwiftBoardListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9473F461A1A93A4006D0CB3 /* SwiftBoardListViewModel.swift */; };
 		C9473F491A1A967F006D0CB3 /* SwiftBoardCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9473F481A1A967F006D0CB3 /* SwiftBoardCollectionView.swift */; };
 		C9473F4B1A1A97A9006D0CB3 /* FolderCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9473F4A1A1A97A9006D0CB3 /* FolderCollectionView.swift */; };
@@ -20,7 +22,7 @@
 		C972A7791A17C16400EDC404 /* FolderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C972A7781A17C16400EDC404 /* FolderViewModel.swift */; };
 		C972A77B1A17C25C00EDC404 /* SwiftBoardItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C972A77A1A17C25C00EDC404 /* SwiftBoardItemViewModel.swift */; };
 		C972A77D1A17C2B300EDC404 /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C972A77C1A17C2B300EDC404 /* RootViewModel.swift */; };
-		C997CF7C1A1FD94400AAB2A8 /* DragAndDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = C997CF7B1A1FD94400AAB2A8 /* DragAndDrop.swift */; };
+		C997CF7C1A1FD94400AAB2A8 /* DragAndDropOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C997CF7B1A1FD94400AAB2A8 /* DragAndDropOperation.swift */; };
 		C9981F7719C798C600804558 /* CollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9981F7619C798C600804558 /* CollectionViewLayout.swift */; };
 		C9989ABA1A113E2000799596 /* PanAndStopGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9989AB91A113E2000799596 /* PanAndStopGestureRecognizer.swift */; };
 		C99E408F19CB41AC003DE57D /* FolderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99E408E19CB41AC003DE57D /* FolderCollectionViewCell.swift */; };
@@ -48,6 +50,8 @@
 /* Begin PBXFileReference section */
 		C908190B19D485EA0091A58C /* SwiftBoardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBoardCell.swift; sourceTree = "<group>"; };
 		C933C67C1A144FC6004F7703 /* DroppableCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DroppableCollectionViewLayout.swift; sourceTree = "<group>"; };
+		C941E7FC1A23A148006D3085 /* MoveAppToFolder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoveAppToFolder.swift; sourceTree = "<group>"; };
+		C941E7FE1A23A160006D3085 /* MoveItemInList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoveItemInList.swift; sourceTree = "<group>"; };
 		C9473F461A1A93A4006D0CB3 /* SwiftBoardListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBoardListViewModel.swift; sourceTree = "<group>"; };
 		C9473F481A1A967F006D0CB3 /* SwiftBoardCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBoardCollectionView.swift; sourceTree = "<group>"; };
 		C9473F4A1A1A97A9006D0CB3 /* FolderCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderCollectionView.swift; sourceTree = "<group>"; };
@@ -59,7 +63,7 @@
 		C972A7781A17C16400EDC404 /* FolderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderViewModel.swift; sourceTree = "<group>"; };
 		C972A77A1A17C25C00EDC404 /* SwiftBoardItemViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBoardItemViewModel.swift; sourceTree = "<group>"; };
 		C972A77C1A17C2B300EDC404 /* RootViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
-		C997CF7B1A1FD94400AAB2A8 /* DragAndDrop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragAndDrop.swift; sourceTree = "<group>"; };
+		C997CF7B1A1FD94400AAB2A8 /* DragAndDropOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragAndDropOperation.swift; sourceTree = "<group>"; };
 		C9981F7619C798C600804558 /* CollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewLayout.swift; sourceTree = "<group>"; };
 		C9989AB91A113E2000799596 /* PanAndStopGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanAndStopGestureRecognizer.swift; sourceTree = "<group>"; };
 		C9989ABB1A1143A300799596 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
@@ -97,6 +101,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C941E7FB1A23A131006D3085 /* Drag and Drop */ = {
+			isa = PBXGroup;
+			children = (
+				C997CF7B1A1FD94400AAB2A8 /* DragAndDropOperation.swift */,
+				C941E7FC1A23A148006D3085 /* MoveAppToFolder.swift */,
+				C941E7FE1A23A160006D3085 /* MoveItemInList.swift */,
+			);
+			name = "Drag and Drop";
+			sourceTree = "<group>";
+		};
 		C972A7751A17BDFE00EDC404 /* View Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -105,7 +119,7 @@
 				C972A77C1A17C2B300EDC404 /* RootViewModel.swift */,
 				C972A7781A17C16400EDC404 /* FolderViewModel.swift */,
 				C972A7761A17BE1700EDC404 /* AppViewModel.swift */,
-				C997CF7B1A1FD94400AAB2A8 /* DragAndDrop.swift */,
+				C941E7FB1A23A131006D3085 /* Drag and Drop */,
 			);
 			name = "View Models";
 			sourceTree = "<group>";
@@ -327,7 +341,8 @@
 				C9DAE69E19C73EC0007CF518 /* ViewController.swift in Sources */,
 				C9DAE69C19C73EC0007CF518 /* AppDelegate.swift in Sources */,
 				C972A77B1A17C25C00EDC404 /* SwiftBoardItemViewModel.swift in Sources */,
-				C997CF7C1A1FD94400AAB2A8 /* DragAndDrop.swift in Sources */,
+				C997CF7C1A1FD94400AAB2A8 /* DragAndDropOperation.swift in Sources */,
+				C941E7FF1A23A160006D3085 /* MoveItemInList.swift in Sources */,
 				C99E409119CB9187003DE57D /* AppCollectionViewCell.swift in Sources */,
 				C972A7791A17C16400EDC404 /* FolderViewModel.swift in Sources */,
 				C9989ABA1A113E2000799596 /* PanAndStopGestureRecognizer.swift in Sources */,
@@ -335,6 +350,7 @@
 				C94803FA19F70C2B000A4FB0 /* SwiftBoardListViewModelDataSource.swift in Sources */,
 				C99E408F19CB41AC003DE57D /* FolderCollectionViewCell.swift in Sources */,
 				C908190C19D485EA0091A58C /* SwiftBoardCell.swift in Sources */,
+				C941E7FD1A23A148006D3085 /* MoveAppToFolder.swift in Sources */,
 				C9981F7719C798C600804558 /* CollectionViewLayout.swift in Sources */,
 				C96664A619DCA3CD00247FC4 /* CollectionViewLayoutAttributes.swift in Sources */,
 			);

@@ -1,20 +1,16 @@
 //
-//  DragAndDrop.swift
+//  MoveAppToFolder.swift
 //  SwiftBoard
 //
-//  Created by Matt Daw on 2014-11-21.
+//  Created by Matt Daw on 2014-11-24.
 //  Copyright (c) 2014 Matt Daw. All rights reserved.
 //
 
 import Foundation
 
-protocol DragAndDropOperation {
-    func dragStart()
-    func dragEnd()
-    func drop()
-}
-
 class MoveAppToFolder: NSObject, DragAndDropOperation {
+    weak var delegate: DragAndDropOperationDelegate?
+    
     let prepareToOpenFolderAfterSeconds = 2.0
     let openFolderAfterSeconds = 2.0
     
@@ -68,29 +64,5 @@ class MoveAppToFolder: NSObject, DragAndDropOperation {
     
     func resetFolderState() {
         folderViewModel.state = .Normal
-    }
-}
-
-class MoveItem: DragAndDropOperation {
-    let listViewModel: SwiftBoardListViewModel
-    let fromIndex: Int
-    let toIndex: Int
-    
-    init(listViewModel initList: SwiftBoardListViewModel, fromIndex initFrom: Int, toIndex initTo: Int) {
-        listViewModel = initList
-        fromIndex = initFrom
-        toIndex = initTo
-    }
-    
-    func dragStart() {
-        listViewModel.moveItemAtIndex(fromIndex, toIndex: toIndex)
-    }
-    
-    func dragEnd() {
-    
-    }
-    
-    func drop() {
-        
     }
 }

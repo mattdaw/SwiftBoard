@@ -264,16 +264,33 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     func dragAndDropOperationForGesture(gesture: UIGestureRecognizer) -> DragAndDropOperation? {
         let gestureHit = gestureHitForGesture(gesture)
         
+        if let dragOperation = dragAndDropOperationForAppOnFolder(gestureHit) {
+            return dragOperation
+        }
+        
+        if let dragOperation = dragAndDropOperationForMoveItem(gestureHit) {
+            return dragOperation
+        }
+        
+        // TODO: Handle dragging an app on top of an app and creating a folder?
+        // TODO: Handle promoting an app out of a folder
+        
+        return nil
+    }
+    
+    func dragAndDropOperationForAppOnFolder(gestureHit: GestureHit) -> DragAndDropOperation? {
         if let appViewModel = draggingItemViewModel as? AppViewModel {
             if let folderHit = gestureHit as? FolderGestureHit {
                 if folderHit.cell.pointInsideIcon(folderHit.locationInCell) {
                     return MoveAppToFolder(rootViewModel: rootViewModel!, appViewModel: appViewModel, folderViewModel: folderHit.folderViewModel)
                 }
             }
-            
-            // TODO: Handle dragging an app on top of an app and creating a folder?
         }
         
+        return nil
+    }
+    
+    func dragAndDropOperationForMoveItem(gestureHit: GestureHit) -> DragAndDropOperation? {
         if let itemViewModel = draggingItemViewModel {
             if let listViewModel = draggingItemViewModel?.listViewModel {
                 if let cellHit = gestureHit as? CellGestureHit {
@@ -293,16 +310,15 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
                             newIndex = layout.indexToMoveSourceIndexRightOfDestIndex(dragIndex!, destIndex: dropIndex!)
                         }
                         
-                        return MoveItem(listViewModel: listViewModel, fromIndex: dragIndex!, toIndex: newIndex)
+                        return MoveItemInList(listViewModel: listViewModel, fromIndex: dragIndex!, toIndex: newIndex)
                     }
                 }
             }
         }
-        
-        // TODO: Handle promoting an app out of a folder
-        
+
         return nil
     }
+
     
     func startDrag(gesture: UIGestureRecognizer) {
         if let cellHit = gestureHitForGesture(gesture) as? CellGestureHit {
