@@ -19,10 +19,22 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
     @IBOutlet weak var leftConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightConstraint: NSLayoutConstraint!
     
+    weak var appViewModel: AppViewModel? {
+        didSet {
+            if appViewModel != nil {
+                hidden = appViewModel!.dragging
+                label.text = appViewModel!.name
+                containerView.backgroundColor = appViewModel!.color
+                appViewModel!.delegate = self
+            } else {
+                hidden = false
+            }
+        }
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
-        
-        hidden = false
+        appViewModel = nil
     }
     
     override func awakeFromNib() {
@@ -60,15 +72,11 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
         return containerView.pointInside(converted, withEvent: nil)
     }
     
-    func configureForAppViewModel(appViewModel: AppViewModel) {
-        hidden = appViewModel.dragging
-        label.text = appViewModel.name
-        containerView.backgroundColor = appViewModel.color
-        
-        appViewModel.delegate = self
+    @IBAction func deleteApp(sender: AnyObject) {
+        appViewModel?.delete()
     }
     
-    // AppViewModelDelegate
+    // MARK: AppViewModelDelegate
     func appViewModelDraggingDidChange(dragging: Bool) {
         hidden = dragging
     }

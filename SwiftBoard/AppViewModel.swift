@@ -28,4 +28,10 @@ class AppViewModel: SwiftBoardItemViewModel {
         name = appName
         color = appColor
     }
+    
+    func delete() {
+        if let index = listViewModel?.indexOfItem(self) {
+            listViewModel?.removeItemAtIndex(index)
+        }
+    }
 }

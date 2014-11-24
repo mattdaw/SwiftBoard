@@ -160,7 +160,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             return dragOperation
         }
         
-        // TODO: Handle dragging an app on top of an app and creating a folder?
+        // TODO: Handle dragging an app on top of an app, creating a folder.
         
         return nil
     }
@@ -244,7 +244,6 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     
     private func endDrag(gesture: UIGestureRecognizer) {
         if let proxyState = dragProxyState {
-            
             if let returnToRect = dragProxyReturnToRect() {
                 UIView.animateWithDuration(0.2, animations: { () -> Void in
                     proxyState.view.transform = CGAffineTransformIdentity

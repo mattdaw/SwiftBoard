@@ -33,7 +33,7 @@ class ListViewModelDataSource : NSObject, UICollectionViewDelegate, UICollection
         switch itemViewModel {
         case let appViewModel as AppViewModel:
             let myCell = collectionView.dequeueReusableCellWithReuseIdentifier("App", forIndexPath: indexPath) as AppCollectionViewCell
-            myCell.configureForAppViewModel(appViewModel)
+            myCell.appViewModel = appViewModel
                         
             cell = myCell
         case let folderViewModel as FolderViewModel:
