@@ -217,8 +217,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         return nil
     }
 
-    
-    func startDrag(gesture: UIGestureRecognizer) {
+    private func startDrag(gesture: UIGestureRecognizer) {
         if let cellHit = gestureHitForGesture(gesture) as? CellGestureHit {
             let cell = cellHit.cell
             
@@ -245,7 +244,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     private func endDrag(gesture: UIGestureRecognizer) {
         if let proxyState = dragProxyState {
             if let returnToRect = dragProxyReturnToRect() {
-                UIView.animateWithDuration(0.2, animations: { () -> Void in
+                UIView.animateWithDuration(0.4, animations: { () -> Void in
                     proxyState.view.transform = CGAffineTransformIdentity
                     proxyState.view.alpha = 1
                     proxyState.view.frame = returnToRect
