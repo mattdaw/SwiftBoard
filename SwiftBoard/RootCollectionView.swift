@@ -67,11 +67,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         panAndStopGestureRecognizer.delegate = self
         addGestureRecognizer(panAndStopGestureRecognizer)
     }
-    
-    func viewModelAtIndexPath(indexPath: NSIndexPath) -> SwiftBoardItemViewModel? {
-        return nil
-    }
-    
+
     func handleTapGesture(gesture: UITapGestureRecognizer) {
         let gestureHit = gestureHitForGesture(gesture)
         
@@ -116,72 +112,6 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         }
     }
     
-    /*
-    func handlePanGestureStopped(gesture: PanAndStopGestureRecognizer) {
-        // Idea -> classes for gesture "hits", different for hit on folder, app, collection view.
-        // Then something like "drop operation for" drag hit + drop hit
-        //
-        // How should the two states be differentiated? Is this a hover vs a drop?
-        if let gestureInfo = infoForGesture(gesture) {
-            let collectionView = gestureInfo.collectionView
-            let layout = collectionView.collectionViewLayout as DroppableCollectionViewLayout
-            let dropCell = gestureInfo.cell
-            // EW, but temp
-            let dragIndex = draggingItemViewModel!.listViewModel!.indexOfItem(draggingItemViewModel!)
-            let dropIndex = gestureInfo.itemIndexInList
-            let location = gestureInfo.locationInCollectionView
-            let locationInCell = gestureInfo.locationInCell
-            
-            currentDropState = DropState(index: dropIndex, cell: dropCell)
-            
-            if draggingItemViewModel is AppViewModel && dropCell.pointInsideIcon(locationInCell) && dropCell is FolderCollectionViewCell {
-                if let folderViewModel = gestureInfo.itemViewModel as? FolderViewModel {
-                    if let appViewModel = draggingItemViewModel as? AppViewModel {
-                        rootViewModel?.appDragEnter(appViewModel, folderViewModel: folderViewModel)
-                        
-                        dropOperation = {
-                            self.rootViewModel?.appDragDrop()
-                            self.endDrag()
-                        }
-                    }
-                }
-            } else if dragIndex != dropIndex {
-                // Drag: App -> Drop: Cell? It's not really "on" the app/folder
-                var newIndex: Int
-                
-                if locationInCell.x < (dropCell.bounds.width / 2) {
-                    newIndex = layout.indexToMoveSourceIndexLeftOfDestIndex(dragIndex!, destIndex: dropIndex)
-                } else {
-                    newIndex = layout.indexToMoveSourceIndexRightOfDestIndex(dragIndex!, destIndex: dropIndex)
-                }
-                
-                draggingItemViewModel!.listViewModel!.moveItemAtIndex(dragIndex!, toIndex: newIndex)
-                
-                if let newCell = collectionView.cellForItemAtIndexPath(NSIndexPath(forItem: newIndex, inSection: 0)) {
-                    dragProxyReturnToRect = convertRect(newCell.frame, fromView: newCell.superview)
-                }
-            }
-        } else {
-            // Drag: App Inside Folder -> Drop: Root Collection View (outside its folders collection view)
-            if openFolderCollectionView != nil {
-                if let folderViewModel = openFolderCollectionView!.listViewModel as? FolderViewModel {
-                    // "Promote to root"
-                    if let appViewModel = draggingItemViewModel as? AppViewModel {
-                        rootViewModel?.closeFolder(folderViewModel)
-                        rootViewModel?.moveAppFromFolder(appViewModel, folderViewModel: folderViewModel)
-                        
-                        if let newIndex = rootViewModel?.indexOfItem(appViewModel) {
-                            if let newCell = cellForItemAtIndexPath(NSIndexPath(forItem: newIndex, inSection: 0)) {
-                                dragProxyReturnToRect = convertRect(newCell.frame, fromView: newCell.superview)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-*/
-    
     func gestureHitForGesture(gesture: UIGestureRecognizer) -> GestureHit {
         var destCollectionView: SwiftBoardCollectionView = self
         if let folderCollectionView = openFolderCollectionView {
@@ -215,20 +145,22 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         return collectionViewHit
     }
     
-    // How do I get the view proxy to know where to return to?
     func dragAndDropOperationForGesture(gesture: UIGestureRecognizer) -> DragAndDropOperation? {
         let gestureHit = gestureHitForGesture(gesture)
         
-        if var dragOperation = dragAndDropOperationForAppOnFolder(gestureHit) {
+        if let dragOperation = dragAndDropOperationForAppOnFolder(gestureHit) {
             return dragOperation
         }
         
-        if var dragOperation = dragAndDropOperationForMoveItem(gestureHit) {
+        if let dragOperation = dragAndDropOperationForMoveItem(gestureHit) {
+            return dragOperation
+        }
+        
+        if let dragOperation = dragAndDropOperationForMoveAppOutOfFolder(gestureHit) {
             return dragOperation
         }
         
         // TODO: Handle dragging an app on top of an app and creating a folder?
-        // TODO: Handle promoting an app out of a folder
         
         return nil
     }
@@ -271,6 +203,17 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             }
         }
 
+        return nil
+    }
+    
+    func dragAndDropOperationForMoveAppOutOfFolder(gestureHit: GestureHit) -> DragAndDropOperation? {
+        if let folderViewModel = openFolderCollectionView?.listViewModel as? FolderViewModel {
+            if let appViewModel = draggingItemViewModel as? AppViewModel {
+                rootViewModel?.closeFolder(folderViewModel)
+                rootViewModel?.moveAppFromFolder(appViewModel, folderViewModel: folderViewModel)
+            }
+        }
+        
         return nil
     }
 
@@ -354,7 +297,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     // MARK: RootViewModelDelegate
     
     func rootViewModelFolderOpened(folderViewModel: FolderViewModel) {
-        // ?
+        // Opening a folder terminates the current drag operation
         dragAndDropOperation = nil
         
         if let index = rootViewModel?.indexOfItem(folderViewModel) {
@@ -367,7 +310,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     }
     
     func rootViewModelFolderClosed(folderViewModel: FolderViewModel) {
-        // ?
+        // Closing a folder terminates the current drag operation
         dragAndDropOperation = nil
         
         if let index = rootViewModel?.indexOfItem(folderViewModel) {

@@ -29,6 +29,7 @@ class MoveAppToFolder: NSObject, DragAndDropOperation {
         openFolderTimer = NSTimer.scheduledTimerWithTimeInterval(prepareToOpenFolderAfterSeconds, target: self, selector: "prepareToOpenFolder", userInfo: nil, repeats: false)
     }
     
+    // TODO: Figure out how to get this called at the right moments
     func dragEnd() {
         cancelTimer()
         resetFolderState()
@@ -38,11 +39,6 @@ class MoveAppToFolder: NSObject, DragAndDropOperation {
         cancelTimer()
         rootViewModel.moveAppToFolder(appViewModel, folderViewModel: folderViewModel)
         resetFolderState()
-    }
-    
-    func cancelTimer() {
-        openFolderTimer?.invalidate()
-        openFolderTimer = nil
     }
     
     func prepareToOpenFolder() {
@@ -60,7 +56,12 @@ class MoveAppToFolder: NSObject, DragAndDropOperation {
         resetFolderState()
     }
     
-    func resetFolderState() {
+    private func cancelTimer() {
+        openFolderTimer?.invalidate()
+        openFolderTimer = nil
+    }
+    
+    private func resetFolderState() {
         folderViewModel.state = .Normal
     }
 }
