@@ -115,7 +115,9 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     func gestureHitForGesture(gesture: UIGestureRecognizer) -> GestureHit {
         var destCollectionView: SwiftBoardCollectionView = self
         if let folderCollectionView = openFolderCollectionView {
-            destCollectionView = folderCollectionView
+            if folderCollectionView.pointInside(gesture.locationInView(folderCollectionView), withEvent: nil) {
+                destCollectionView = folderCollectionView
+            }
         }
         
         let locationInCollectionView = gesture.locationInView(destCollectionView)
@@ -209,7 +211,11 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     func dragAndDropOperationForMoveAppOutOfFolder(gestureHit: GestureHit) -> DragAndDropOperation? {
         if let folderViewModel = openFolderCollectionView?.listViewModel as? FolderViewModel {
             if let appViewModel = draggingItemViewModel as? AppViewModel {
-                return MoveAppFromFolder(rootViewModel: rootViewModel!, appViewModel: appViewModel, folderViewModel: folderViewModel)
+                if let collectionViewHit = gestureHit as? CollectionViewGestureHit {
+                    if collectionViewHit.collectionView === self {
+                        return MoveAppFromFolder(rootViewModel: rootViewModel!, appViewModel: appViewModel, folderViewModel: folderViewModel)
+                    }
+                }
             }
         }
         
