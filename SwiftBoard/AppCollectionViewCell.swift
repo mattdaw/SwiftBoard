@@ -49,15 +49,19 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
         if bounds.width < 80 {
             deleteButton.alpha = 0
             label.alpha = 0
+            
             topConstraint.constant = 0
             bottomConstraint.constant = 0
             leftConstraint.constant = 0
             rightConstraint.constant = 0
         } else {
-            let extraWidth = (bounds.width - 60) / 2
-            let extraHeight = (bounds.height - 80) / 2
             deleteButton.alpha = 1
             label.alpha = 1
+            
+            let extraWidth = (bounds.width - 60) / 2
+            let extraHeight = (bounds.height - 80) / 2
+            println(extraHeight)
+            
             topConstraint.constant = extraHeight
             bottomConstraint.constant = extraHeight + 20
             leftConstraint.constant = extraWidth

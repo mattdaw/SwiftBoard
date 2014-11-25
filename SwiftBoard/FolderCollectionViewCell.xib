@@ -19,10 +19,7 @@
                         <collectionViewLayout key="collectionViewLayout" id="gF3-om-ik0" customClass="FolderCollectionViewLayout" customModule="SwiftBoard" customModuleProvider="target"/>
                     </collectionView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5ti-SB-GRc">
-                        <rect key="frame" x="20" y="74" width="40" height="21"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="21" id="Bqc-5x-dGz"/>
-                        </constraints>
+                        <rect key="frame" x="20" y="74" width="40" height="20"/>
                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
