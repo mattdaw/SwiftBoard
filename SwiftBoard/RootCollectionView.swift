@@ -179,7 +179,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     
     func dragAndDropOperationForMoveItem(gestureHit: GestureHit) -> DragAndDropOperation? {
         if let itemViewModel = draggingItemViewModel {
-            if let listViewModel = draggingItemViewModel?.listViewModel {
+            if let listViewModel = itemViewModel.listViewModel {
                 if let cellHit = gestureHit as? CellGestureHit {
                     if itemViewModel === cellHit.itemViewModel {
                         return nil
