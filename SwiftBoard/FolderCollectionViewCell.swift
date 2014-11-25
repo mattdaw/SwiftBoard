@@ -9,9 +9,22 @@
 import UIKit
 
 class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
-    
     @IBOutlet weak var collectionView: FolderCollectionView!
     @IBOutlet weak var label: UILabel!
+    
+    let flickeringAnimationKey = "flickering"
+    
+    private var expanded: Bool = false {
+        didSet {
+            expanded ? expand() : collapse()
+        }
+    }
+    
+    private var flickering: Bool = false {
+        didSet {
+            flickering ? startFlickering() : stopFlickering()
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -60,6 +73,21 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
         folderViewModel.itemViewModelDelegate = self
     }
     
+    func startFlickering() {
+        let anim = CABasicAnimation(keyPath:"backgroundColor")
+        anim.toValue = UIColor.darkGrayColor().CGColor
+        anim.autoreverses = true
+        anim.duration = 0.1
+        anim.repeatCount = HUGE
+        
+        self.collectionView.layer.addAnimation(anim, forKey:flickeringAnimationKey);
+    }
+    
+    func stopFlickering() {
+        self.collectionView.layer.removeAnimationForKey(flickeringAnimationKey)
+    }
+
+    
     // FolderViewModelDelegate
     
     func folderViewModelDraggingDidChange(dragging: Bool) {
@@ -67,6 +95,16 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     }
     
     func folderViewModelStateDidChange(state: FolderViewModelState) {
-        println("State changed")
+        switch state {
+        case .Normal:
+            expanded = false
+            flickering = false
+        case .AppHovering:
+            expanded = true
+        case .PreparingToOpen:
+            flickering = true
+        default:
+            break;
+        }
     }
 }

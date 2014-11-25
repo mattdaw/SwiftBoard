@@ -233,7 +233,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             dragProxyState = DragProxyState(view: dragProxyView, originalCenter: dragProxyView.center)
             UIView.animateWithDuration(0.2) {
                 dragProxyView.transform = CGAffineTransformMakeScale(1.1, 1.1)
-                dragProxyView.alpha = 0.8
+                dragProxyView.alpha = 0.9
             }
             
             draggingItemViewModel = cellHit.itemViewModel

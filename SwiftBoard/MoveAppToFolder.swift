@@ -10,7 +10,7 @@ import Foundation
 
 class MoveAppToFolder: NSObject, DragAndDropOperation {
     let prepareToOpenFolderAfterSeconds = 2.0
-    let openFolderAfterSeconds = 2.0
+    let openFolderAfterSeconds = 5.0
     
     let rootViewModel: RootViewModel
     let appViewModel: AppViewModel
