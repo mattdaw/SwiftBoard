@@ -46,7 +46,7 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes!) {
         super.applyLayoutAttributes(layoutAttributes)
         
-        if bounds.width < 40 {
+        if bounds.width < 80 {
             deleteButton.alpha = 0
             label.alpha = 0
             topConstraint.constant = 0
@@ -54,12 +54,14 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
             leftConstraint.constant = 0
             rightConstraint.constant = 0
         } else {
+            let extraWidth = (bounds.width - 60) / 2
+            let extraHeight = (bounds.height - 80) / 2
             deleteButton.alpha = 1
             label.alpha = 1
-            topConstraint.constant = 10
-            bottomConstraint.constant = 30
-            leftConstraint.constant = 10
-            rightConstraint.constant = 10
+            topConstraint.constant = extraHeight
+            bottomConstraint.constant = extraHeight + 20
+            leftConstraint.constant = extraWidth
+            rightConstraint.constant = extraWidth
         }
         
         // Trigger constraint re-evaluation, so the subview sizes get animated too
