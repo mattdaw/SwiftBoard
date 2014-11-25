@@ -13,9 +13,12 @@
                 <rect key="frame" x="0.0" y="0.0" width="80" height="100"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="UW6-Dw-6xo" customClass="FolderCollectionView" customModule="SwiftBoard" customModuleProvider="target">
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ql0-bh-nRR" userLabel="Expanding View">
                         <rect key="frame" x="10" y="10" width="60" height="60"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                    </view>
+                    <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="UW6-Dw-6xo" customClass="FolderCollectionView" customModule="SwiftBoard" customModuleProvider="target">
+                        <rect key="frame" x="10" y="10" width="60" height="60"/>
                         <collectionViewLayout key="collectionViewLayout" id="gF3-om-ik0" customClass="FolderCollectionViewLayout" customModule="SwiftBoard" customModuleProvider="target"/>
                     </collectionView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5ti-SB-GRc">
@@ -31,12 +34,17 @@
                 <constraint firstItem="5ti-SB-GRc" firstAttribute="top" secondItem="UW6-Dw-6xo" secondAttribute="bottom" constant="4" id="CCG-Oh-d7F"/>
                 <constraint firstAttribute="bottom" secondItem="UW6-Dw-6xo" secondAttribute="bottom" constant="30" id="XTy-3k-AT0"/>
                 <constraint firstAttribute="centerX" secondItem="5ti-SB-GRc" secondAttribute="centerX" id="bmm-W0-rAo"/>
+                <constraint firstItem="Ql0-bh-nRR" firstAttribute="width" secondItem="UW6-Dw-6xo" secondAttribute="width" id="dgg-r4-zJo"/>
+                <constraint firstItem="Ql0-bh-nRR" firstAttribute="top" secondItem="UW6-Dw-6xo" secondAttribute="top" id="eSP-b6-d8I"/>
                 <constraint firstItem="UW6-Dw-6xo" firstAttribute="top" secondItem="k2r-z4-Cw9" secondAttribute="top" constant="10" id="nAl-bO-uHM"/>
+                <constraint firstItem="Ql0-bh-nRR" firstAttribute="leading" secondItem="UW6-Dw-6xo" secondAttribute="leading" id="p4D-Uq-hCS"/>
                 <constraint firstAttribute="trailing" secondItem="UW6-Dw-6xo" secondAttribute="trailing" constant="10" id="skZ-Ho-hvr"/>
+                <constraint firstItem="Ql0-bh-nRR" firstAttribute="height" secondItem="UW6-Dw-6xo" secondAttribute="height" id="w6u-vc-nKV"/>
                 <constraint firstItem="UW6-Dw-6xo" firstAttribute="leading" secondItem="k2r-z4-Cw9" secondAttribute="leading" constant="10" id="xOd-GY-kgy"/>
             </constraints>
             <connections>
                 <outlet property="collectionView" destination="UW6-Dw-6xo" id="CxZ-SZ-Zz1"/>
+                <outlet property="expandingView" destination="Ql0-bh-nRR" id="dq0-RX-mVK"/>
                 <outlet property="label" destination="5ti-SB-GRc" id="Sb6-4e-7Zg"/>
             </connections>
             <point key="canvasLocation" x="69" y="332"/>

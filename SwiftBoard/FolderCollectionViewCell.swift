@@ -10,6 +10,7 @@ import UIKit
 
 class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     @IBOutlet weak var collectionView: FolderCollectionView!
+    @IBOutlet weak var expandingView: UIView!
     @IBOutlet weak var label: UILabel!
     
     let flickeringAnimationKey = "flickering"
@@ -28,8 +29,8 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        collectionView.layer.cornerRadius = 5
+        collectionView.backgroundColor = UIColor.clearColor()
+        expandingView.layer.cornerRadius = 5
     }
     
     override func prepareForReuse() {
@@ -52,15 +53,15 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     }
     
     func expand() {
-        UIView.animateWithDuration(0.2) {
-            self.transform = CGAffineTransformMakeScale(1.15, 1.15)
+        UIView.animateWithDuration(0.4) {
+            self.expandingView.layer.transform = CATransform3DMakeScale(1.15, 1.15, 1)
             self.label.alpha = 0
         }
     }
     
     func collapse() {
-        UIView.animateWithDuration(0.2) {
-            self.transform = CGAffineTransformIdentity
+        UIView.animateWithDuration(0.4) {
+            self.expandingView.layer.transform = CATransform3DIdentity
             self.label.alpha = 1
         }
     }
@@ -80,11 +81,11 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
         anim.duration = 0.1
         anim.repeatCount = HUGE
         
-        self.collectionView.layer.addAnimation(anim, forKey:flickeringAnimationKey);
+        expandingView.layer.addAnimation(anim, forKey:flickeringAnimationKey);
     }
     
     func stopFlickering() {
-        self.collectionView.layer.removeAnimationForKey(flickeringAnimationKey)
+        expandingView.layer.removeAnimationForKey(flickeringAnimationKey)
     }
 
     
