@@ -60,7 +60,6 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
             
             let extraWidth = (bounds.width - 60) / 2
             let extraHeight = (bounds.height - 80) / 2
-            println(extraHeight)
             
             topConstraint.constant = extraHeight
             bottomConstraint.constant = extraHeight + 20
