@@ -13,6 +13,7 @@
 		C941E7FF1A23A160006D3085 /* MoveItemInList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C941E7FE1A23A160006D3085 /* MoveItemInList.swift */; };
 		C941E8031A23A6A6006D3085 /* GestureHit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C941E8021A23A6A6006D3085 /* GestureHit.swift */; };
 		C941E8051A23B03D006D3085 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C941E8041A23B03D006D3085 /* Extensions.swift */; };
+		C941E8071A24011A006D3085 /* MoveAppFromFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C941E8061A24011A006D3085 /* MoveAppFromFolder.swift */; };
 		C9473F471A1A93A4006D0CB3 /* SwiftBoardListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9473F461A1A93A4006D0CB3 /* SwiftBoardListViewModel.swift */; };
 		C9473F491A1A967F006D0CB3 /* SwiftBoardCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9473F481A1A967F006D0CB3 /* SwiftBoardCollectionView.swift */; };
 		C9473F4B1A1A97A9006D0CB3 /* FolderCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9473F4A1A1A97A9006D0CB3 /* FolderCollectionView.swift */; };
@@ -55,6 +56,7 @@
 		C941E7FE1A23A160006D3085 /* MoveItemInList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoveItemInList.swift; sourceTree = "<group>"; };
 		C941E8021A23A6A6006D3085 /* GestureHit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GestureHit.swift; sourceTree = "<group>"; };
 		C941E8041A23B03D006D3085 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		C941E8061A24011A006D3085 /* MoveAppFromFolder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoveAppFromFolder.swift; sourceTree = "<group>"; };
 		C9473F461A1A93A4006D0CB3 /* SwiftBoardListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBoardListViewModel.swift; sourceTree = "<group>"; };
 		C9473F481A1A967F006D0CB3 /* SwiftBoardCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBoardCollectionView.swift; sourceTree = "<group>"; };
 		C9473F4A1A1A97A9006D0CB3 /* FolderCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderCollectionView.swift; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 			children = (
 				C997CF7B1A1FD94400AAB2A8 /* DragAndDropOperation.swift */,
 				C941E7FC1A23A148006D3085 /* MoveAppToFolder.swift */,
+				C941E8061A24011A006D3085 /* MoveAppFromFolder.swift */,
 				C941E7FE1A23A160006D3085 /* MoveItemInList.swift */,
 			);
 			name = "Drag and Drop";
@@ -344,6 +347,7 @@
 				C972A7771A17BE1700EDC404 /* AppViewModel.swift in Sources */,
 				C9DAE69E19C73EC0007CF518 /* ViewController.swift in Sources */,
 				C9DAE69C19C73EC0007CF518 /* AppDelegate.swift in Sources */,
+				C941E8071A24011A006D3085 /* MoveAppFromFolder.swift in Sources */,
 				C972A77B1A17C25C00EDC404 /* SwiftBoardItemViewModel.swift in Sources */,
 				C997CF7C1A1FD94400AAB2A8 /* DragAndDropOperation.swift in Sources */,
 				C941E7FF1A23A160006D3085 /* MoveItemInList.swift in Sources */,

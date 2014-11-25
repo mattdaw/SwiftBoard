@@ -209,8 +209,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     func dragAndDropOperationForMoveAppOutOfFolder(gestureHit: GestureHit) -> DragAndDropOperation? {
         if let folderViewModel = openFolderCollectionView?.listViewModel as? FolderViewModel {
             if let appViewModel = draggingItemViewModel as? AppViewModel {
-                rootViewModel?.closeFolder(folderViewModel)
-                rootViewModel?.moveAppFromFolder(appViewModel, folderViewModel: folderViewModel)
+                return MoveAppFromFolder(rootViewModel: rootViewModel!, appViewModel: appViewModel, folderViewModel: folderViewModel)
             }
         }
         
