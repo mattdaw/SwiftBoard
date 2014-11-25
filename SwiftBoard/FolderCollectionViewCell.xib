@@ -7,14 +7,19 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Folder" id="k2r-z4-Cw9" customClass="FolderCollectionViewCell" customModule="SwiftBoard" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="96" height="96"/>
+            <rect key="frame" x="0.0" y="0.0" width="80" height="100"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="96" height="96"/>
+                <rect key="frame" x="0.0" y="0.0" width="80" height="100"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
+                    <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="UW6-Dw-6xo" customClass="FolderCollectionView" customModule="SwiftBoard" customModuleProvider="target">
+                        <rect key="frame" x="10" y="10" width="60" height="60"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                        <collectionViewLayout key="collectionViewLayout" id="gF3-om-ik0" customClass="FolderCollectionViewLayout" customModule="SwiftBoard" customModuleProvider="target"/>
+                    </collectionView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5ti-SB-GRc">
-                        <rect key="frame" x="28" y="72" width="40" height="21"/>
+                        <rect key="frame" x="20" y="74" width="40" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="Bqc-5x-dGz"/>
                         </constraints>
@@ -22,21 +27,16 @@
                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="UW6-Dw-6xo" customClass="FolderCollectionView" customModule="SwiftBoard" customModuleProvider="target">
-                        <rect key="frame" x="18" y="8" width="60" height="60"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
-                        <collectionViewLayout key="collectionViewLayout" id="gF3-om-ik0" customClass="FolderCollectionViewLayout" customModule="SwiftBoard" customModuleProvider="target"/>
-                    </collectionView>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
             <constraints>
                 <constraint firstItem="5ti-SB-GRc" firstAttribute="top" secondItem="UW6-Dw-6xo" secondAttribute="bottom" constant="4" id="CCG-Oh-d7F"/>
-                <constraint firstAttribute="bottom" secondItem="UW6-Dw-6xo" secondAttribute="bottom" constant="28" id="XTy-3k-AT0"/>
+                <constraint firstAttribute="bottom" secondItem="UW6-Dw-6xo" secondAttribute="bottom" constant="30" id="XTy-3k-AT0"/>
                 <constraint firstAttribute="centerX" secondItem="5ti-SB-GRc" secondAttribute="centerX" id="bmm-W0-rAo"/>
-                <constraint firstItem="UW6-Dw-6xo" firstAttribute="top" secondItem="k2r-z4-Cw9" secondAttribute="top" constant="8" id="nAl-bO-uHM"/>
-                <constraint firstAttribute="trailing" secondItem="UW6-Dw-6xo" secondAttribute="trailing" constant="18" id="skZ-Ho-hvr"/>
-                <constraint firstItem="UW6-Dw-6xo" firstAttribute="leading" secondItem="k2r-z4-Cw9" secondAttribute="leading" constant="18" id="xOd-GY-kgy"/>
+                <constraint firstItem="UW6-Dw-6xo" firstAttribute="top" secondItem="k2r-z4-Cw9" secondAttribute="top" constant="10" id="nAl-bO-uHM"/>
+                <constraint firstAttribute="trailing" secondItem="UW6-Dw-6xo" secondAttribute="trailing" constant="10" id="skZ-Ho-hvr"/>
+                <constraint firstItem="UW6-Dw-6xo" firstAttribute="leading" secondItem="k2r-z4-Cw9" secondAttribute="leading" constant="10" id="xOd-GY-kgy"/>
             </constraints>
             <connections>
                 <outlet property="collectionView" destination="UW6-Dw-6xo" id="CxZ-SZ-Zz1"/>

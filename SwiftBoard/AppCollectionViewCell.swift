@@ -56,10 +56,10 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
         } else {
             deleteButton.alpha = 1
             label.alpha = 1
-            topConstraint.constant = 8
-            bottomConstraint.constant = 28
-            leftConstraint.constant = 18
-            rightConstraint.constant = 18
+            topConstraint.constant = 10
+            bottomConstraint.constant = 30
+            leftConstraint.constant = 10
+            rightConstraint.constant = 10
         }
         
         // Trigger constraint re-evaluation, so the subview sizes get animated too

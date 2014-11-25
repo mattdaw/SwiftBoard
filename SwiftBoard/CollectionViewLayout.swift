@@ -10,7 +10,8 @@ import UIKit
 
 class CollectionViewLayout: DroppableCollectionViewLayout {
     
-    let itemSize = CGFloat(96)
+    let itemSize = CGFloat(80)
+    let heightPadding = CGFloat(20)
     var itemFrames: [CGRect] = []
     var numberOfItems = 0
     var zoomToIndex: Int?
@@ -49,18 +50,18 @@ class CollectionViewLayout: DroppableCollectionViewLayout {
         var left = CGFloat(0)
         var column = 1
         var zoomedSize = myItemSize
-        var rowOffset = myItemSize
+        var rowOffset = myItemSize + heightPadding
         var columnOffset = myItemSize
         
         if let zoomIndex = zoomToIndex {
             if availableWidth < availableHeight {
                 zoomedSize = availableWidth - 10
-                rowOffset = zoomedSize + (availableHeight - zoomedSize) / 2
+                rowOffset = zoomedSize + (availableHeight - zoomedSize) / 2 + heightPadding
                 columnOffset = zoomedSize
             } else {
                 zoomedSize = availableHeight - 10
                 rowOffset = zoomedSize
-                columnOffset = zoomedSize + (availableWidth - zoomedSize) / 2
+                columnOffset = zoomedSize + (availableWidth - zoomedSize) / 2 + heightPadding
             }
         }
 
@@ -68,7 +69,7 @@ class CollectionViewLayout: DroppableCollectionViewLayout {
         numberOfItems = myCollectionView.numberOfItemsInSection(0)
         
         for itemIndex in 0..<numberOfItems {
-            let itemFrame = CGRect(x: left, y: top, width: zoomedSize, height: zoomedSize)
+            let itemFrame = CGRect(x: left, y: top, width: zoomedSize, height: zoomedSize + heightPadding)
             itemFrames.append(itemFrame)
             
             column += 1
