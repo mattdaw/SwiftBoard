@@ -259,11 +259,11 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         dragAndDropOperation = nil
         
         if let proxyState = dragProxyState {
-            if let returnToRect = dragProxyReturnToRect() {
+            if let returnToCenter = dragProxyReturnToCenter() {
                 UIView.animateWithDuration(0.4, animations: { () -> Void in
                     proxyState.view.transform = CGAffineTransformIdentity
                     proxyState.view.alpha = 1
-                    proxyState.view.frame = returnToRect
+                    proxyState.view.center = returnToCenter
                 }, completion: { (Bool) -> Void in
                     self.resetDrag()
                 })
@@ -285,24 +285,20 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         }
     }
     
-    private func dragProxyReturnToRect() -> CGRect? {
-        var returnToRect: CGRect?
+    private func dragProxyReturnToCenter() -> CGPoint? {
+        var returnToCenter: CGPoint?
+        var cell: UICollectionViewCell?
         
         if let itemViewModel = draggingItemViewModel {
-            if itemViewModel.listViewModel is RootViewModel {
-                if let index = itemViewModel.listViewModel?.indexOfItem(itemViewModel) {
-                    if let cell = cellForItemAtIndexPath(index.toIndexPath()) {
-                        returnToRect = cell.frame
-                    }
+            if let rootViewModel = itemViewModel.listViewModel as? RootViewModel {
+                if let index = rootViewModel.indexOfItem(itemViewModel) {
+                    cell = cellForItemAtIndexPath(index.toIndexPath())
                 }
             } else if let folderViewModel = itemViewModel.listViewModel as? FolderViewModel {
                 if let indexOfFolder = rootViewModel?.indexOfItem(folderViewModel) {
                     if let folderCell = cellForItemAtIndexPath(indexOfFolder.toIndexPath()) as? FolderCollectionViewCell {
                         if let indexOfItem = itemViewModel.listViewModel?.indexOfItem(itemViewModel) {
-                            
-                            if let cell = folderCell.collectionView.cellForItemAtIndexPath(indexOfItem.toIndexPath()) {
-                                returnToRect = convertRect(cell.frame, fromView: cell.superview)
-                            }
+                            cell = folderCell.collectionView.cellForItemAtIndexPath(indexOfItem.toIndexPath())
                         }
                     }
                 }
@@ -310,7 +306,11 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             }
         }
         
-        return returnToRect
+        if cell != nil {
+            returnToCenter = convertPoint(cell!.center, fromView: cell!.superview)
+        }
+        
+        return returnToCenter
     }
     
     // MARK: RootViewModelDelegate
