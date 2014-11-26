@@ -44,10 +44,12 @@ class RootViewModel: SwiftBoardListViewModel {
     }
     
     func openFolder(folderViewModel: FolderViewModel) {
+        folderViewModel.state = .Open
         rootViewModelDelegate?.rootViewModelFolderOpened(folderViewModel)
     }
     
     func closeFolder(folderViewModel: FolderViewModel) {
+        folderViewModel.state = .Closed
         rootViewModelDelegate?.rootViewModelFolderClosed(folderViewModel)
     }
 }

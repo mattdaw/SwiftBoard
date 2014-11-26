@@ -13,8 +13,14 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     @IBOutlet weak var expandingView: UIView!
     @IBOutlet weak var label: UILabel!
     
+    @IBOutlet weak var topConstraint: NSLayoutConstraint!
+    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var leftConstraint: NSLayoutConstraint!
+    @IBOutlet weak var rightConstraint: NSLayoutConstraint!
+    
     let flickeringAnimationKey = "flickering"
     
+    private var opened = false
     private var expanded: Bool = false {
         didSet {
             expanded ? expand() : collapse()
@@ -42,6 +48,21 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes!) {
         super.applyLayoutAttributes(layoutAttributes)
     
+        if opened {
+            topConstraint.constant = 10
+            bottomConstraint.constant = 30
+            leftConstraint.constant = 10
+            rightConstraint.constant = 10
+        } else {
+            let extraWidth = (bounds.width - 60) / 2
+            let extraHeight = (bounds.height - 80) / 2
+            
+            topConstraint.constant = extraHeight
+            bottomConstraint.constant = extraHeight + 20
+            leftConstraint.constant = extraWidth
+            rightConstraint.constant = extraWidth
+        }
+        
         // Trigger constraint re-evaluation, so the subview sizes get animated too
         // http://stackoverflow.com/questions/23564453/uicollectionview-layout-transitions
         layoutIfNeeded()
@@ -54,7 +75,7 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     
     func expand() {
         UIView.animateWithDuration(0.4) {
-            self.expandingView.layer.transform = CATransform3DMakeScale(1.15, 1.15, 1)
+            self.expandingView.layer.transform = CATransform3DMakeScale(1.2, 1.2, 1)
             self.label.alpha = 0
         }
     }
@@ -75,7 +96,7 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     }
     
     func startFlickering() {
-        let anim = CABasicAnimation(keyPath:"backgroundColor")
+        let anim = CABasicAnimation(keyPath: "backgroundColor")
         anim.toValue = UIColor.darkGrayColor().CGColor
         anim.autoreverses = true
         anim.duration = 0.1
@@ -88,7 +109,6 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
         expandingView.layer.removeAnimationForKey(flickeringAnimationKey)
     }
 
-    
     // FolderViewModelDelegate
     
     func folderViewModelDraggingDidChange(dragging: Bool) {
@@ -97,13 +117,22 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     
     func folderViewModelStateDidChange(state: FolderViewModelState) {
         switch state {
-        case .Normal:
+        case .Closed:
+            opened = false
             expanded = false
             flickering = false
         case .AppHovering:
+            opened = false
             expanded = true
+            flickering = false
         case .PreparingToOpen:
+            opened = false
+            expanded = true
             flickering = true
+        case .Open:
+            opened = true
+            expanded = false
+            flickering = false
         default:
             break;
         }

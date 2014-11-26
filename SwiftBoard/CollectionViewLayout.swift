@@ -40,18 +40,18 @@ class CollectionViewLayout: DroppableCollectionViewLayout {
         let mySize = getSize()
         let availableHeight = mySize.height
         let availableWidth = mySize.width
-        var myItemSize = CGFloat(itemSize)
+        var myItemWidth = CGFloat(itemSize)
         
         itemsPerRow = Int(floor(availableWidth / itemSize))
         let floatItems = Float(availableWidth) / Float(itemsPerRow)
-        myItemSize = CGFloat(floor(floatItems))
+        myItemWidth = CGFloat(floor(floatItems))
         
         var top = CGFloat(0)
         var left = CGFloat(0)
         var column = 1
-        var zoomedSize = myItemSize
-        var rowOffset = myItemSize + heightPadding
-        var columnOffset = myItemSize
+        var zoomedSize = myItemWidth
+        var rowOffset = myItemWidth + heightPadding
+        var columnOffset = myItemWidth
         
         if let zoomIndex = zoomToIndex {
             if availableWidth < availableHeight {

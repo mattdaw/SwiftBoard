@@ -43,9 +43,13 @@
                 <constraint firstItem="UW6-Dw-6xo" firstAttribute="leading" secondItem="k2r-z4-Cw9" secondAttribute="leading" constant="10" id="xOd-GY-kgy"/>
             </constraints>
             <connections>
+                <outlet property="bottomConstraint" destination="XTy-3k-AT0" id="Sdr-MM-CLV"/>
                 <outlet property="collectionView" destination="UW6-Dw-6xo" id="CxZ-SZ-Zz1"/>
                 <outlet property="expandingView" destination="Ql0-bh-nRR" id="dq0-RX-mVK"/>
                 <outlet property="label" destination="5ti-SB-GRc" id="Sb6-4e-7Zg"/>
+                <outlet property="leftConstraint" destination="xOd-GY-kgy" id="JDc-Zh-ntU"/>
+                <outlet property="rightConstraint" destination="skZ-Ho-hvr" id="iDR-Gu-TQW"/>
+                <outlet property="topConstraint" destination="nAl-bO-uHM" id="l3E-0c-0wa"/>
             </connections>
             <point key="canvasLocation" x="69" y="332"/>
         </collectionViewCell>

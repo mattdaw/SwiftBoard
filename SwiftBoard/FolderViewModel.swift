@@ -9,7 +9,7 @@
 import Foundation
 
 enum FolderViewModelState {
-    case Normal, AppHovering, PreparingToOpen
+    case Closed, AppHovering, PreparingToOpen, Open
 }
 
 protocol FolderViewModelDelegate: class {
@@ -37,11 +37,7 @@ class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
     
     init(name folderName: String, viewModels initViewModels: [SwiftBoardItemViewModel]) {
         name = folderName
-        state = .Normal
+        state = .Closed
         super.init(viewModels: initViewModels)
-    }
-    
-    func openItemAtIndex(index: Int) {
-        println("Opened in folder")
     }
 }
