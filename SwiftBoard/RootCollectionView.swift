@@ -286,7 +286,6 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     }
     
     private func dragProxyReturnToCenter() -> CGPoint? {
-        var returnToCenter: CGPoint?
         var cell: UICollectionViewCell?
         
         if let itemViewModel = draggingItemViewModel {
@@ -307,10 +306,10 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         }
         
         if cell != nil {
-            returnToCenter = convertPoint(cell!.center, fromView: cell!.superview)
+            return convertPoint(cell!.center, fromView: cell!.superview)
         }
         
-        return returnToCenter
+        return nil
     }
     
     // MARK: UIGestureRecognizerDelegate
