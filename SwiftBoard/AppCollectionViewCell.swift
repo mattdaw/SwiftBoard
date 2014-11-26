@@ -50,10 +50,10 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
             deleteButton.alpha = 0
             label.alpha = 0
             
-            topConstraint.constant = 0
-            bottomConstraint.constant = 0
-            leftConstraint.constant = 0
-            rightConstraint.constant = 0
+            topConstraint.constant = 2
+            bottomConstraint.constant = 2
+            leftConstraint.constant = 2
+            rightConstraint.constant = 2
         } else {
             deleteButton.alpha = 1
             label.alpha = 1
