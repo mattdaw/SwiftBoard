@@ -68,9 +68,8 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
         layoutIfNeeded()
     }
     
-    override func pointInsideIcon(point:CGPoint) -> Bool {
-        let converted = convertPoint(point, toView:collectionView)
-        return collectionView.pointInside(converted, withEvent: nil)
+    override func iconRect() -> CGRect? {
+        return collectionView.frame
     }
     
     func expand() {

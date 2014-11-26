@@ -10,27 +10,13 @@ import UIKit
 
 class SwiftBoardCell : UICollectionViewCell {
     
-    let animationKey = "editingModeEnabled"
+    let animationKey = "jigglingAnimationKey"
     
-    func pointInsideIcon(point:CGPoint) -> Bool {
-        return false
+    func iconRect() -> CGRect? {
+        return nil
     }
     
-    override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes!) {
-        super.applyLayoutAttributes(layoutAttributes)
-        
-        /*
-        if let myAttributes = layoutAttributes as? CollectionViewLayoutAttributes {
-            if myAttributes.editingModeEnabled {
-                startAnimating()
-            } else {
-                stopAnimating()
-            }
-        }
-        */
-    }
-    
-    func startAnimating() {
+    func startJiggling() {
         let anim = CABasicAnimation(keyPath:"transform.rotation")
         anim.fromValue = -M_PI / 48
         anim.toValue = M_PI / 48
@@ -42,7 +28,7 @@ class SwiftBoardCell : UICollectionViewCell {
         self.layer.addAnimation(anim, forKey:animationKey);
     }
     
-    func stopAnimating() {
+    func stopJiggling() {
         self.layer.removeAnimationForKey(animationKey)
     }
 }

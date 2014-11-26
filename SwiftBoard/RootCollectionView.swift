@@ -26,6 +26,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     private var dragProxyState: DragProxyState?
     private var draggingItemViewModel: SwiftBoardItemViewModel?
     private var dragAndDropOperation: DragAndDropOperation?
+    private var endDragAndDropOperationWhenExitsRect: CGRect?
     
     var rootViewModel: RootViewModel? {
         didSet {
@@ -102,6 +103,16 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
                 dragProxyState!.view.center = CGPoint(x: dragProxyState!.originalCenter.x + translation.x,
                     y: dragProxyState!.originalCenter.y + translation.y)
             }
+            
+            if let dragOp = dragAndDropOperation {
+                if let exitRect = endDragAndDropOperationWhenExitsRect {
+                    let location = gesture.locationInView(self)
+                    if !CGRectContainsPoint(exitRect, location) {
+                        dragOp.dragEnd()
+                        dragAndDropOperation = nil
+                    }
+                }
+            }
         }
     }
     
@@ -170,8 +181,11 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     func dragAndDropOperationForAppOnFolder(gestureHit: GestureHit) -> DragAndDropOperation? {
         if let appViewModel = draggingItemViewModel as? AppViewModel {
             if let folderHit = gestureHit as? FolderGestureHit {
-                if folderHit.cell.pointInsideIcon(folderHit.locationInCell) {
-                    return MoveAppToFolder(rootViewModel: rootViewModel!, appViewModel: appViewModel, folderViewModel: folderHit.folderViewModel)
+                if let iconRect = folderHit.cell.iconRect() {
+                    if CGRectContainsPoint(iconRect, folderHit.locationInCell) {
+                        endDragAndDropOperationWhenExitsRect = convertRect(iconRect, fromView: folderHit.cell)
+                        return MoveAppToFolder(rootViewModel: rootViewModel!, appViewModel: appViewModel, folderViewModel: folderHit.folderViewModel)
+                    }
                 }
             }
         }

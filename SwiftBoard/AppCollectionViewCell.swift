@@ -72,9 +72,8 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
         layoutIfNeeded()
     }
     
-    override func pointInsideIcon(point:CGPoint) -> Bool {
-        let converted = convertPoint(point, toView:containerView)
-        return containerView.pointInside(converted, withEvent: nil)
+    override func iconRect() -> CGRect? {
+        return containerView.frame
     }
     
     @IBAction func deleteApp(sender: AnyObject) {

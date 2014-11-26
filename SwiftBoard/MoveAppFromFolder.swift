@@ -24,11 +24,6 @@ class MoveAppFromFolder: DragAndDropOperation {
         rootViewModel.moveAppFromFolder(appViewModel, folderViewModel: folderViewModel)
     }
     
-    func dragEnd() {
-        
-    }
-    
-    func drop() {
-        
-    }
+    func dragEnd() {}
+    func drop() {}
 }
