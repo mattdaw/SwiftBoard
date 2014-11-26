@@ -313,6 +313,30 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         return returnToCenter
     }
     
+    // MARK: UIGestureRecognizerDelegate
+    
+    override func gestureRecognizerShouldBegin(gesture: UIGestureRecognizer) -> Bool {
+        switch gesture {
+        case longPressRecognizer:
+            return true
+        case panAndStopGestureRecognizer:
+            return draggingItemViewModel != nil
+        default:
+            return super.gestureRecognizerShouldBegin(gesture)
+        }
+    }
+    
+    func gestureRecognizer(gesture: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGesture: UIGestureRecognizer) -> Bool {
+        switch gesture {
+        case longPressRecognizer:
+            return otherGesture === panAndStopGestureRecognizer
+        case panAndStopGestureRecognizer:
+            return otherGesture === longPressRecognizer
+        default:
+            return false
+        }
+    }
+    
     // MARK: RootViewModelDelegate
     
     func rootViewModelFolderOpened(folderViewModel: FolderViewModel) {
@@ -338,29 +362,4 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             setCollectionViewLayout(regularLayout, animated: true)
         }
     }
-    
-    // MARK: UIGestureRecognizerDelegate
-    
-    override func gestureRecognizerShouldBegin(gesture: UIGestureRecognizer) -> Bool {
-        switch gesture {
-        case longPressRecognizer:
-            return true
-        case panAndStopGestureRecognizer:
-            return draggingItemViewModel != nil
-        default:
-            return super.gestureRecognizerShouldBegin(gesture)
-        }
-    }
-    
-    func gestureRecognizer(gesture: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGesture: UIGestureRecognizer) -> Bool {
-        switch gesture {
-        case longPressRecognizer:
-            return otherGesture === panAndStopGestureRecognizer
-        case panAndStopGestureRecognizer:
-            return otherGesture === longPressRecognizer
-        default:
-            return false
-        }
-    }
-
 }
