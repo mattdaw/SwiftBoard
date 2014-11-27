@@ -8,7 +8,7 @@
 
 import Foundation
 
-class MoveItemInList: DragAndDropOperation {
+class MoveItemInList: DragOperation {
     let listViewModel: SwiftBoardListViewModel
     let fromIndex: Int
     let toIndex: Int
@@ -21,13 +21,5 @@ class MoveItemInList: DragAndDropOperation {
     
     func dragStart() {
         listViewModel.moveItemAtIndex(fromIndex, toIndex: toIndex)
-    }
-    
-    func dragEnd() {
-        
-    }
-    
-    func drop() {
-        
     }
 }
