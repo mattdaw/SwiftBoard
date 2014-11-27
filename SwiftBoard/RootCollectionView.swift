@@ -26,9 +26,8 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     private var draggingItemViewModel: SwiftBoardItemViewModel?
 
     private var lastCollectionView: UICollectionView?
-    
     private var dragAndDropOperation: DragAndDropOperation?
-    private var endDragAndDropOperationWhenExitsRect: CGRect?
+    private var cancelDragAndDropOperationWhenExitsRect: CGRect?
     
     var rootViewModel: RootViewModel? {
         didSet {
@@ -89,6 +88,8 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             startDrag(gesture)
         case UIGestureRecognizerState.Ended, UIGestureRecognizerState.Cancelled:
             dragAndDropOperation?.drop()
+            dragAndDropOperation = nil
+            
             endDrag(gesture)
         default:
             break
@@ -118,7 +119,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             lastCollectionView = gestureCollectionView
             
             if let dragOp = dragAndDropOperation {
-                if let exitRect = endDragAndDropOperationWhenExitsRect {
+                if let exitRect = cancelDragAndDropOperationWhenExitsRect {
                     let location = gesture.locationInView(self)
                     if !CGRectContainsPoint(exitRect, location) {
                         dragOp.dragCancel()
@@ -205,7 +206,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             if let folderHit = gestureHit as? FolderGestureHit {
                 if let iconRect = folderHit.cell.iconRect() {
                     if CGRectContainsPoint(iconRect, folderHit.locationInCell) {
-                        endDragAndDropOperationWhenExitsRect = convertRect(iconRect, fromView: folderHit.cell)
+                        cancelDragAndDropOperationWhenExitsRect = convertRect(iconRect, fromView: folderHit.cell)
                         return MoveAppToFolder(rootViewModel: rootViewModel!, appViewModel: appViewModel, folderViewModel: folderHit.folderViewModel)
                     }
                 }
@@ -264,8 +265,6 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     }
     
     private func endDrag(gesture: UIGestureRecognizer) {
-        dragAndDropOperation = nil
-        
         if let proxyState = dragProxyState {
             if let returnToCenter = dragProxyReturnToCenter() {
                 UIView.animateWithDuration(0.4, animations: { () -> Void in
