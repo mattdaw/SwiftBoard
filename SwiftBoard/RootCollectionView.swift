@@ -27,6 +27,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     private var draggingItemViewModel: SwiftBoardItemViewModel?
     private var dragAndDropOperation: DragAndDropOperation?
     private var endDragAndDropOperationWhenExitsRect: CGRect?
+    private var lastCollectionView: UICollectionView?
     
     var rootViewModel: RootViewModel? {
         didSet {
@@ -104,6 +105,20 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
                     y: dragProxyState!.originalCenter.y + translation.y)
             }
             
+            let gestureCollectionView = collectionViewForGesture(gesture)
+            if lastCollectionView != nil && lastCollectionView !== gestureCollectionView {
+                if lastCollectionView === openFolderCollectionView {
+                    if let folderViewModel = openFolderCollectionView?.folderViewModel {
+                        if let appViewModel = draggingItemViewModel as? AppViewModel {
+                            rootViewModel?.closeFolder(folderViewModel)
+                            rootViewModel?.moveAppFromFolder(appViewModel, folderViewModel: folderViewModel)
+                        }
+                    }
+                }
+            }
+            
+            lastCollectionView = gestureCollectionView
+            
             if let dragOp = dragAndDropOperation {
                 if let exitRect = endDragAndDropOperationWhenExitsRect {
                     let location = gesture.locationInView(self)
@@ -117,13 +132,23 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     }
     
     func handlePanGestureStopped(gesture: PanAndStopGestureRecognizer) {
+        // Don't start a new operation if one is already in progress.
+        if dragAndDropOperation != nil {
+            return
+        }
+
         if let dragAndDropOp = dragAndDropOperationForGesture(gesture) {
             dragAndDropOperation = dragAndDropOp
             dragAndDropOperation!.dragStart()
+            
+            // Temporary hack.
+            if dragAndDropOperation is MoveItemInList {
+                dragAndDropOperation = nil
+            }
         }
     }
     
-    func gestureHitForGesture(gesture: UIGestureRecognizer) -> GestureHit {
+    func collectionViewForGesture(gesture: UIGestureRecognizer) -> SwiftBoardCollectionView {
         var destCollectionView: SwiftBoardCollectionView = self
         if let folderCollectionView = openFolderCollectionView {
             if folderCollectionView.pointInside(gesture.locationInView(folderCollectionView), withEvent: nil) {
@@ -131,6 +156,11 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             }
         }
         
+        return destCollectionView
+    }
+    
+    func gestureHitForGesture(gesture: UIGestureRecognizer) -> GestureHit {
+        let destCollectionView = collectionViewForGesture(gesture)
         let locationInCollectionView = gesture.locationInView(destCollectionView)
         let collectionViewHit = CollectionViewGestureHit(collectionView: destCollectionView, locationInCollectionView: locationInCollectionView)
         
@@ -166,10 +196,6 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         }
         
         if let dragOperation = dragAndDropOperationForMoveItem(gestureHit) {
-            return dragOperation
-        }
-        
-        if let dragOperation = dragAndDropOperationForMoveAppOutOfFolder(gestureHit) {
             return dragOperation
         }
         
@@ -222,20 +248,6 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         return nil
     }
     
-    func dragAndDropOperationForMoveAppOutOfFolder(gestureHit: GestureHit) -> DragAndDropOperation? {
-        if let folderViewModel = openFolderCollectionView?.listViewModel as? FolderViewModel {
-            if let appViewModel = draggingItemViewModel as? AppViewModel {
-                if let collectionViewHit = gestureHit as? CollectionViewGestureHit {
-                    if collectionViewHit.collectionView === self {
-                        return MoveAppFromFolder(rootViewModel: rootViewModel!, appViewModel: appViewModel, folderViewModel: folderViewModel)
-                    }
-                }
-            }
-        }
-        
-        return nil
-    }
-
     private func startDrag(gesture: UIGestureRecognizer) {
         if let cellHit = gestureHitForGesture(gesture) as? CellGestureHit {
             let cell = cellHit.cell
