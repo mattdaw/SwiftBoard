@@ -15,7 +15,6 @@ struct DragProxyState {
 
 class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate, SwiftBoardListViewModelDelegate, RootViewModelDelegate {
     private var listDataSource: ListViewModelDataSource?
-    private var zoomedLayout = CollectionViewLayout()
     private var regularLayout = CollectionViewLayout()
     
     private var tapGestureRecognizer: UITapGestureRecognizer!
@@ -357,7 +356,10 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         if let index = rootViewModel?.indexOfItem(folderViewModel) {
             if let cell = cellForItemAtIndexPath(index.toIndexPath()) as? FolderCollectionViewCell {
                 openFolderCollectionView = cell.collectionView
+                
+                let zoomedLayout = CollectionViewLayout()
                 zoomedLayout.zoomToIndex = index
+                
                 setCollectionViewLayout(zoomedLayout, animated: true)
             }
         }
@@ -369,7 +371,6 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         
         if let index = rootViewModel?.indexOfItem(folderViewModel) {
             openFolderCollectionView = nil
-            zoomedLayout.zoomToIndex = nil
             setCollectionViewLayout(regularLayout, animated: true)
         }
     }
