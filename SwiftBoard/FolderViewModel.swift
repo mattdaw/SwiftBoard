@@ -20,6 +20,7 @@ protocol FolderViewModelDelegate: class {
 class FolderViewModel: ListViewModel, ItemViewModel {
     var name: String
     var listViewModel: ListViewModel?
+    weak var itemViewModelDelegate: FolderViewModelDelegate?
     
     var dragging: Bool = false {
         didSet {
@@ -32,8 +33,6 @@ class FolderViewModel: ListViewModel, ItemViewModel {
             itemViewModelDelegate?.folderViewModelStateDidChange(state)
         }
     }
-    
-    weak var itemViewModelDelegate: FolderViewModelDelegate?
     
     init(name folderName: String, viewModels initViewModels: [ItemViewModel]) {
         name = folderName
