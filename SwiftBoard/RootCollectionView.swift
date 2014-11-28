@@ -97,7 +97,7 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         if gesture.state == .Began || gesture.state == .Changed {
             updateDragProxyPosition(gesture)
             dragAppOutOfFolder(gesture)
-            dragCancelIfExitsRect(gesture)
+            cancelDragAndDropOperationIfExitsRect(gesture)
         }
     }
     
@@ -288,10 +288,11 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         lastCollectionView = gestureCollectionView
     }
     
-    private func dragCancelIfExitsRect(gesture: UIPanGestureRecognizer) {
+    private func cancelDragAndDropOperationIfExitsRect(gesture: UIPanGestureRecognizer) {
         if let dragOp = dragAndDropOperation {
             if let exitRect = cancelDragAndDropOperationWhenExitsRect {
                 let location = gesture.locationInView(self)
+                
                 if !CGRectContainsPoint(exitRect, location) {
                     dragOp.dragCancel()
                     dragAndDropOperation = nil
