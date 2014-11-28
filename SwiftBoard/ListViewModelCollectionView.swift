@@ -8,10 +8,10 @@
 
 import UIKit
 
-class ListViewModelCollectionView: UICollectionView, SwiftBoardListViewModelDelegate {
-    var listViewModel: SwiftBoardListViewModel? { return nil }
+class ListViewModelCollectionView: UICollectionView, ListViewModelDelegate {
+    var listViewModel: ListViewModel? { return nil }
     
-    // MARK: SwiftBoardListViewModelDelegate
+    // MARK: ListViewModelDelegate
     
     func listViewModelItemMoved(fromIndex: Int, toIndex: Int) {
         performBatchUpdates({ () -> Void in

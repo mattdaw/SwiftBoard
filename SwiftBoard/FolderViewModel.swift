@@ -17,9 +17,9 @@ protocol FolderViewModelDelegate: class {
     func folderViewModelStateDidChange(state: FolderViewModelState)
 }
 
-class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
+class FolderViewModel: ListViewModel, ItemViewModel {
     var name: String
-    var listViewModel: SwiftBoardListViewModel?
+    var listViewModel: ListViewModel?
     
     var dragging: Bool = false {
         didSet {
@@ -35,7 +35,7 @@ class FolderViewModel: SwiftBoardListViewModel, SwiftBoardItemViewModel {
     
     weak var itemViewModelDelegate: FolderViewModelDelegate?
     
-    init(name folderName: String, viewModels initViewModels: [SwiftBoardItemViewModel]) {
+    init(name folderName: String, viewModels initViewModels: [ItemViewModel]) {
         name = folderName
         state = .Closed
         super.init(viewModels: initViewModels)

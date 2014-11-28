@@ -12,10 +12,10 @@ protocol AppViewModelDelegate: class {
     func appViewModelDraggingDidChange(dragging: Bool)
 }
 
-class AppViewModel: SwiftBoardItemViewModel {
+class AppViewModel: ItemViewModel {
     var name: String
     var color: UIColor
-    var listViewModel: SwiftBoardListViewModel?
+    var listViewModel: ListViewModel?
     weak var delegate: AppViewModelDelegate?
     
     var dragging: Bool = false {

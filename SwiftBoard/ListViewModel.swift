@@ -1,5 +1,5 @@
 //
-//  SwiftBoardListViewModel.swift
+//  ListViewModel.swift
 //  SwiftBoard
 //
 //  Created by Matt Daw on 2014-11-17.
@@ -8,18 +8,18 @@
 
 import Foundation
 
-protocol SwiftBoardListViewModelDelegate: class {
+protocol ListViewModelDelegate: class {
     func listViewModelItemMoved(fromIndex: Int, toIndex: Int)
     func listViewModelItemAddedAtIndex(index: Int)
     func listViewModelItemRemovedAtIndex(index: Int)
 }
 
-class SwiftBoardListViewModel {
+class ListViewModel {
     var numberOfRows: Int = 1
-    private var viewModels: [SwiftBoardItemViewModel]
-    weak var listViewModelDelegate: SwiftBoardListViewModelDelegate?
+    private var viewModels: [ItemViewModel]
+    weak var listViewModelDelegate: ListViewModelDelegate?
     
-    init(viewModels initViewModels:[SwiftBoardItemViewModel]) {
+    init(viewModels initViewModels:[ItemViewModel]) {
         viewModels = initViewModels
         
         for itemViewModel in viewModels {
@@ -31,11 +31,11 @@ class SwiftBoardListViewModel {
         return viewModels.count
     }
     
-    func itemAtIndex(index: Int) -> SwiftBoardItemViewModel {
+    func itemAtIndex(index: Int) -> ItemViewModel {
         return viewModels[index]
     }
     
-    func indexOfItem(item: SwiftBoardItemViewModel) -> Int? {
+    func indexOfItem(item: ItemViewModel) -> Int? {
         for (index, compareItem) in enumerate(viewModels) {
             if item === compareItem {
                 return index
@@ -46,7 +46,7 @@ class SwiftBoardListViewModel {
     }
     
     func moveItemAtIndex(fromIndex: Int, toIndex: Int) {
-        var item: SwiftBoardItemViewModel = viewModels[fromIndex]
+        var item: ItemViewModel = viewModels[fromIndex]
         viewModels.removeAtIndex(fromIndex)
         viewModels.insert(item, atIndex: toIndex)
         
@@ -58,7 +58,7 @@ class SwiftBoardListViewModel {
         listViewModelDelegate?.listViewModelItemRemovedAtIndex(index)
     }
     
-    func appendItem(itemViewModel: SwiftBoardItemViewModel) {
+    func appendItem(itemViewModel: ItemViewModel) {
         let index = viewModels.count
         viewModels.append(itemViewModel)
         listViewModelDelegate?.listViewModelItemAddedAtIndex(index)

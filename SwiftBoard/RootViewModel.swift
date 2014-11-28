@@ -13,7 +13,7 @@ protocol RootViewModelDelegate: class {
     func rootViewModelFolderClosed(folderViewModel: FolderViewModel)
 }
 
-class RootViewModel: SwiftBoardListViewModel {    
+class RootViewModel: ListViewModel {    
     weak var rootViewModelDelegate: RootViewModelDelegate?
     
     func moveAppToFolder(appViewModel: AppViewModel, folderViewModel: FolderViewModel) {

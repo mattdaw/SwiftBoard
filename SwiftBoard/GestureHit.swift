@@ -24,9 +24,9 @@ class CellGestureHit: GestureHit {
     let collectionViewHit: CollectionViewGestureHit
     let cell: SwiftBoardCell
     let locationInCell: CGPoint
-    let itemViewModel: SwiftBoardItemViewModel
+    let itemViewModel: ItemViewModel
     
-    init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: SwiftBoardCell, locationInCell initCellLocation: CGPoint, itemViewModel initItem: SwiftBoardItemViewModel) {
+    init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: SwiftBoardCell, locationInCell initCellLocation: CGPoint, itemViewModel initItem: ItemViewModel) {
         collectionViewHit = initHit
         cell = initCell
         locationInCell = initCellLocation

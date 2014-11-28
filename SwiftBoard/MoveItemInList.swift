@@ -9,11 +9,11 @@
 import Foundation
 
 class MoveItemInList: DragOperation {
-    let listViewModel: SwiftBoardListViewModel
+    let listViewModel: ListViewModel
     let fromIndex: Int
     let toIndex: Int
     
-    init(listViewModel initList: SwiftBoardListViewModel, fromIndex initFrom: Int, toIndex initTo: Int) {
+    init(listViewModel initList: ListViewModel, fromIndex initFrom: Int, toIndex initTo: Int) {
         listViewModel = initList
         fromIndex = initFrom
         toIndex = initTo

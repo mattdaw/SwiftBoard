@@ -13,7 +13,7 @@ struct DragProxyState {
     let originalCenter: CGPoint
 }
 
-class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelegate, SwiftBoardListViewModelDelegate, RootViewModelDelegate {
+class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelegate, ListViewModelDelegate, RootViewModelDelegate {
     private var listDataSource: ListViewModelDataSource?
     private var regularLayout = CollectionViewLayout()
     
@@ -23,7 +23,7 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
     
     private var openFolderCollectionView: FolderCollectionView?
     private var dragProxyState: DragProxyState?
-    private var draggingItemViewModel: SwiftBoardItemViewModel?
+    private var draggingItemViewModel: ItemViewModel?
 
     private var lastCollectionView: UICollectionView?
     private var dragAndDropOperation: DragAndDropOperation?
@@ -42,7 +42,7 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
         }
     }
     
-    override var listViewModel: SwiftBoardListViewModel? {
+    override var listViewModel: ListViewModel? {
         return rootViewModel
     }
     

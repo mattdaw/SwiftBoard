@@ -10,9 +10,9 @@ import UIKit
 
 class ListViewModelDataSource : NSObject, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    var listViewModel: SwiftBoardListViewModel
+    var listViewModel: ListViewModel
     
-    init(_ initViewModel: SwiftBoardListViewModel) {
+    init(_ initViewModel: ListViewModel) {
         listViewModel = initViewModel
         
         super.init()

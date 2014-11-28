@@ -23,7 +23,7 @@ class FolderCollectionView: ListViewModelCollectionView {
         }
     }
     
-    override var listViewModel: SwiftBoardListViewModel? {
+    override var listViewModel: ListViewModel? {
         return folderViewModel
     }
     

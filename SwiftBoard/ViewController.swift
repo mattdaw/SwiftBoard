@@ -21,7 +21,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         // TODO: Move to AppDelegate and pass in
-        var viewModels: [SwiftBoardItemViewModel] = [
+        var viewModels: [ItemViewModel] = [
             AppViewModel(name: "App 1", color: UIColor.greenColor()),
             AppViewModel(name: "App 2", color: UIColor.blueColor()),
             FolderViewModel(name: "Folder 1", viewModels: [
