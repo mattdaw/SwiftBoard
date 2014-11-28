@@ -98,35 +98,9 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     
     func handlePanGesture(gesture: PanAndStopGestureRecognizer) {
         if gesture.state == .Began || gesture.state == .Changed {
-            if dragProxyState != nil {
-                let translation = gesture.translationInView(self)
-                dragProxyState!.view.center = CGPoint(x: dragProxyState!.originalCenter.x + translation.x,
-                    y: dragProxyState!.originalCenter.y + translation.y)
-            }
-            
-            let gestureCollectionView = collectionViewForGesture(gesture)
-            if lastCollectionView != nil && lastCollectionView !== gestureCollectionView {
-                if lastCollectionView === openFolderCollectionView {
-                    if let folderViewModel = openFolderCollectionView?.folderViewModel {
-                        if let appViewModel = draggingItemViewModel as? AppViewModel {
-                            rootViewModel?.closeFolder(folderViewModel)
-                            rootViewModel?.moveAppFromFolder(appViewModel, folderViewModel: folderViewModel)
-                        }
-                    }
-                }
-            }
-            
-            lastCollectionView = gestureCollectionView
-            
-            if let dragOp = dragAndDropOperation {
-                if let exitRect = cancelDragAndDropOperationWhenExitsRect {
-                    let location = gesture.locationInView(self)
-                    if !CGRectContainsPoint(exitRect, location) {
-                        dragOp.dragCancel()
-                        dragAndDropOperation = nil
-                    }
-                }
-            }
+            updateDragProxyPosition(gesture)
+            dragAppOutOfFolder(gesture)
+            dragCancelIfExitsRect(gesture)
         }
     }
     
@@ -289,6 +263,40 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
             }
         
             draggingItemViewModel = nil
+        }
+    }
+    
+    private func updateDragProxyPosition(gesture: UIPanGestureRecognizer) {
+        if let proxyState = dragProxyState {
+            let translation = gesture.translationInView(self)
+            dragProxyState!.view.center = CGPoint(x: proxyState.originalCenter.x + translation.x, y: proxyState.originalCenter.y + translation.y)
+        }
+    }
+    
+    private func dragAppOutOfFolder(gesture: UIPanGestureRecognizer) {
+        let gestureCollectionView = collectionViewForGesture(gesture)
+        
+        if lastCollectionView != nil && lastCollectionView === openFolderCollectionView && lastCollectionView !== gestureCollectionView {
+            if let folderViewModel = openFolderCollectionView?.folderViewModel {
+                if let appViewModel = draggingItemViewModel as? AppViewModel {
+                    rootViewModel?.closeFolder(folderViewModel)
+                    rootViewModel?.moveAppFromFolder(appViewModel, folderViewModel: folderViewModel)
+                }
+            }
+        }
+        
+        lastCollectionView = gestureCollectionView
+    }
+    
+    private func dragCancelIfExitsRect(gesture: UIPanGestureRecognizer) {
+        if let dragOp = dragAndDropOperation {
+            if let exitRect = cancelDragAndDropOperationWhenExitsRect {
+                let location = gesture.locationInView(self)
+                if !CGRectContainsPoint(exitRect, location) {
+                    dragOp.dragCancel()
+                    dragAndDropOperation = nil
+                }
+            }
         }
     }
     
