@@ -161,9 +161,9 @@
 			isa = PBXGroup;
 			children = (
 				C9473F481A1A967F006D0CB3 /* ListViewModelCollectionView.swift */,
+				C94803F919F70C2B000A4FB0 /* ListViewModelDataSource.swift */,
 				C9F94B421A1A68FA00119BCA /* RootCollectionView.swift */,
 				C9473F4A1A1A97A9006D0CB3 /* FolderCollectionView.swift */,
-				C94803F919F70C2B000A4FB0 /* ListViewModelDataSource.swift */,
 				C941E8021A23A6A6006D3085 /* GestureHit.swift */,
 			);
 			name = "Collection Views";
