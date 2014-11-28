@@ -87,9 +87,6 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         case UIGestureRecognizerState.Began:
             startDrag(gesture)
         case UIGestureRecognizerState.Ended, UIGestureRecognizerState.Cancelled:
-            dragAndDropOperation?.drop()
-            dragAndDropOperation = nil
-            
             endDrag(gesture)
         default:
             break
@@ -239,6 +236,9 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
     }
     
     private func endDrag(gesture: UIGestureRecognizer) {
+        dragAndDropOperation?.drop()
+        dragAndDropOperation = nil
+        
         if let proxyState = dragProxyState {
             if let returnToCenter = dragProxyReturnToCenter() {
                 UIView.animateWithDuration(0.4, animations: { () -> Void in
