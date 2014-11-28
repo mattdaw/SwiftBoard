@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FolderCollectionView: SwiftBoardCollectionView {
+class FolderCollectionView: ListViewModelCollectionView {
     var listDataSource: ListViewModelDataSource?
     
     var folderViewModel: FolderViewModel? {

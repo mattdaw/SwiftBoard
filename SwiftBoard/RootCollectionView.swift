@@ -13,7 +13,7 @@ struct DragProxyState {
     let originalCenter: CGPoint
 }
 
-class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate, SwiftBoardListViewModelDelegate, RootViewModelDelegate {
+class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelegate, SwiftBoardListViewModelDelegate, RootViewModelDelegate {
     private var listDataSource: ListViewModelDataSource?
     private var regularLayout = CollectionViewLayout()
     
@@ -116,8 +116,8 @@ class RootCollectionView: SwiftBoardCollectionView, UIGestureRecognizerDelegate,
         }
     }
     
-    func collectionViewForGesture(gesture: UIGestureRecognizer) -> SwiftBoardCollectionView {
-        var destCollectionView: SwiftBoardCollectionView = self
+    func collectionViewForGesture(gesture: UIGestureRecognizer) -> ListViewModelCollectionView {
+        var destCollectionView: ListViewModelCollectionView = self
         if let folderCollectionView = openFolderCollectionView {
             if folderCollectionView.pointInside(gesture.locationInView(folderCollectionView), withEvent: nil) {
                 destCollectionView = folderCollectionView

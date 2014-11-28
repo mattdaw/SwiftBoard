@@ -1,5 +1,5 @@
 //
-//  SwiftBoardCollectionView.swift
+//  ListViewModelCollectionView.swift
 //  SwiftBoard
 //
 //  Created by Matt Daw on 2014-11-17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SwiftBoardCollectionView: UICollectionView, SwiftBoardListViewModelDelegate {
+class ListViewModelCollectionView: UICollectionView, SwiftBoardListViewModelDelegate {
     var listViewModel: SwiftBoardListViewModel? { return nil }
     
     // MARK: SwiftBoardListViewModelDelegate
