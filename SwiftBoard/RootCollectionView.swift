@@ -56,6 +56,10 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
         scrollEnabled = false
         setCollectionViewLayout(regularLayout, animated: false)
         
+        addGestureRecognizers()
+    }
+    
+    func addGestureRecognizers() {
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: "handleTapGesture:")
         addGestureRecognizer(tapGestureRecognizer)
         
