@@ -306,30 +306,34 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
     }
     
     private func dragProxyReturnToCenter() -> CGPoint? {
-        var cell: UICollectionViewCell?
-        
         if let itemViewModel = draggingItemViewModel {
-            if let rootViewModel = itemViewModel.listViewModel as? RootViewModel {
-                if let index = rootViewModel.indexOfItem(itemViewModel) {
-                    cell = cellForItemAtIndexPath(index.toIndexPath())
-                }
-            } else if let folderViewModel = itemViewModel.listViewModel as? FolderViewModel {
-                if let indexOfFolder = rootViewModel?.indexOfItem(folderViewModel) {
-                    if let folderCell = cellForItemAtIndexPath(indexOfFolder.toIndexPath()) as? FolderCollectionViewCell {
-                        if let indexOfItem = itemViewModel.listViewModel?.indexOfItem(itemViewModel) {
-                            cell = folderCell.collectionView.cellForItemAtIndexPath(indexOfItem.toIndexPath())
-                        }
-                    }
-                }
-                
+            if let cell = cellForItemViewModel(itemViewModel) {
+                return convertPoint(cell.center, fromView: cell.superview)
             }
         }
         
-        if cell != nil {
-            return convertPoint(cell!.center, fromView: cell!.superview)
+        return nil
+    }
+    
+    private func cellForItemViewModel(itemViewModel: ItemViewModel) -> UICollectionViewCell? {
+        var cell: UICollectionViewCell?
+        
+        if let rootViewModel = itemViewModel.listViewModel as? RootViewModel {
+            if let index = rootViewModel.indexOfItem(itemViewModel) {
+                cell = cellForItemAtIndexPath(index.toIndexPath())
+            }
+        } else if let folderViewModel = itemViewModel.listViewModel as? FolderViewModel {
+            if let indexOfFolder = rootViewModel?.indexOfItem(folderViewModel) {
+                if let folderCell = cellForItemAtIndexPath(indexOfFolder.toIndexPath()) as? FolderCollectionViewCell {
+                    if let indexOfItem = itemViewModel.listViewModel?.indexOfItem(itemViewModel) {
+                        cell = folderCell.collectionView.cellForItemAtIndexPath(indexOfItem.toIndexPath())
+                    }
+                }
+            }
+            
         }
         
-        return nil
+        return cell
     }
     
     // MARK: UIGestureRecognizerDelegate
