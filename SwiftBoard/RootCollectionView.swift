@@ -330,7 +330,6 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
                     }
                 }
             }
-            
         }
         
         return cell
