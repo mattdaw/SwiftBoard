@@ -362,7 +362,7 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
     // MARK: RootViewModelDelegate
     
     func rootViewModelFolderOpened(folderViewModel: FolderViewModel) {
-        // Opening a folder terminates the current drag operation
+        // Opening a folder terminates the current drag and drop operation
         dragAndDropOperation = nil
         
         if let index = rootViewModel?.indexOfItem(folderViewModel) {
@@ -378,7 +378,7 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
     }
     
     func rootViewModelFolderClosed(folderViewModel: FolderViewModel) {
-        // Closing a folder terminates the current drag operation
+        // Closing a folder terminates the current drag and drop operation
         dragAndDropOperation = nil
         
         if let index = rootViewModel?.indexOfItem(folderViewModel) {
