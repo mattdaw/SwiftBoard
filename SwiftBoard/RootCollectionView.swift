@@ -245,17 +245,24 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
         dragAndDropOperation = nil
         
         if let proxyState = dragProxyState {
-            if let returnToCenter = dragProxyReturnToCenter() {
-                UIView.animateWithDuration(0.4, animations: { () -> Void in
-                    proxyState.view.transform = CGAffineTransformIdentity
-                    proxyState.view.alpha = 1
-                    proxyState.view.center = returnToCenter
-                }, completion: { (Bool) -> Void in
+            // Do the animation in the operation queue, so we can be sure the cell has been inserted into the
+            // destination collection view.
+            //
+            // TODO: This isn't working again for dropping on a folder, might need to go back to setting
+            // frame instead of center again?
+            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+                if let returnToCenter = self.dragProxyReturnToCenter() {
+                    UIView.animateWithDuration(0.4, animations: { () -> Void in
+                        proxyState.view.transform = CGAffineTransformIdentity
+                        proxyState.view.alpha = 1
+                        proxyState.view.center = returnToCenter
+                    }, completion: { (Bool) -> Void in
+                        self.resetDrag()
+                    })
+                } else {
                     self.resetDrag()
-                })
-            } else {
-                resetDrag()
-            }
+                }
+            })
         }
     }
     

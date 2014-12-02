@@ -136,6 +136,18 @@
 			name = "View Models";
 			sourceTree = "<group>";
 		};
+		C995052D1A2E6AF4001C84A2 /* Animation Operations */ = {
+			isa = PBXGroup;
+			children = (
+				C986FA241A2E59B7000D622C /* AsyncOperation.swift */,
+				C986FA261A2E59E6000D622C /* SetLayoutOperation.swift */,
+				C995052B1A2E5FBA001C84A2 /* AddItemOperation.swift */,
+				C99505291A2E5F4A001C84A2 /* MoveItemOperation.swift */,
+				C986FA221A2E55F9000D622C /* RemoveItemOperation.swift */,
+			);
+			name = "Animation Operations";
+			sourceTree = "<group>";
+		};
 		C9AAE6EC1A1CF8A700CE1E35 /* Collection View Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -175,11 +187,6 @@
 				C9F94B421A1A68FA00119BCA /* RootCollectionView.swift */,
 				C9473F4A1A1A97A9006D0CB3 /* FolderCollectionView.swift */,
 				C941E8021A23A6A6006D3085 /* GestureHit.swift */,
-				C986FA241A2E59B7000D622C /* AsyncOperation.swift */,
-				C986FA261A2E59E6000D622C /* SetLayoutOperation.swift */,
-				C995052B1A2E5FBA001C84A2 /* AddItemOperation.swift */,
-				C99505291A2E5F4A001C84A2 /* MoveItemOperation.swift */,
-				C986FA221A2E55F9000D622C /* RemoveItemOperation.swift */,
 			);
 			name = "Collection Views";
 			sourceTree = "<group>";
@@ -213,6 +220,7 @@
 				C9AAE6EF1A1CF8D900CE1E35 /* Collection Views */,
 				C9AAE6EC1A1CF8A700CE1E35 /* Collection View Cells */,
 				C9AAE6ED1A1CF8BB00CE1E35 /* Collection View Layouts */,
+				C995052D1A2E6AF4001C84A2 /* Animation Operations */,
 				C9AAE6EE1A1CF8C700CE1E35 /* Gesture Recognizers */,
 				C9DAE6A219C73EC0007CF518 /* Images.xcassets */,
 				C9DAE6A419C73EC0007CF518 /* LaunchScreen.xib */,
