@@ -16,6 +16,7 @@ struct DragProxyState {
 class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelegate, ListViewModelDelegate, RootViewModelDelegate {
     private var listDataSource: ListViewModelDataSource?
     private var regularLayout = CollectionViewLayout()
+    private var zoomedLayout = CollectionViewLayout()
     
     private var tapGestureRecognizer: UITapGestureRecognizer!
     private var longPressRecognizer: UILongPressGestureRecognizer!
@@ -283,8 +284,18 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
         if lastCollectionView != nil && lastCollectionView === openFolderCollectionView && lastCollectionView !== gestureCollectionView {
             if let folderViewModel = openFolderCollectionView?.folderViewModel {
                 if let appViewModel = draggingItemViewModel as? AppViewModel {
-                    rootViewModel?.closeFolder(folderViewModel)
                     rootViewModel?.moveAppFromFolder(appViewModel, folderViewModel: folderViewModel)
+                    rootViewModel?.closeFolder(folderViewModel)
+                    
+                    // The AddItemOperation animation needs to be in-flight before we remove the folder so that the index
+                    // paths line up.
+                    if folderViewModel.numberOfItems() == 0 {
+                        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+                            if let folderIndex = self.rootViewModel?.indexOfItem(folderViewModel) {
+                                self.rootViewModel?.removeItemAtIndex(folderIndex)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -368,11 +379,11 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
         if let index = rootViewModel?.indexOfItem(folderViewModel) {
             if let cell = cellForItemAtIndexPath(index.toIndexPath()) as? FolderCollectionViewCell {
                 openFolderCollectionView = cell.collectionView
-                
-                let zoomedLayout = CollectionViewLayout()
                 zoomedLayout.zoomToIndex = index
+                zoomedLayout.invalidateLayout()
                 
-                setCollectionViewLayout(zoomedLayout, animated: true)
+                let op = SetLayoutOperation(collectionView: self, layout: zoomedLayout)
+                NSOperationQueue.mainQueue().addOperation(op)
             }
         }
     }
@@ -383,7 +394,9 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
         
         if let index = rootViewModel?.indexOfItem(folderViewModel) {
             openFolderCollectionView = nil
-            setCollectionViewLayout(regularLayout, animated: true)
+            
+            let op = SetLayoutOperation(collectionView: self, layout: regularLayout)
+            NSOperationQueue.mainQueue().addOperation(op)
         }
     }
 }

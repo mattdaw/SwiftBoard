@@ -14,20 +14,17 @@ class ListViewModelCollectionView: UICollectionView, ListViewModelDelegate {
     // MARK: ListViewModelDelegate
     
     func listViewModelItemMoved(fromIndex: Int, toIndex: Int) {
-        performBatchUpdates({ () -> Void in
-            self.moveItemAtIndexPath(fromIndex.toIndexPath(), toIndexPath: toIndex.toIndexPath())
-        }, completion: nil)
+        let op = MoveItemOperation(collectionView: self, fromIndex: fromIndex, toIndex: toIndex)
+        NSOperationQueue.mainQueue().addOperation(op)
     }
     
     func listViewModelItemAddedAtIndex(index: Int) {
-        performBatchUpdates({ () -> Void in
-            self.insertItemsAtIndexPaths([index.toIndexPath()])
-        }, completion: nil)
+        let op = AddItemOperation(collectionView: self, index: index)
+        NSOperationQueue.mainQueue().addOperation(op)
     }
     
     func listViewModelItemRemovedAtIndex(index: Int) {
-        performBatchUpdates({ () -> Void in
-            self.deleteItemsAtIndexPaths([index.toIndexPath()])
-        }, completion: nil)
+        let op = RemoveItemOperation(collectionView: self, index: index)
+        NSOperationQueue.mainQueue().addOperation(op)
     }
 }
