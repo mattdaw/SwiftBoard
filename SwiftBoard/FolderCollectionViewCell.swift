@@ -114,6 +114,13 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
         hidden = dragging
     }
     
+    func folderViewModelDeletingDidChange(deleting: Bool) {
+        if deleting {
+            let op = FadeOutCellOperation(self)
+            NSOperationQueue.mainQueue().addOperation(op)
+        }
+    }
+    
     func folderViewModelStateDidChange(state: FolderViewModelState) {
         switch state {
         case .Closed:

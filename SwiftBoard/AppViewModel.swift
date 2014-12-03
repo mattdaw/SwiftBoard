@@ -10,6 +10,7 @@ import UIKit
 
 protocol AppViewModelDelegate: class {
     func appViewModelDraggingDidChange(dragging: Bool)
+    func appViewModelDeletingDidChange(deleting: Bool)
 }
 
 class AppViewModel: ItemViewModel {
@@ -24,6 +25,12 @@ class AppViewModel: ItemViewModel {
         }
     }
     
+    var deleting: Bool = false {
+        didSet {
+            delegate?.appViewModelDeletingDidChange(deleting)
+        }
+    }
+    
     init(name appName:String, color appColor:UIColor) {
         name = appName
         color = appColor
@@ -31,6 +38,7 @@ class AppViewModel: ItemViewModel {
     
     func delete() {
         if let index = listViewModel?.indexOfItem(self) {
+            deleting = true
             listViewModel?.removeItemAtIndex(index)
         }
     }

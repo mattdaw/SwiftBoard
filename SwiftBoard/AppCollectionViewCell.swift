@@ -81,7 +81,15 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
     }
     
     // MARK: AppViewModelDelegate
+    
     func appViewModelDraggingDidChange(dragging: Bool) {
         hidden = dragging
+    }
+    
+    func appViewModelDeletingDidChange(deleting: Bool) {
+        if deleting {
+            let op = FadeOutCellOperation(self)
+            NSOperationQueue.mainQueue().addOperation(op)
+        }
     }
 }

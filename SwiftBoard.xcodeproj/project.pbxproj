@@ -28,6 +28,7 @@
 		C986FA271A2E59E6000D622C /* SetLayoutOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C986FA261A2E59E6000D622C /* SetLayoutOperation.swift */; };
 		C995052A1A2E5F4A001C84A2 /* MoveItemOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99505291A2E5F4A001C84A2 /* MoveItemOperation.swift */; };
 		C995052C1A2E5FBA001C84A2 /* AddItemOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C995052B1A2E5FBA001C84A2 /* AddItemOperation.swift */; };
+		C995052F1A2F6611001C84A2 /* FadeOutCellOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C995052E1A2F6611001C84A2 /* FadeOutCellOperation.swift */; };
 		C997CF7C1A1FD94400AAB2A8 /* DragAndDropOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C997CF7B1A1FD94400AAB2A8 /* DragAndDropOperation.swift */; };
 		C9981F7719C798C600804558 /* CollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9981F7619C798C600804558 /* CollectionViewLayout.swift */; };
 		C9989ABA1A113E2000799596 /* PanAndStopGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9989AB91A113E2000799596 /* PanAndStopGestureRecognizer.swift */; };
@@ -75,6 +76,7 @@
 		C986FA261A2E59E6000D622C /* SetLayoutOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetLayoutOperation.swift; sourceTree = "<group>"; };
 		C99505291A2E5F4A001C84A2 /* MoveItemOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoveItemOperation.swift; sourceTree = "<group>"; };
 		C995052B1A2E5FBA001C84A2 /* AddItemOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddItemOperation.swift; sourceTree = "<group>"; };
+		C995052E1A2F6611001C84A2 /* FadeOutCellOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FadeOutCellOperation.swift; sourceTree = "<group>"; };
 		C997CF7B1A1FD94400AAB2A8 /* DragAndDropOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragAndDropOperation.swift; sourceTree = "<group>"; };
 		C9981F7619C798C600804558 /* CollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewLayout.swift; sourceTree = "<group>"; };
 		C9989AB91A113E2000799596 /* PanAndStopGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanAndStopGestureRecognizer.swift; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 				C995052B1A2E5FBA001C84A2 /* AddItemOperation.swift */,
 				C99505291A2E5F4A001C84A2 /* MoveItemOperation.swift */,
 				C986FA221A2E55F9000D622C /* RemoveItemOperation.swift */,
+				C995052E1A2F6611001C84A2 /* FadeOutCellOperation.swift */,
 			);
 			name = "Animation Operations";
 			sourceTree = "<group>";
@@ -371,6 +374,7 @@
 				C9DAE69C19C73EC0007CF518 /* AppDelegate.swift in Sources */,
 				C972A77B1A17C25C00EDC404 /* ItemViewModel.swift in Sources */,
 				C997CF7C1A1FD94400AAB2A8 /* DragAndDropOperation.swift in Sources */,
+				C995052F1A2F6611001C84A2 /* FadeOutCellOperation.swift in Sources */,
 				C995052C1A2E5FBA001C84A2 /* AddItemOperation.swift in Sources */,
 				C941E7FF1A23A160006D3085 /* MoveItemInList.swift in Sources */,
 				C99E409119CB9187003DE57D /* AppCollectionViewCell.swift in Sources */,

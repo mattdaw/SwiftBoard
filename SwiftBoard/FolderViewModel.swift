@@ -14,6 +14,7 @@ enum FolderViewModelState {
 
 protocol FolderViewModelDelegate: class {
     func folderViewModelDraggingDidChange(dragging: Bool)
+    func folderViewModelDeletingDidChange(deleting: Bool)
     func folderViewModelStateDidChange(state: FolderViewModelState)
 }
 
@@ -25,6 +26,12 @@ class FolderViewModel: ListViewModel, ItemViewModel {
     var dragging: Bool = false {
         didSet {
             itemViewModelDelegate?.folderViewModelDraggingDidChange(dragging)
+        }
+    }
+    
+    var deleting: Bool = false {
+        didSet {
+            itemViewModelDelegate?.folderViewModelDeletingDidChange(deleting)
         }
     }
     
