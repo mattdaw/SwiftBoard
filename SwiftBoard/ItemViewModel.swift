@@ -13,4 +13,6 @@ protocol ItemViewModel: class {
     var deleting: Bool { get set }
     
     var listViewModel: ListViewModel? { get set }
+    
+    func delete()
 }

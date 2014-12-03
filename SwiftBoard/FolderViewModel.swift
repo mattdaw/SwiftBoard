@@ -46,4 +46,11 @@ class FolderViewModel: ListViewModel, ItemViewModel {
         state = .Closed
         super.init(viewModels: initViewModels)
     }
+    
+    func delete() {
+        if let index = listViewModel?.indexOfItem(self) {
+            deleting = true
+            listViewModel?.removeItemAtIndex(index)
+        }
+    }
 }
