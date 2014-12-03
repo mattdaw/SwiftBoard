@@ -10,21 +10,37 @@ import UIKit
 
 class ListViewModelCollectionView: UICollectionView, ListViewModelDelegate {
     var listViewModel: ListViewModel? { return nil }
+    var deferAnimations: Bool = true
     
     // MARK: ListViewModelDelegate
     
     func listViewModelItemMoved(fromIndex: Int, toIndex: Int) {
         let op = MoveItemOperation(collectionView: self, fromIndex: fromIndex, toIndex: toIndex)
-        NSOperationQueue.mainQueue().addOperation(op)
+        
+        if deferAnimations {
+            NSOperationQueue.mainQueue().addOperation(op)
+        } else {
+            op.start()
+        }
     }
     
     func listViewModelItemAddedAtIndex(index: Int) {
         let op = AddItemOperation(collectionView: self, index: index)
-        NSOperationQueue.mainQueue().addOperation(op)
+        
+        if deferAnimations {
+            NSOperationQueue.mainQueue().addOperation(op)
+        } else {
+            op.start()
+        }
     }
     
     func listViewModelItemRemovedAtIndex(index: Int) {
         let op = RemoveItemOperation(collectionView: self, index: index)
-        NSOperationQueue.mainQueue().addOperation(op)
+        
+        if deferAnimations {
+            NSOperationQueue.mainQueue().addOperation(op)
+        } else {
+            op.start()
+        }
     }
 }

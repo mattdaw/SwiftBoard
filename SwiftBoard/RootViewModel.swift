@@ -11,18 +11,31 @@ import Foundation
 protocol RootViewModelDelegate: class {
     func rootViewModelFolderOpened(folderViewModel: FolderViewModel)
     func rootViewModelFolderClosed(folderViewModel: FolderViewModel)
+    
+    func rootViewModelWillMoveAppToFolder(appViewModel: AppViewModel, folderViewModel: FolderViewModel, open: Bool)
+    func rootViewModelDidMoveAppToFolder(appViewModel: AppViewModel, folderViewModel: FolderViewModel, open: Bool)
 }
 
 class RootViewModel: ListViewModel {    
     weak var rootViewModelDelegate: RootViewModelDelegate?
     
-    func moveAppToFolder(appViewModel: AppViewModel, folderViewModel: FolderViewModel) {
+    func moveAppToFolder(appViewModel: AppViewModel, folderViewModel: FolderViewModel, open: Bool) {
         if let index = indexOfItem(appViewModel) {
+            rootViewModelDelegate?.rootViewModelWillMoveAppToFolder(appViewModel, folderViewModel: folderViewModel, open: open)
+            
             let addIndex = folderViewModel.numberOfItems()
             
             appViewModel.listViewModel = folderViewModel
             removeItemAtIndex(index)
             folderViewModel.appendItem(appViewModel)
+            
+            if open {
+                openFolder(folderViewModel)
+            } else {
+                folderViewModel.state = .Closed
+            }
+            
+            rootViewModelDelegate?.rootViewModelDidMoveAppToFolder(appViewModel, folderViewModel: folderViewModel, open: open)
         } else {
             assertionFailure("moveAppToFolder: AppViewModel isn't in the RootViewModel")
         }

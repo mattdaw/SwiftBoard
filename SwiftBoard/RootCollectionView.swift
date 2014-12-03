@@ -378,6 +378,14 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
     
     // MARK: RootViewModelDelegate
     
+    func rootViewModelWillMoveAppToFolder(appViewModel: AppViewModel, folderViewModel: FolderViewModel, open: Bool) {
+        deferAnimations = false
+    }
+    
+    func rootViewModelDidMoveAppToFolder(appViewModel: AppViewModel, folderViewModel: FolderViewModel, open: Bool) {
+        deferAnimations = true
+    }
+    
     func rootViewModelFolderOpened(folderViewModel: FolderViewModel) {
         // Opening a folder terminates the current drag and drop operation
         dragAndDropOperation = nil
@@ -390,7 +398,11 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
                 zoomedLayout.zoomToIndex = index
                 
                 let op = SetLayoutOperation(collectionView: self, layout: zoomedLayout)
-                NSOperationQueue.mainQueue().addOperation(op)
+                if deferAnimations {
+                    NSOperationQueue.mainQueue().addOperation(op)
+                } else {
+                    op.start()
+                }
             }
         }
     }

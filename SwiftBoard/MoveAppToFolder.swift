@@ -36,8 +36,7 @@ class MoveAppToFolder: NSObject, DragAndDropOperation {
     
     func drop() {
         cancelTimer()
-        rootViewModel.moveAppToFolder(appViewModel, folderViewModel: folderViewModel)
-        folderViewModel.state = .Closed
+        rootViewModel.moveAppToFolder(appViewModel, folderViewModel: folderViewModel, open: false)
     }
     
     func prepareToOpenFolder() {
@@ -50,8 +49,7 @@ class MoveAppToFolder: NSObject, DragAndDropOperation {
     func openFolder() {
         cancelTimer()
         
-        rootViewModel.moveAppToFolder(appViewModel, folderViewModel: folderViewModel)
-        rootViewModel.openFolder(folderViewModel)
+        rootViewModel.moveAppToFolder(appViewModel, folderViewModel: folderViewModel, open: true)
     }
     
     private func cancelTimer() {
