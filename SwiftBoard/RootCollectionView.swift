@@ -16,7 +16,6 @@ struct DragProxyState {
 class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelegate, ListViewModelDelegate, RootViewModelDelegate {
     private var listDataSource: ListViewModelDataSource?
     private var regularLayout = CollectionViewLayout()
-    private var zoomedLayout = CollectionViewLayout()
     
     private var tapGestureRecognizer: UITapGestureRecognizer!
     private var longPressRecognizer: UILongPressGestureRecognizer!
@@ -386,8 +385,9 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
         if let index = rootViewModel?.indexOfItem(folderViewModel) {
             if let cell = cellForItemAtIndexPath(index.toIndexPath()) as? FolderCollectionViewCell {
                 openFolderCollectionView = cell.collectionView
+                
+                let zoomedLayout = CollectionViewLayout()
                 zoomedLayout.zoomToIndex = index
-                zoomedLayout.invalidateLayout()
                 
                 let op = SetLayoutOperation(collectionView: self, layout: zoomedLayout)
                 NSOperationQueue.mainQueue().addOperation(op)
