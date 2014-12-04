@@ -92,4 +92,12 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
             NSOperationQueue.mainQueue().addOperation(op)
         }
     }
+    
+    func appViewModelEditingDidChange(editing: Bool) {
+        if editing {
+            startJiggling()
+        } else {
+            stopJiggling()
+        }
+    }
 }

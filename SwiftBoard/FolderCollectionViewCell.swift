@@ -121,6 +121,14 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
         }
     }
     
+    func folderViewModelEditingDidChange(editing: Bool) {
+        if editing {
+            startJiggling()
+        } else {
+            stopJiggling()
+        }
+    }
+    
     func folderViewModelStateDidChange(state: FolderViewModelState) {
         switch state {
         case .Closed:

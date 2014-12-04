@@ -46,7 +46,11 @@ class ViewController: UIViewController {
         
         rootViewModel = RootViewModel(viewModels: viewModels)
         rootCollectionView.rootViewModel = rootViewModel
-    }    
+    }
+    
+    @IBAction func handleHomeButton(sender: UIButton) {
+        rootViewModel!.editingModeEnabled = false
+    }
 }
 
 

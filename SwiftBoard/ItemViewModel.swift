@@ -11,6 +11,7 @@ import Foundation
 protocol ItemViewModel: class {
     var dragging: Bool { get set }
     var deleting: Bool { get set }
+    var editing: Bool { get set }
     
     var listViewModel: ListViewModel? { get set }
     

@@ -234,6 +234,8 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
                 dragProxyView.alpha = 0.9
             }
             
+            rootViewModel!.editingModeEnabled = true
+            
             draggingItemViewModel = cellHit.itemViewModel
             draggingItemViewModel!.dragging = true
         }

@@ -16,8 +16,17 @@ protocol RootViewModelDelegate: class {
     func rootViewModelDidMoveAppToFolder(appViewModel: AppViewModel, folderViewModel: FolderViewModel, open: Bool)
 }
 
-class RootViewModel: ListViewModel {    
+class RootViewModel: ListViewModel {
     weak var rootViewModelDelegate: RootViewModelDelegate?
+    
+    var editingModeEnabled: Bool = false {
+        didSet {
+            for var i = 0; i < numberOfItems(); i++ {
+                let item = itemAtIndex(i)
+                item.editing = editingModeEnabled
+            }
+        }
+    }
     
     func moveAppToFolder(appViewModel: AppViewModel, folderViewModel: FolderViewModel, open: Bool) {
         if let index = indexOfItem(appViewModel) {

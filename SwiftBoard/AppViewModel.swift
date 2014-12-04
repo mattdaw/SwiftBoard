@@ -11,6 +11,7 @@ import UIKit
 protocol AppViewModelDelegate: class {
     func appViewModelDraggingDidChange(dragging: Bool)
     func appViewModelDeletingDidChange(deleting: Bool)
+    func appViewModelEditingDidChange(editing: Bool)
 }
 
 class AppViewModel: ItemViewModel {
@@ -28,6 +29,12 @@ class AppViewModel: ItemViewModel {
     var deleting: Bool = false {
         didSet {
             delegate?.appViewModelDeletingDidChange(deleting)
+        }
+    }
+    
+    var editing: Bool = false {
+        didSet {
+            delegate?.appViewModelEditingDidChange(editing)
         }
     }
     
