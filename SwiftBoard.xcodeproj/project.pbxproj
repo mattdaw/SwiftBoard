@@ -173,13 +173,14 @@
 			name = "Collection View Layouts";
 			sourceTree = "<group>";
 		};
-		C9AAE6EE1A1CF8C700CE1E35 /* Gesture Recognizers */ = {
+		C9AAE6EE1A1CF8C700CE1E35 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
 				C9989ABB1A1143A300799596 /* Bridging-Header.h */,
+				C941E8041A23B03D006D3085 /* Extensions.swift */,
 				C9989AB91A113E2000799596 /* PanAndStopGestureRecognizer.swift */,
 			);
-			name = "Gesture Recognizers";
+			name = Utilities;
 			sourceTree = "<group>";
 		};
 		C9AAE6EF1A1CF8D900CE1E35 /* Collection Views */ = {
@@ -218,13 +219,12 @@
 				C9DAE69F19C73EC0007CF518 /* Main.storyboard */,
 				C9DAE69B19C73EC0007CF518 /* AppDelegate.swift */,
 				C9DAE69D19C73EC0007CF518 /* ViewController.swift */,
-				C941E8041A23B03D006D3085 /* Extensions.swift */,
 				C972A7751A17BDFE00EDC404 /* View Models */,
 				C9AAE6EF1A1CF8D900CE1E35 /* Collection Views */,
 				C9AAE6EC1A1CF8A700CE1E35 /* Collection View Cells */,
 				C9AAE6ED1A1CF8BB00CE1E35 /* Collection View Layouts */,
 				C995052D1A2E6AF4001C84A2 /* Animation Operations */,
-				C9AAE6EE1A1CF8C700CE1E35 /* Gesture Recognizers */,
+				C9AAE6EE1A1CF8C700CE1E35 /* Utilities */,
 				C9DAE6A219C73EC0007CF518 /* Images.xcassets */,
 				C9DAE6A419C73EC0007CF518 /* LaunchScreen.xib */,
 				C9DAE69919C73EC0007CF518 /* Supporting Files */,
