@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
+class AppCollectionViewCell : ItemViewModelCell, AppViewModelDelegate {
     
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var label: UILabel!
@@ -19,20 +19,12 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
     @IBOutlet weak var leftConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightConstraint: NSLayoutConstraint!
     
-    private var editing = false
-    private var zoomed = false
-    
-    private var jiggling: Bool = false {
-        didSet {
-            jiggling ? startJiggling() : stopJiggling()
-        }
-    }
-    
     weak var appViewModel: AppViewModel? {
         didSet {
             if let myViewModel = appViewModel {
                 hidden = myViewModel.dragging
-                jiggling = myViewModel.editing
+                editing = myViewModel.editing
+                zoomed = myViewModel.zoomed
                 label.text = myViewModel.name
                 containerView.backgroundColor = myViewModel.color
                 myViewModel.delegate = self
@@ -93,10 +85,6 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
     
     @IBAction func deleteApp(sender: AnyObject) {
         appViewModel?.delete()
-    }
-    
-    func updateJiggling() {
-        jiggling = editing && !zoomed
     }
     
     // MARK: AppViewModelDelegate

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C908190C19D485EA0091A58C /* SwiftBoardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C908190B19D485EA0091A58C /* SwiftBoardCell.swift */; };
+		C908190C19D485EA0091A58C /* ItemViewModelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C908190B19D485EA0091A58C /* ItemViewModelCell.swift */; };
 		C933C67D1A144FC6004F7703 /* DroppableCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C933C67C1A144FC6004F7703 /* DroppableCollectionViewLayout.swift */; };
 		C941E7FD1A23A148006D3085 /* MoveAppToFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C941E7FC1A23A148006D3085 /* MoveAppToFolder.swift */; };
 		C941E7FF1A23A160006D3085 /* MoveItemInList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C941E7FE1A23A160006D3085 /* MoveItemInList.swift */; };
@@ -55,7 +55,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		C908190B19D485EA0091A58C /* SwiftBoardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBoardCell.swift; sourceTree = "<group>"; };
+		C908190B19D485EA0091A58C /* ItemViewModelCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemViewModelCell.swift; sourceTree = "<group>"; };
 		C933C67C1A144FC6004F7703 /* DroppableCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DroppableCollectionViewLayout.swift; sourceTree = "<group>"; };
 		C941E7FC1A23A148006D3085 /* MoveAppToFolder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoveAppToFolder.swift; sourceTree = "<group>"; };
 		C941E7FE1A23A160006D3085 /* MoveItemInList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoveItemInList.swift; sourceTree = "<group>"; };
@@ -154,7 +154,7 @@
 		C9AAE6EC1A1CF8A700CE1E35 /* Collection View Cells */ = {
 			isa = PBXGroup;
 			children = (
-				C908190B19D485EA0091A58C /* SwiftBoardCell.swift */,
+				C908190B19D485EA0091A58C /* ItemViewModelCell.swift */,
 				C99E409019CB9187003DE57D /* AppCollectionViewCell.swift */,
 				C96A381119CA0F650069F5D9 /* AppCollectionViewCell.xib */,
 				C99E408E19CB41AC003DE57D /* FolderCollectionViewCell.swift */,
@@ -386,7 +386,7 @@
 				C99E408F19CB41AC003DE57D /* FolderCollectionViewCell.swift in Sources */,
 				C941E8051A23B03D006D3085 /* Extensions.swift in Sources */,
 				C995052A1A2E5F4A001C84A2 /* MoveItemOperation.swift in Sources */,
-				C908190C19D485EA0091A58C /* SwiftBoardCell.swift in Sources */,
+				C908190C19D485EA0091A58C /* ItemViewModelCell.swift in Sources */,
 				C941E7FD1A23A148006D3085 /* MoveAppToFolder.swift in Sources */,
 				C9981F7719C798C600804558 /* CollectionViewLayout.swift in Sources */,
 			);

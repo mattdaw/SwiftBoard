@@ -137,7 +137,7 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
         let collectionViewHit = CollectionViewGestureHit(collectionView: destCollectionView, locationInCollectionView: locationInCollectionView)
         
         if let indexPath = destCollectionView.indexPathForItemAtPoint(locationInCollectionView) {
-            if let cell = destCollectionView.cellForItemAtIndexPath(indexPath) as? SwiftBoardCell {
+            if let cell = destCollectionView.cellForItemAtIndexPath(indexPath) as? ItemViewModelCell {
                 if let listViewModel = destCollectionView.listViewModel {
                     let itemViewModel = listViewModel.itemAtIndex(indexPath.item)
                     let locationInCell = destCollectionView.convertPoint(locationInCollectionView, toView: cell)

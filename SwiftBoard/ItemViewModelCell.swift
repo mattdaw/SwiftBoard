@@ -1,5 +1,5 @@
 //
-//  SwiftBoardCell.swift
+//  ItemViewModelCell.swift
 //  SwiftBoard
 //
 //  Created by Matt Daw on 2014-09-25.
@@ -8,11 +8,29 @@
 
 import UIKit
 
-class SwiftBoardCell : UICollectionViewCell {
+class ItemViewModelCell : UICollectionViewCell {
     let jigglingAnimationKey = "jigglingAnimationKey"
     
-    func iconRect() -> CGRect? {
-        return nil
+    var editing: Bool = false {
+        didSet {
+            updateJiggling()
+        }
+    }
+    
+    var zoomed: Bool = false {
+        didSet {
+            updateJiggling()
+        }
+    }
+    
+    private var jiggling: Bool = false {
+        didSet {
+            jiggling ? startJiggling() : stopJiggling()
+        }
+    }
+    
+    func updateJiggling() {
+        jiggling = editing && !zoomed
     }
     
     func startJiggling() {
@@ -33,5 +51,9 @@ class SwiftBoardCell : UICollectionViewCell {
         anim.timeOffset = CFTimeInterval(Double(arc4random_uniform(100)) / 100.0)
         
         return anim
+    }
+    
+    func iconRect() -> CGRect? {
+        return nil
     }
 }

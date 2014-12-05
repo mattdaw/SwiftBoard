@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
+class FolderCollectionViewCell : ItemViewModelCell, FolderViewModelDelegate {
     @IBOutlet weak var collectionView: FolderCollectionView!
     @IBOutlet weak var expandingView: UIView!
     @IBOutlet weak var label: UILabel!
@@ -19,9 +19,6 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     @IBOutlet weak var rightConstraint: NSLayoutConstraint!
     
     let flickeringAnimationKey = "flickering"
-    
-    private var zoomed = false
-    private var editing = false
     
     private var expanded: Bool = false {
         didSet {
@@ -35,17 +32,12 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
         }
     }
     
-    private var jiggling: Bool = false {
-        didSet {
-            jiggling ? startJiggling() : stopJiggling()
-        }
-    }
-    
     weak var folderViewModel: FolderViewModel? {
         didSet {
             if let myViewModel = folderViewModel {
                 hidden = myViewModel.dragging
-                jiggling = myViewModel.editing
+                editing = myViewModel.editing
+                zoomed = myViewModel.zoomed
                 label.text = myViewModel.name
                 collectionView.folderViewModel = myViewModel
                 myViewModel.itemViewModelDelegate = self
@@ -120,10 +112,6 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     
     func stopFlickering() {
         expandingView.layer.removeAnimationForKey(flickeringAnimationKey)
-    }
-    
-    func updateJiggling() {
-        jiggling = editing && !zoomed
     }
     
     // FolderViewModelDelegate

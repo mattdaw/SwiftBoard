@@ -22,11 +22,11 @@ class CollectionViewGestureHit: GestureHit {
 
 class CellGestureHit: GestureHit {
     let collectionViewHit: CollectionViewGestureHit
-    let cell: SwiftBoardCell
+    let cell: ItemViewModelCell
     let locationInCell: CGPoint
     let itemViewModel: ItemViewModel
     
-    init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: SwiftBoardCell, locationInCell initCellLocation: CGPoint, itemViewModel initItem: ItemViewModel) {
+    init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: ItemViewModelCell, locationInCell initCellLocation: CGPoint, itemViewModel initItem: ItemViewModel) {
         collectionViewHit = initHit
         cell = initCell
         locationInCell = initCellLocation
@@ -37,7 +37,7 @@ class CellGestureHit: GestureHit {
 class AppGestureHit: CellGestureHit, GestureHit {
     let appViewModel: AppViewModel
     
-    init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: SwiftBoardCell, locationInCell initCellLocation: CGPoint, appViewModel initApp: AppViewModel) {
+    init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: ItemViewModelCell, locationInCell initCellLocation: CGPoint, appViewModel initApp: AppViewModel) {
         appViewModel = initApp
         super.init(collectionViewHit: initHit, cell: initCell, locationInCell: initCellLocation, itemViewModel: initApp)
     }
@@ -46,7 +46,7 @@ class AppGestureHit: CellGestureHit, GestureHit {
 class FolderGestureHit: CellGestureHit, GestureHit {
     let folderViewModel: FolderViewModel
     
-    init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: SwiftBoardCell, locationInCell initCellLocation: CGPoint, folderViewModel initFolder: FolderViewModel) {
+    init(collectionViewHit initHit: CollectionViewGestureHit, cell initCell: ItemViewModelCell, locationInCell initCellLocation: CGPoint, folderViewModel initFolder: FolderViewModel) {
         folderViewModel = initFolder
         super.init(collectionViewHit: initHit, cell: initCell, locationInCell: initCellLocation, itemViewModel: initFolder)
     }
