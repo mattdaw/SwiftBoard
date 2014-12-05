@@ -119,7 +119,7 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     func stopFlickering() {
         expandingView.layer.removeAnimationForKey(flickeringAnimationKey)
     }
-
+    
     // FolderViewModelDelegate
     
     func folderViewModelDraggingDidChange(dragging: Bool) {
@@ -134,7 +134,7 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     }
     
     func folderViewModelEditingDidChange(editing: Bool) {
-        jiggling = editing
+        jiggling = editing && !opened
     }
     
     func folderViewModelStateDidChange(state: FolderViewModelState) {
