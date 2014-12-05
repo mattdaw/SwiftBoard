@@ -13,12 +13,16 @@ class FolderCollectionView: ListViewModelCollectionView {
     
     var folderViewModel: FolderViewModel? {
         didSet {
-            if folderViewModel != nil {
-                listDataSource = ListViewModelDataSource(folderViewModel!)
+            if let myViewModel = folderViewModel {
+                listDataSource = ListViewModelDataSource(myViewModel)
                 dataSource = listDataSource
                 delegate = listDataSource
                 
-                folderViewModel!.listViewModelDelegate = self
+                myViewModel.listViewModelDelegate = self
+            } else {
+                listDataSource = nil
+                dataSource = nil
+                delegate = nil
             }
         }
     }
