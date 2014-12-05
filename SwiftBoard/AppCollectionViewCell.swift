@@ -30,12 +30,12 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
     
     weak var appViewModel: AppViewModel? {
         didSet {
-            if appViewModel != nil {
-                hidden = appViewModel!.dragging
-                jiggling = appViewModel!.editing
-                label.text = appViewModel!.name
-                containerView.backgroundColor = appViewModel!.color
-                appViewModel!.delegate = self
+            if let myViewModel = appViewModel {
+                hidden = myViewModel.dragging
+                jiggling = myViewModel.editing
+                label.text = myViewModel.name
+                containerView.backgroundColor = myViewModel.color
+                myViewModel.delegate = self
             } else {
                 hidden = false
             }
