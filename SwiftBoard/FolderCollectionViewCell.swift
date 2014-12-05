@@ -20,7 +20,9 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     
     let flickeringAnimationKey = "flickering"
     
-    private var opened = false
+    private var zoomed = false
+    private var editing = false
+    
     private var expanded: Bool = false {
         didSet {
             expanded ? expand() : collapse()
@@ -68,7 +70,7 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes!) {
         super.applyLayoutAttributes(layoutAttributes)
     
-        if opened {
+        if zoomed {
             topConstraint.constant = 10
             bottomConstraint.constant = 30
             leftConstraint.constant = 10
@@ -120,47 +122,49 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
         expandingView.layer.removeAnimationForKey(flickeringAnimationKey)
     }
     
-    // FolderViewModelDelegate
-    
-    func folderViewModelDraggingDidChange(dragging: Bool) {
-        hidden = dragging
+    func updateJiggling() {
+        jiggling = editing && !zoomed
     }
     
-    func folderViewModelDeletingDidChange(deleting: Bool) {
-        if deleting {
+    // FolderViewModelDelegate
+    
+    func folderViewModelDraggingDidChange(newValue: Bool) {
+        hidden = newValue
+    }
+    
+    func folderViewModelDeletingDidChange(newValue: Bool) {
+        if newValue {
             let op = FadeOutCellOperation(self)
             NSOperationQueue.mainQueue().addOperation(op)
         }
     }
     
-    func folderViewModelEditingDidChange(editing: Bool) {
-        jiggling = editing && !opened
+    func folderViewModelEditingDidChange(newValue: Bool) {
+        editing = newValue
+        updateJiggling()
+    }
+    
+    func folderViewModelZoomedDidChange(newValue: Bool) {
+        zoomed = newValue
+        updateJiggling()
     }
     
     func folderViewModelStateDidChange(state: FolderViewModelState) {
         switch state {
         case .Closed:
-            opened = false
             expanded = false
             flickering = false
-            jiggling = folderViewModel!.editing
         case .AppHovering:
-            opened = false
             expanded = true
             flickering = false
-            jiggling = false
         case .PreparingToOpen:
-            opened = false
             expanded = true
             flickering = true
-            jiggling = false
         case .Open:
-            opened = true
             expanded = false
             flickering = false
-            jiggling = false
-        default:
-            break;
         }
+        
+        updateJiggling()
     }
 }

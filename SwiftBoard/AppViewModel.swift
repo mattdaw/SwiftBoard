@@ -12,6 +12,7 @@ protocol AppViewModelDelegate: class {
     func appViewModelDraggingDidChange(dragging: Bool)
     func appViewModelDeletingDidChange(deleting: Bool)
     func appViewModelEditingDidChange(editing: Bool)
+    func appViewModelZoomedDidChange(zoomed: Bool)
 }
 
 class AppViewModel: ItemViewModel {
@@ -35,6 +36,12 @@ class AppViewModel: ItemViewModel {
     var editing: Bool = false {
         didSet {
             delegate?.appViewModelEditingDidChange(editing)
+        }
+    }
+    
+    var zoomed: Bool = false {
+        didSet {
+            delegate?.appViewModelZoomedDidChange(zoomed)
         }
     }
     

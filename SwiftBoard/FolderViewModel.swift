@@ -13,10 +13,11 @@ enum FolderViewModelState {
 }
 
 protocol FolderViewModelDelegate: class {
-    func folderViewModelDraggingDidChange(dragging: Bool)
-    func folderViewModelDeletingDidChange(deleting: Bool)
-    func folderViewModelEditingDidChange(editing: Bool)
-    func folderViewModelStateDidChange(state: FolderViewModelState)
+    func folderViewModelDraggingDidChange(Bool)
+    func folderViewModelDeletingDidChange(Bool)
+    func folderViewModelEditingDidChange(Bool)
+    func folderViewModelZoomedDidChange(Bool)
+    func folderViewModelStateDidChange(FolderViewModelState)
 }
 
 class FolderViewModel: ListViewModel, ItemViewModel {
@@ -43,6 +44,17 @@ class FolderViewModel: ListViewModel, ItemViewModel {
             for var i=0; i < numberOfItems(); i++ {
                 let item = itemAtIndex(i)
                 item.editing = editing
+            }
+        }
+    }
+    
+    var zoomed: Bool = false {
+        didSet {
+            itemViewModelDelegate?.folderViewModelZoomedDidChange(zoomed)
+            
+            for var i=0; i < numberOfItems(); i++ {
+                let item = itemAtIndex(i)
+                item.zoomed = zoomed
             }
         }
     }

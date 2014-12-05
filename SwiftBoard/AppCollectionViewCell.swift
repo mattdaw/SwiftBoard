@@ -107,4 +107,8 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
             stopJiggling()
         }
     }
+    
+    func appViewModelZoomedDidChange(zoomed: Bool) {
+        println("Zoomed!")
+    }
 }

@@ -28,6 +28,17 @@ class RootViewModel: ListViewModel {
         }
     }
     
+    private var openFolderViewModel: FolderViewModel? {
+        didSet {
+            let zoomed = openFolderViewModel != nil
+            
+            for var i = 0; i < numberOfItems(); i++ {
+                let item = itemAtIndex(i)
+                item.zoomed = zoomed
+            }
+        }
+    }
+    
     func moveAppToFolder(appViewModel: AppViewModel, folderViewModel: FolderViewModel, open: Bool) {
         if let index = indexOfItem(appViewModel) {
             rootViewModelDelegate?.rootViewModelWillMoveAppToFolder(appViewModel, folderViewModel: folderViewModel, open: open)
@@ -40,8 +51,6 @@ class RootViewModel: ListViewModel {
             
             if open {
                 openFolder(folderViewModel)
-            } else {
-                folderViewModel.state = .Closed
             }
             
             rootViewModelDelegate?.rootViewModelDidMoveAppToFolder(appViewModel, folderViewModel: folderViewModel, open: open)
@@ -63,12 +72,24 @@ class RootViewModel: ListViewModel {
     }
     
     func openFolder(folderViewModel: FolderViewModel) {
-        folderViewModel.state = .Open
-        rootViewModelDelegate?.rootViewModelFolderOpened(folderViewModel)
+        if openFolderViewModel == nil {
+            openFolderViewModel = folderViewModel
+            
+            folderViewModel.state = .Open
+            rootViewModelDelegate?.rootViewModelFolderOpened(folderViewModel)
+        } else {
+            assertionFailure("openFolder: Tried to open a folder when another is open.")
+        }
     }
     
     func closeFolder(folderViewModel: FolderViewModel) {
-        folderViewModel.state = .Closed
-        rootViewModelDelegate?.rootViewModelFolderClosed(folderViewModel)
+        if openFolderViewModel != nil {
+            openFolderViewModel = nil
+            
+            folderViewModel.state = .Closed
+            rootViewModelDelegate?.rootViewModelFolderClosed(folderViewModel)
+        } else {
+            assertionFailure("closeFolder: Tried to close a folder when no folder is open.")
+        }
     }
 }
