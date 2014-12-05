@@ -11,10 +11,10 @@ import Foundation
 protocol GestureHit {}
 
 class CollectionViewGestureHit: GestureHit {
-    let collectionView: UICollectionView
+    let collectionView: ListViewModelCollectionView
     let locationInCollectionView: CGPoint
     
-    init(collectionView initCollectionView: UICollectionView, locationInCollectionView initViewLocation: CGPoint) {
+    init(collectionView initCollectionView: ListViewModelCollectionView, locationInCollectionView initViewLocation: CGPoint) {
         collectionView = initCollectionView
         locationInCollectionView = initViewLocation
     }

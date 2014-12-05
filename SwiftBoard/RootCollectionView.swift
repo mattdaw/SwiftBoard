@@ -194,13 +194,14 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
     func dragOperationForMoveItem(gestureHit: GestureHit) -> DragOperation? {
         if let itemViewModel = draggingItemViewModel {
             if let listViewModel = itemViewModel.listViewModel {
+                let dragIndex = listViewModel.indexOfItem(itemViewModel)
+                
                 if let cellHit = gestureHit as? CellGestureHit {
                     if itemViewModel === cellHit.itemViewModel {
                         return nil
                     }
                     
                     let layout = cellHit.collectionViewHit.collectionView.collectionViewLayout as DroppableCollectionViewLayout
-                    var dragIndex = listViewModel.indexOfItem(itemViewModel)
                     var dropIndex = listViewModel.indexOfItem(cellHit.itemViewModel)
                     var newIndex: Int
                     
@@ -212,6 +213,12 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
                         }
                         
                         return MoveItemInList(listViewModel: listViewModel, fromIndex: dragIndex!, toIndex: newIndex)
+                    }
+                } else if let collectionViewHit = gestureHit as? CollectionViewGestureHit {
+                    let lastIndex = listViewModel.numberOfItems() - 1
+                    
+                    if collectionViewHit.collectionView.listViewModel === listViewModel && dragIndex != nil && lastIndex != dragIndex {
+                        return MoveItemInList(listViewModel: listViewModel, fromIndex: dragIndex!, toIndex: lastIndex)
                     }
                 }
             }
