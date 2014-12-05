@@ -177,8 +177,8 @@
 			isa = PBXGroup;
 			children = (
 				C9989ABB1A1143A300799596 /* Bridging-Header.h */,
-				C941E8041A23B03D006D3085 /* Extensions.swift */,
 				C9989AB91A113E2000799596 /* PanAndStopGestureRecognizer.swift */,
+				C941E8041A23B03D006D3085 /* Extensions.swift */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";

@@ -19,8 +19,6 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
     @IBOutlet weak var leftConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightConstraint: NSLayoutConstraint!
     
-    let jiggingAppAnimationKey = "jigglingAppAnimationKey"
-    
     private var jiggling: Bool = false {
         didSet {
             jiggling ? startJiggling() : stopJiggling()
@@ -83,14 +81,6 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
     
     override func iconRect() -> CGRect? {
         return containerView.frame
-    }
-    
-    func startJiggling() {
-        self.layer.addAnimation(CABasicAnimation.jigglingAnimation(), forKey:jiggingAppAnimationKey);
-    }
-    
-    func stopJiggling() {
-        self.layer.removeAnimationForKey(jiggingAppAnimationKey)
     }
     
     @IBAction func deleteApp(sender: AnyObject) {
