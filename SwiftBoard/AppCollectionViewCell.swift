@@ -19,6 +19,8 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
     @IBOutlet weak var leftConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightConstraint: NSLayoutConstraint!
     
+    private var zoomed = false
+    
     private var jiggling: Bool = false {
         didSet {
             jiggling ? startJiggling() : stopJiggling()
@@ -53,7 +55,12 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes!) {
         super.applyLayoutAttributes(layoutAttributes)
         
-        if bounds.width < 80 {
+        if zoomed {
+            topConstraint.constant = 10
+            bottomConstraint.constant = 30
+            leftConstraint.constant = 10
+            rightConstraint.constant = 10
+        } else if bounds.width < 80 {
             deleteButton.alpha = 0
             label.alpha = 0
             
@@ -89,26 +96,26 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
     
     // MARK: AppViewModelDelegate
     
-    func appViewModelDraggingDidChange(dragging: Bool) {
-        hidden = dragging
+    func appViewModelDraggingDidChange(newValue: Bool) {
+        hidden = newValue
     }
     
-    func appViewModelDeletingDidChange(deleting: Bool) {
-        if deleting {
+    func appViewModelDeletingDidChange(newValue: Bool) {
+        if newValue {
             let op = FadeOutCellOperation(self)
             NSOperationQueue.mainQueue().addOperation(op)
         }
     }
     
-    func appViewModelEditingDidChange(editing: Bool) {
-        if editing {
+    func appViewModelEditingDidChange(newValue: Bool) {
+        if newValue {
             startJiggling()
         } else {
             stopJiggling()
         }
     }
     
-    func appViewModelZoomedDidChange(zoomed: Bool) {
-        println("Zoomed!")
+    func appViewModelZoomedDidChange(newValue: Bool) {
+        zoomed = newValue
     }
 }

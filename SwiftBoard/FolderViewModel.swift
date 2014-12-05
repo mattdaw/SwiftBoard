@@ -51,11 +51,6 @@ class FolderViewModel: ListViewModel, ItemViewModel {
     var zoomed: Bool = false {
         didSet {
             itemViewModelDelegate?.folderViewModelZoomedDidChange(zoomed)
-            
-            for var i=0; i < numberOfItems(); i++ {
-                let item = itemAtIndex(i)
-                item.zoomed = zoomed
-            }
         }
     }
     
