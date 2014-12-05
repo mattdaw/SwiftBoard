@@ -230,6 +230,7 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
     private func startDrag(gesture: UIGestureRecognizer) {
         if let cellHit = gestureHitForGesture(gesture) as? CellGestureHit {
             let cell = cellHit.cell
+            cell.showDeleteButton(false)
             
             let dragProxyView = cell.snapshotViewAfterScreenUpdates(true)
             dragProxyView.frame = convertRect(cell.frame, fromView: cell.superview)
@@ -242,7 +243,6 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
             }
             
             rootViewModel!.editingModeEnabled = true
-            
             draggingItemViewModel = cellHit.itemViewModel
             draggingItemViewModel!.dragging = true
         }

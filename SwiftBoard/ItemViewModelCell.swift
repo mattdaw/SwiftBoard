@@ -14,6 +14,7 @@ class ItemViewModelCell : UICollectionViewCell {
     var editing: Bool = false {
         didSet {
             updateJiggling()
+            editing ? showDeleteButton(true) : hideDeleteButton(true)
         }
     }
     
@@ -51,6 +52,14 @@ class ItemViewModelCell : UICollectionViewCell {
         anim.timeOffset = CFTimeInterval(Double(arc4random_uniform(100)) / 100.0)
         
         return anim
+    }
+    
+    func showDeleteButton(animated: Bool) {
+        // Abstract in superclass
+    }
+    
+    func hideDeleteButton(animated: Bool) {
+        // Abstract in superclass
     }
     
     func iconRect() -> CGRect? {

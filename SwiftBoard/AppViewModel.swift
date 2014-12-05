@@ -35,7 +35,9 @@ class AppViewModel: ItemViewModel {
     
     var editing: Bool = false {
         didSet {
-            delegate?.appViewModelEditingDidChange(editing)
+            if oldValue != editing {
+                delegate?.appViewModelEditingDidChange(editing)
+            }
         }
     }
     

@@ -50,29 +50,11 @@ class AppCollectionViewCell : ItemViewModelCell, AppViewModelDelegate {
         super.applyLayoutAttributes(layoutAttributes)
         
         if zoomed {
-            topConstraint.constant = 10
-            bottomConstraint.constant = 30
-            leftConstraint.constant = 10
-            rightConstraint.constant = 10
+            updateConstraintsZoomed()
         } else if bounds.width < 80 {
-            deleteButton.alpha = 0
-            label.alpha = 0
-            
-            topConstraint.constant = 2
-            bottomConstraint.constant = 2
-            leftConstraint.constant = 2
-            rightConstraint.constant = 2
+            updateConstraintsSmall()
         } else {
-            deleteButton.alpha = 1
-            label.alpha = 1
-            
-            let extraWidth = (bounds.width - 60) / 2
-            let extraHeight = (bounds.height - 80) / 2
-            
-            topConstraint.constant = extraHeight
-            bottomConstraint.constant = extraHeight + 20
-            leftConstraint.constant = extraWidth
-            rightConstraint.constant = extraWidth
+            updateConstraintsNormal()
         }
         
         // Trigger constraint re-evaluation, so the subview sizes get animated too
@@ -80,12 +62,68 @@ class AppCollectionViewCell : ItemViewModelCell, AppViewModelDelegate {
         layoutIfNeeded()
     }
     
+    @IBAction func deleteApp(sender: AnyObject) {
+        appViewModel?.delete()
+    }
+    
     override func iconRect() -> CGRect? {
         return containerView.frame
     }
     
-    @IBAction func deleteApp(sender: AnyObject) {
-        appViewModel?.delete()
+    override func showDeleteButton(animated: Bool) {
+        deleteButton.hidden = false
+        
+        if animated {
+            deleteButton.transform = CGAffineTransformMakeScale(0.01, 0.01)
+            
+            UIView.animateWithDuration(0.2, animations: { () -> Void in
+                self.deleteButton.transform = CGAffineTransformIdentity
+            })
+        }
+    }
+    
+    override func hideDeleteButton(animated: Bool) {
+        if animated {
+            UIView.animateWithDuration(0.2, animations: { () -> Void in
+                self.deleteButton.transform = CGAffineTransformMakeScale(0.01, 0.01)
+            }, completion: { (finished: Bool) -> Void in
+                self.deleteButton.hidden = true
+                self.deleteButton.transform = CGAffineTransformIdentity
+            })
+        } else {
+            self.deleteButton.hidden = true
+        }
+    }
+    
+    func updateConstraintsZoomed() {
+        topConstraint.constant = 10
+        bottomConstraint.constant = 30
+        leftConstraint.constant = 10
+        rightConstraint.constant = 10
+    }
+    
+    func updateConstraintsSmall() {
+        deleteButton.alpha = 0
+        label.alpha = 0
+        
+        topConstraint.constant = 2
+        bottomConstraint.constant = 2
+        leftConstraint.constant = 2
+        rightConstraint.constant = 2
+    }
+    
+    func updateConstraintsNormal() {
+        deleteButton.alpha = 1
+        label.alpha = 1
+        
+        let extraWidth = (bounds.width - 60) / 2
+        let extraHeight = (bounds.height - 80) / 2
+        
+        topConstraint.constant = extraHeight
+        bottomConstraint.constant = extraHeight + 20
+        leftConstraint.constant = extraWidth
+        rightConstraint.constant = extraWidth
+
     }
     
     // MARK: AppViewModelDelegate
@@ -103,11 +141,9 @@ class AppCollectionViewCell : ItemViewModelCell, AppViewModelDelegate {
     
     func appViewModelEditingDidChange(newValue: Bool) {
         editing = newValue
-        updateJiggling()
     }
     
     func appViewModelZoomedDidChange(newValue: Bool) {
         zoomed = newValue
-        updateJiggling()
     }
 }
