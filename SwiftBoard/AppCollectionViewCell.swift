@@ -19,10 +19,17 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
     @IBOutlet weak var leftConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightConstraint: NSLayoutConstraint!
     
+    private var jiggling: Bool = false {
+        didSet {
+            jiggling ? startJiggling() : stopJiggling()
+        }
+    }
+    
     weak var appViewModel: AppViewModel? {
         didSet {
             if appViewModel != nil {
                 hidden = appViewModel!.dragging
+                jiggling = appViewModel!.editing
                 label.text = appViewModel!.name
                 containerView.backgroundColor = appViewModel!.color
                 appViewModel!.delegate = self

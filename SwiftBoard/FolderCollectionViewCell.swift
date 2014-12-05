@@ -33,6 +33,12 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
         }
     }
     
+    private var jiggling: Bool = false {
+        didSet {
+            jiggling ? startJiggling() : stopJiggling()
+        }
+    }
+
     override func awakeFromNib() {
         super.awakeFromNib()
         collectionView.backgroundColor = UIColor.clearColor()
@@ -88,6 +94,7 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     
     func configureForFolderViewModel(folderViewModel: FolderViewModel) {
         hidden = folderViewModel.dragging
+        jiggling = folderViewModel.editing
         label.text = folderViewModel.name
         collectionView.folderViewModel = folderViewModel
         
@@ -122,11 +129,7 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     }
     
     func folderViewModelEditingDidChange(editing: Bool) {
-        if editing {
-            startJiggling()
-        } else {
-            stopJiggling()
-        }
+        jiggling = editing
     }
     
     func folderViewModelStateDidChange(state: FolderViewModelState) {
