@@ -19,6 +19,7 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
     @IBOutlet weak var leftConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightConstraint: NSLayoutConstraint!
     
+    private var editing = false
     private var zoomed = false
     
     private var jiggling: Bool = false {
@@ -94,6 +95,10 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
         appViewModel?.delete()
     }
     
+    func updateJiggling() {
+        jiggling = editing && !zoomed
+    }
+    
     // MARK: AppViewModelDelegate
     
     func appViewModelDraggingDidChange(newValue: Bool) {
@@ -108,14 +113,12 @@ class AppCollectionViewCell : SwiftBoardCell, AppViewModelDelegate {
     }
     
     func appViewModelEditingDidChange(newValue: Bool) {
-        if newValue {
-            startJiggling()
-        } else {
-            stopJiggling()
-        }
+        editing = newValue
+        updateJiggling()
     }
     
     func appViewModelZoomedDidChange(newValue: Bool) {
         zoomed = newValue
+        updateJiggling()
     }
 }

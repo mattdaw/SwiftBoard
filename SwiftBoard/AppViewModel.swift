@@ -9,10 +9,10 @@
 import UIKit
 
 protocol AppViewModelDelegate: class {
-    func appViewModelDraggingDidChange(dragging: Bool)
-    func appViewModelDeletingDidChange(deleting: Bool)
-    func appViewModelEditingDidChange(editing: Bool)
-    func appViewModelZoomedDidChange(zoomed: Bool)
+    func appViewModelDraggingDidChange(Bool)
+    func appViewModelDeletingDidChange(Bool)
+    func appViewModelEditingDidChange(Bool)
+    func appViewModelZoomedDidChange(Bool)
 }
 
 class AppViewModel: ItemViewModel {
