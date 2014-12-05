@@ -38,6 +38,20 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
             jiggling ? startJiggling() : stopJiggling()
         }
     }
+    
+    weak var folderViewModel: FolderViewModel? {
+        didSet {
+            if let myViewModel = folderViewModel {
+                hidden = myViewModel.dragging
+                jiggling = myViewModel.editing
+                label.text = myViewModel.name
+                collectionView.folderViewModel = myViewModel
+                myViewModel.itemViewModelDelegate = self
+            } else {
+                hidden = false
+            }
+        }
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -92,15 +106,6 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
         }
     }
     
-    func configureForFolderViewModel(folderViewModel: FolderViewModel) {
-        hidden = folderViewModel.dragging
-        jiggling = folderViewModel.editing
-        label.text = folderViewModel.name
-        collectionView.folderViewModel = folderViewModel
-        
-        folderViewModel.itemViewModelDelegate = self
-    }
-    
     func startFlickering() {
         let anim = CABasicAnimation(keyPath: "backgroundColor")
         anim.toValue = UIColor.darkGrayColor().CGColor
@@ -138,18 +143,22 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
             opened = false
             expanded = false
             flickering = false
+            jiggling = folderViewModel!.editing
         case .AppHovering:
             opened = false
             expanded = true
             flickering = false
+            jiggling = false
         case .PreparingToOpen:
             opened = false
             expanded = true
             flickering = true
+            jiggling = false
         case .Open:
             opened = true
             expanded = false
             flickering = false
+            jiggling = false
         default:
             break;
         }

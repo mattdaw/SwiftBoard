@@ -38,7 +38,7 @@ class ListViewModelDataSource : NSObject, UICollectionViewDelegate, UICollection
             cell = myCell
         case let folderViewModel as FolderViewModel:
             let myCell = collectionView.dequeueReusableCellWithReuseIdentifier("Folder", forIndexPath: indexPath) as FolderCollectionViewCell
-            myCell.configureForFolderViewModel(folderViewModel)
+            myCell.folderViewModel = folderViewModel
             
             cell = myCell
         default:
