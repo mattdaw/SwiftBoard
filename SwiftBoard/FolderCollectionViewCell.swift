@@ -22,13 +22,17 @@ class FolderCollectionViewCell : ItemViewModelCell, FolderViewModelDelegate {
     
     private var expanded: Bool = false {
         didSet {
-            expanded ? expand() : collapse()
+            if expanded != oldValue {
+                expanded ? expand() : collapse()
+            }
         }
     }
     
     private var flickering: Bool = false {
         didSet {
-            flickering ? startFlickering() : stopFlickering()
+            if flickering != oldValue {
+                flickering ? startFlickering() : stopFlickering()
+            }
         }
     }
     

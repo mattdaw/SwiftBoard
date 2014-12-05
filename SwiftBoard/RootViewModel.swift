@@ -21,9 +21,11 @@ class RootViewModel: ListViewModel {
     
     var editingModeEnabled: Bool = false {
         didSet {
-            for var i = 0; i < numberOfItems(); i++ {
-                let item = itemAtIndex(i)
-                item.editing = editingModeEnabled
+            if editingModeEnabled != oldValue {
+                for var i = 0; i < numberOfItems(); i++ {
+                    let item = itemAtIndex(i)
+                    item.editing = editingModeEnabled
+                }
             }
         }
     }
