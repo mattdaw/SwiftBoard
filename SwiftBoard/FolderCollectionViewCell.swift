@@ -18,6 +18,7 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
     @IBOutlet weak var leftConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightConstraint: NSLayoutConstraint!
     
+    let jiggingFolderAnimationKey = "jiggingFolderAnimationKey"
     let flickeringAnimationKey = "flickering"
     
     private var opened = false
@@ -104,6 +105,22 @@ class FolderCollectionViewCell : SwiftBoardCell, FolderViewModelDelegate {
             self.expandingView.layer.transform = CATransform3DIdentity
             self.label.alpha = 1
         }
+    }
+    
+    func startJiggling() {
+        let anim = CABasicAnimation(keyPath:"transform.rotation")
+        anim.fromValue = -M_PI / 48
+        anim.toValue = M_PI / 48
+        anim.autoreverses = true
+        anim.duration = 0.2
+        anim.repeatCount = HUGE
+        anim.timeOffset = CFTimeInterval(Double(arc4random_uniform(100)) / 100.0)
+        
+        self.layer.addAnimation(anim, forKey:jiggingFolderAnimationKey);
+    }
+    
+    func stopJiggling() {
+        self.layer.removeAnimationForKey(jiggingFolderAnimationKey)
     }
     
     func startFlickering() {

@@ -39,6 +39,11 @@ class FolderViewModel: ListViewModel, ItemViewModel {
     var editing: Bool = false {
         didSet {
             itemViewModelDelegate?.folderViewModelEditingDidChange(editing)
+            
+            for var i=0; i < numberOfItems(); i++ {
+                let item = itemAtIndex(i)
+                item.editing = editing
+            }
         }
     }
     
