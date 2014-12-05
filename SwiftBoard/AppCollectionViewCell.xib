@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6246"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -25,10 +25,11 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B1Y-vc-v4G">
-                        <rect key="frame" x="-12" y="-12" width="44" height="44"/>
+                        <rect key="frame" x="-1" y="-1" width="22" height="22"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="44" id="PPC-Io-lL3"/>
-                            <constraint firstAttribute="height" constant="44" id="gBn-qn-aDt"/>
+                            <constraint firstAttribute="width" constant="22" id="PPC-Io-lL3"/>
+                            <constraint firstAttribute="height" constant="22" id="gBn-qn-aDt"/>
                         </constraints>
                         <state key="normal" title="X">
                             <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>

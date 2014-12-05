@@ -43,6 +43,7 @@ class AppCollectionViewCell : ItemViewModelCell, AppViewModelDelegate {
         super.awakeFromNib()
         
         containerView.layer.cornerRadius = 5
+        deleteButton.layer.cornerRadius = 11
     }
     
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes!) {
