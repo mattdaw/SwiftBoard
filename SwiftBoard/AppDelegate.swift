@@ -11,7 +11,8 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
-
+    var rootViewModel: RootViewModel?
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         if let viewController = window?.rootViewController as? ViewController {
             var viewModels: [ItemViewModel] = [
@@ -37,10 +38,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 AppViewModel(name: "App 16", color: UIColor.redColor())
             ]
             
-            viewController.rootViewModel = RootViewModel(viewModels: viewModels)
+            rootViewModel = RootViewModel(viewModels: viewModels)
+            viewController.rootViewModel = rootViewModel
         }
         
         return true
+    }
+    
+    func applicationWillResignActive(application: UIApplication) {
+        rootViewModel?.editingModeEnabled = false
     }
 }
 
