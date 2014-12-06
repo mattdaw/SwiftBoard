@@ -28,46 +28,36 @@ class FolderViewModel: ListViewModel, ItemViewModel {
     
     var dragging: Bool = false {
         didSet {
-            if dragging != oldValue {
-                folderViewModelDelegate?.folderViewModelDraggingDidChange(dragging)
-            }
+            folderViewModelDelegate?.folderViewModelDraggingDidChange(dragging)
         }
     }
     
     var deleting: Bool = false {
         didSet {
-            if deleting != oldValue {
-                folderViewModelDelegate?.folderViewModelDeletingDidChange(deleting)
-            }
+            folderViewModelDelegate?.folderViewModelDeletingDidChange(deleting)
         }
     }
     
     var editing: Bool = false {
         didSet {
-            if editing != oldValue {
-                folderViewModelDelegate?.folderViewModelEditingDidChange(editing)
-            
-                for var i=0; i < numberOfItems(); i++ {
-                    let item = itemAtIndex(i)
-                    item.editing = editing
-                }
+            folderViewModelDelegate?.folderViewModelEditingDidChange(editing)
+        
+            for var i=0; i < numberOfItems(); i++ {
+                let item = itemAtIndex(i)
+                item.editing = editing
             }
         }
     }
     
     var zoomed: Bool = false {
         didSet {
-            if zoomed != oldValue {
-                folderViewModelDelegate?.folderViewModelZoomedDidChange(zoomed)
-            }
+            folderViewModelDelegate?.folderViewModelZoomedDidChange(zoomed)
         }
     }
     
     var state: FolderViewModelState {
         didSet {
-            if state != oldValue {
-                folderViewModelDelegate?.folderViewModelStateDidChange(state)
-            }
+            folderViewModelDelegate?.folderViewModelStateDidChange(state)
         }
     }
     

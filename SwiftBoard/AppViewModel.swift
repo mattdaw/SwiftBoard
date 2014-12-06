@@ -24,33 +24,25 @@ class AppViewModel: ItemViewModel {
     
     var dragging: Bool = false {
         didSet {
-            if dragging != oldValue {
-                delegate?.appViewModelDraggingDidChange(dragging)
-            }
+            delegate?.appViewModelDraggingDidChange(dragging)
         }
     }
     
     var deleting: Bool = false {
         didSet {
-            if deleting != oldValue {
-                delegate?.appViewModelDeletingDidChange(deleting)
-            }
+            delegate?.appViewModelDeletingDidChange(deleting)
         }
     }
     
     var editing: Bool = false {
         didSet {
-            if editing != oldValue {
-                delegate?.appViewModelEditingDidChange(editing)
-            }
+            delegate?.appViewModelEditingDidChange(editing)
         }
     }
     
     var zoomed: Bool = false {
         didSet {
-            if zoomed != oldValue {
-                delegate?.appViewModelZoomedDidChange(zoomed)
-            }
+            delegate?.appViewModelZoomedDidChange(zoomed)
         }
     }
     

@@ -13,26 +13,22 @@ class ItemViewModelCell : UICollectionViewCell {
     
     var editing: Bool = false {
         didSet {
-            if editing != oldValue {
-                updateJiggling()
-                editing ? showDeleteButton(true) : hideDeleteButton(true)
-            }
+            updateJiggling()
+            
+            let animated = oldValue != editing
+            editing ? showDeleteButton(animated) : hideDeleteButton(animated)
         }
     }
     
     var zoomed: Bool = false {
         didSet {
-            if zoomed != oldValue {
-                updateJiggling()
-            }
+            updateJiggling()
         }
     }
     
     private var jiggling: Bool = false {
         didSet {
-            if jiggling != oldValue {
-                jiggling ? startJiggling() : stopJiggling()
-            }
+            jiggling ? startJiggling() : stopJiggling()
         }
     }
     
