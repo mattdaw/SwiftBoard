@@ -24,12 +24,12 @@ class FolderViewModel: ListViewModel, ItemViewModel {
     var name: String
     var parentListViewModel: ListViewModel?
     
-    weak var itemViewModelDelegate: FolderViewModelDelegate?
+    weak var folderViewModelDelegate: FolderViewModelDelegate?
     
     var dragging: Bool = false {
         didSet {
             if dragging != oldValue {
-                itemViewModelDelegate?.folderViewModelDraggingDidChange(dragging)
+                folderViewModelDelegate?.folderViewModelDraggingDidChange(dragging)
             }
         }
     }
@@ -37,7 +37,7 @@ class FolderViewModel: ListViewModel, ItemViewModel {
     var deleting: Bool = false {
         didSet {
             if deleting != oldValue {
-                itemViewModelDelegate?.folderViewModelDeletingDidChange(deleting)
+                folderViewModelDelegate?.folderViewModelDeletingDidChange(deleting)
             }
         }
     }
@@ -45,7 +45,7 @@ class FolderViewModel: ListViewModel, ItemViewModel {
     var editing: Bool = false {
         didSet {
             if editing != oldValue {
-                itemViewModelDelegate?.folderViewModelEditingDidChange(editing)
+                folderViewModelDelegate?.folderViewModelEditingDidChange(editing)
             
                 for var i=0; i < numberOfItems(); i++ {
                     let item = itemAtIndex(i)
@@ -58,7 +58,7 @@ class FolderViewModel: ListViewModel, ItemViewModel {
     var zoomed: Bool = false {
         didSet {
             if zoomed != oldValue {
-                itemViewModelDelegate?.folderViewModelZoomedDidChange(zoomed)
+                folderViewModelDelegate?.folderViewModelZoomedDidChange(zoomed)
             }
         }
     }
@@ -66,7 +66,7 @@ class FolderViewModel: ListViewModel, ItemViewModel {
     var state: FolderViewModelState {
         didSet {
             if state != oldValue {
-                itemViewModelDelegate?.folderViewModelStateDidChange(state)
+                folderViewModelDelegate?.folderViewModelStateDidChange(state)
             }
         }
     }

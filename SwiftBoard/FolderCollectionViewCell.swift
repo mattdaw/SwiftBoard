@@ -44,7 +44,7 @@ class FolderCollectionViewCell : ItemViewModelCell, FolderViewModelDelegate {
                 zoomed = myViewModel.zoomed
                 label.text = myViewModel.name
                 collectionView.folderViewModel = myViewModel
-                myViewModel.itemViewModelDelegate = self
+                myViewModel.folderViewModelDelegate = self
             } else {
                 hidden = false
             }
