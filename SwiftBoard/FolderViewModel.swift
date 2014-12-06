@@ -14,7 +14,6 @@ enum FolderViewModelState {
 
 protocol FolderViewModelDelegate: class {
     func folderViewModelDraggingDidChange(Bool)
-    func folderViewModelDeletingDidChange(Bool)
     func folderViewModelEditingDidChange(Bool)
     func folderViewModelZoomedDidChange(Bool)
     func folderViewModelStateDidChange(FolderViewModelState)
@@ -29,12 +28,6 @@ class FolderViewModel: ListViewModel, ItemViewModel {
     var dragging: Bool = false {
         didSet {
             folderViewModelDelegate?.folderViewModelDraggingDidChange(dragging)
-        }
-    }
-    
-    var deleting: Bool = false {
-        didSet {
-            folderViewModelDelegate?.folderViewModelDeletingDidChange(deleting)
         }
     }
     
@@ -65,12 +58,5 @@ class FolderViewModel: ListViewModel, ItemViewModel {
         name = folderName
         state = .Closed
         super.init(viewModels: initViewModels)
-    }
-    
-    func delete() {
-        if let index = parentListViewModel?.indexOfItem(self) {
-            deleting = true
-            parentListViewModel?.removeItemAtIndex(index)
-        }
     }
 }

@@ -119,14 +119,7 @@ class FolderCollectionViewCell : ItemViewModelCell, FolderViewModelDelegate {
     func folderViewModelDraggingDidChange(newValue: Bool) {
         hidden = newValue
     }
-    
-    func folderViewModelDeletingDidChange(newValue: Bool) {
-        if newValue {
-            let op = FadeOutCellOperation(self)
-            NSOperationQueue.mainQueue().addOperation(op)
-        }
-    }
-    
+        
     func folderViewModelEditingDidChange(newValue: Bool) {
         editing = newValue
         updateJiggling()

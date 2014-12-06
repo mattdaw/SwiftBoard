@@ -30,11 +30,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     AppViewModel(name: "App 4", color: UIColor.darkGrayColor())
                     ]),
                 AppViewModel(name: "App 3", color: UIColor.cyanColor()),
-                AppViewModel(name: "App 20", color: UIColor.magentaColor()),
-                AppViewModel(name: "App 21", color: UIColor.orangeColor()),
-                AppViewModel(name: "App 22", color: UIColor.brownColor()),
-                AppViewModel(name: "App 23", color: UIColor.blueColor()),
-                AppViewModel(name: "App 24", color: UIColor.redColor())
+                AppViewModel(name: "App 12", color: UIColor.magentaColor()),
+                AppViewModel(name: "App 13", color: UIColor.orangeColor()),
+                AppViewModel(name: "App 14", color: UIColor.brownColor()),
+                AppViewModel(name: "App 15", color: UIColor.blueColor()),
+                AppViewModel(name: "App 16", color: UIColor.redColor())
             ]
             
             viewController.rootViewModel = RootViewModel(viewModels: viewModels)
