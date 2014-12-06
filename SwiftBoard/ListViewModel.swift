@@ -23,7 +23,7 @@ class ListViewModel {
         viewModels = initViewModels
         
         for itemViewModel in viewModels {
-            itemViewModel.listViewModel = self
+            itemViewModel.parentListViewModel = self
         }
     }
     

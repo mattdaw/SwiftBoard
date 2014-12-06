@@ -47,7 +47,7 @@ class RootViewModel: ListViewModel {
             
             let addIndex = folderViewModel.numberOfItems()
             
-            appViewModel.listViewModel = folderViewModel
+            appViewModel.parentListViewModel = folderViewModel
             removeItemAtIndex(index)
             folderViewModel.appendItem(appViewModel)
             
@@ -65,7 +65,7 @@ class RootViewModel: ListViewModel {
         if let removeIndex = folderViewModel.indexOfItem(appViewModel) {
             let addIndex = numberOfItems()
             
-            appViewModel.listViewModel = self
+            appViewModel.parentListViewModel = self
             folderViewModel.removeItemAtIndex(removeIndex)
             appendItem(appViewModel)
         } else {

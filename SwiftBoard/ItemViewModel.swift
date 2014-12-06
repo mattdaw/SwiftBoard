@@ -14,7 +14,7 @@ protocol ItemViewModel: class {
     var editing: Bool { get set }
     var zoomed: Bool { get set }
     
-    var listViewModel: ListViewModel? { get set }
+    var parentListViewModel: ListViewModel? { get set }
     
     func delete()
 }

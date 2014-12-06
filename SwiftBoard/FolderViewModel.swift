@@ -22,7 +22,8 @@ protocol FolderViewModelDelegate: class {
 
 class FolderViewModel: ListViewModel, ItemViewModel {
     var name: String
-    var listViewModel: ListViewModel?
+    var parentListViewModel: ListViewModel?
+    
     weak var itemViewModelDelegate: FolderViewModelDelegate?
     
     var dragging: Bool = false {
@@ -77,9 +78,9 @@ class FolderViewModel: ListViewModel, ItemViewModel {
     }
     
     func delete() {
-        if let index = listViewModel?.indexOfItem(self) {
+        if let index = parentListViewModel?.indexOfItem(self) {
             deleting = true
-            listViewModel?.removeItemAtIndex(index)
+            parentListViewModel?.removeItemAtIndex(index)
         }
     }
 }

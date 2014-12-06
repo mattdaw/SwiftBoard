@@ -193,7 +193,7 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
     
     func dragOperationForMoveItem(gestureHit: GestureHit) -> DragOperation? {
         if let itemViewModel = draggingItemViewModel {
-            if let listViewModel = itemViewModel.listViewModel {
+            if let listViewModel = itemViewModel.parentListViewModel {
                 let dragIndex = listViewModel.indexOfItem(itemViewModel)
                 
                 if let cellHit = gestureHit as? CellGestureHit {
@@ -344,14 +344,14 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
     private func cellForItemViewModel(itemViewModel: ItemViewModel) -> UICollectionViewCell? {
         var cell: UICollectionViewCell?
         
-        if let rootViewModel = itemViewModel.listViewModel as? RootViewModel {
+        if let rootViewModel = itemViewModel.parentListViewModel as? RootViewModel {
             if let index = rootViewModel.indexOfItem(itemViewModel) {
                 cell = cellForItemAtIndexPath(index.toIndexPath())
             }
-        } else if let folderViewModel = itemViewModel.listViewModel as? FolderViewModel {
+        } else if let folderViewModel = itemViewModel.parentListViewModel as? FolderViewModel {
             if let indexOfFolder = rootViewModel?.indexOfItem(folderViewModel) {
                 if let folderCell = cellForItemAtIndexPath(indexOfFolder.toIndexPath()) as? FolderCollectionViewCell {
-                    if let indexOfItem = itemViewModel.listViewModel?.indexOfItem(itemViewModel) {
+                    if let indexOfItem = folderViewModel.indexOfItem(itemViewModel) {
                         cell = folderCell.collectionView.cellForItemAtIndexPath(indexOfItem.toIndexPath())
                     }
                 }

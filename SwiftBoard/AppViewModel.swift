@@ -18,7 +18,8 @@ protocol AppViewModelDelegate: class {
 class AppViewModel: ItemViewModel {
     var name: String
     var color: UIColor
-    var listViewModel: ListViewModel?
+    var parentListViewModel: ListViewModel?
+    
     weak var delegate: AppViewModelDelegate?
     
     var dragging: Bool = false {
@@ -59,9 +60,9 @@ class AppViewModel: ItemViewModel {
     }
     
     func delete() {
-        if let index = listViewModel?.indexOfItem(self) {
+        if let index = parentListViewModel?.indexOfItem(self) {
             deleting = true
-            listViewModel?.removeItemAtIndex(index)
+            parentListViewModel?.removeItemAtIndex(index)
         }
     }
 }
