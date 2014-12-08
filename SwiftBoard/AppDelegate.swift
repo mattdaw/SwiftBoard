@@ -45,6 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
+    // The jiggling animation will be automatically killed if the app loses active status, so I think it's better
+    // to treat that as disabling editing mode. Then the view model state and what's happening on screen match.
     func applicationWillResignActive(application: UIApplication) {
         rootViewModel?.editingModeEnabled = false
     }
