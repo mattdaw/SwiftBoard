@@ -15,7 +15,6 @@ protocol ListViewModelDelegate: class {
 }
 
 class ListViewModel {
-    var numberOfRows: Int = 1
     private var viewModels: [ItemViewModel]
     weak var listViewModelDelegate: ListViewModelDelegate?
     
