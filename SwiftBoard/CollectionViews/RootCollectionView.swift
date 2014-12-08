@@ -38,6 +38,10 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
                 listDataSource = ListViewModelDataSource(rootViewModel!)
                 dataSource = listDataSource
                 delegate = listDataSource
+            } else {
+                listDataSource = nil
+                dataSource = nil
+                delegate = nil
             }
         }
     }
