@@ -136,6 +136,7 @@
 				C941E7FB1A23A131006D3085 /* Drag and Drop */,
 			);
 			name = "View Models";
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		C995052D1A2E6AF4001C84A2 /* Animation Operations */ = {
