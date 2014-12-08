@@ -194,6 +194,7 @@
 				C941E8021A23A6A6006D3085 /* GestureHit.swift */,
 			);
 			name = "Collection Views";
+			path = CollectionViews;
 			sourceTree = "<group>";
 		};
 		C9DAE68D19C73EC0007CF518 = {
