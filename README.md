@@ -5,15 +5,15 @@ This is a personal project that I started so I could learn (and form an educated
 
 Check out my blog at http://www.mattdaw.com for news, lessons learned, etc.
 
+**Not Yet Implemented**
+
+- Model layer / persistence
+- Dragging an app on another app to create a folder
+- Multiple pages of apps at the root level and in folders
+
 **Areas For Improvement**
 
 - Drag and drop abstraction
 - Clean up and simplify collection view layouts
 - Unit tests
 - Animation / transition polish
-
-**Not Yet Implemented**
-
-- Model layer / persistence
-- Dragging an app on another app to create a folder
-- Multiple pages of apps at the root level and in folders
