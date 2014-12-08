@@ -150,6 +150,7 @@
 				C995052E1A2F6611001C84A2 /* FadeOutCellOperation.swift */,
 			);
 			name = "Animation Operations";
+			path = AnimationOperations;
 			sourceTree = "<group>";
 		};
 		C9AAE6EC1A1CF8A700CE1E35 /* Collection View Cells */ = {
