@@ -161,6 +161,7 @@
 				C96A381319CA10120069F5D9 /* FolderCollectionViewCell.xib */,
 			);
 			name = "Collection View Cells";
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		C9AAE6ED1A1CF8BB00CE1E35 /* Collection View Layouts */ = {
