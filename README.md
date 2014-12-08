@@ -1,7 +1,7 @@
 SwiftBoard
 ==========
 
-This is a personal project that I started so I could learn (and form an educated opinion about) Swift. I chose to re-implement the UI from iOS' SpringBoard.app because I admire the design, and it's a more complex and stateful UI than I had attempted on iOS. It has turned out to be a bigger project than I expected, so there's some missing features and plenty of room for improvement in the code. But I'm still having fun, so I'm going to keep at it!
+This is a personal project that I started so I could learn (and form an educated opinion about) Swift. I chose to re-implement parts of the UI from iOS' SpringBoard.app because I admire the design, and it's a more complex and stateful UI than I had attempted on iOS. It has turned out to be a bigger project than I expected, so there's some missing features and plenty of room for improvement in the code. But I'm still having fun, so I'm going to keep at it!
 
 Click on the image below for a quick YouTube screencast:
 
