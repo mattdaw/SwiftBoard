@@ -174,6 +174,7 @@
 				C9A33FC619D09976004E8B62 /* FolderCollectionViewLayout.swift */,
 			);
 			name = "Collection View Layouts";
+			path = CollectionViewLayouts;
 			sourceTree = "<group>";
 		};
 		C9AAE6EE1A1CF8C700CE1E35 /* Utilities */ = {
