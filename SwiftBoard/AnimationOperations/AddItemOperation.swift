@@ -23,7 +23,7 @@ class AddItemOperation: AsyncOperation {
         collectionView.performBatchUpdates({ () -> Void in
             self.collectionView.insertItemsAtIndexPaths([self.index.toIndexPath()])
         }, completion: { (didComplete: Bool) -> Void in
-                self.finished = true
+            self.finished = true
         })
     }
 }

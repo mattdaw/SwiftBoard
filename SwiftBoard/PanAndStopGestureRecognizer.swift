@@ -19,6 +19,7 @@ class PanAndStopGestureRecognizer: UIPanGestureRecognizer {
         stopAfterSecondsWithoutMovement = stopAfterSeconds
         stopFunction = stopFn
         lastLocation = CGPoint(x:0, y:0)
+        
         super.init(target: target, action: action)
     }
     
