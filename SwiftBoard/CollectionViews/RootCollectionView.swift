@@ -293,7 +293,7 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
     private func updateDragProxyPosition(gesture: UIPanGestureRecognizer) {
         if let proxyState = dragProxyState {
             let translation = gesture.translationInView(self)
-            dragProxyState!.view.center = CGPoint(x: proxyState.originalCenter.x + translation.x, y: proxyState.originalCenter.y + translation.y)
+            proxyState.view.center = CGPoint(x: proxyState.originalCenter.x + translation.x, y: proxyState.originalCenter.y + translation.y)
         }
     }
     
