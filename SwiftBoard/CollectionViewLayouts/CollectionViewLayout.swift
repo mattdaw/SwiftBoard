@@ -10,7 +10,7 @@ import UIKit
 
 class CollectionViewLayout: UICollectionViewLayout, DroppableCollectionViewLayout {
     let itemsPerRow = 4
-    let heightPadding = 20
+    let heightPadding = CGFloat(20)
     
     var itemFrames: [CGRect] = []
     var numberOfItems = 0
@@ -26,13 +26,17 @@ class CollectionViewLayout: UICollectionViewLayout, DroppableCollectionViewLayou
             let availableSize = myCollectionView.bounds.size
             
             if let zoomIndex = zoomToIndex {
-                let zoomedWidth = availableSize.width * CGFloat(itemsPerRow)
-                let zoomedFrames = layout(numberOfItems, itemsPerRow, zoomedWidth, heightPadding)
+                let zoomedItemSize = CGSize(width: availableSize.width, height: availableSize.width + heightPadding)
+                let zoomedFrames = layout(numberOfItems, itemsPerRow, zoomedItemSize, availableSize.height)
                 let transform = zoomTransform(zoomedFrames[zoomIndex], availableSize)
                 
-                itemFrames = zoomLayout(zoomedFrames, transform)
+                itemFrames = transformLayout(zoomedFrames, transform)
             } else {
-                itemFrames = layout(numberOfItems, itemsPerRow, availableSize.width, heightPadding)
+                let itemWidth = floor(availableSize.width / CGFloat(itemsPerRow))
+                let itemHeight = itemWidth + heightPadding
+                let itemSize = CGSize(width: itemWidth, height: itemHeight)
+                
+                itemFrames = layout(numberOfItems, itemsPerRow, itemSize, itemHeight)
             }
         }
     }
@@ -80,18 +84,17 @@ class CollectionViewLayout: UICollectionViewLayout, DroppableCollectionViewLayou
     }
 }
 
-private func layout(numberOfItems: Int, itemsPerRow: Int, totalWidth: CGFloat, heightPadding: Int) -> [CGRect] {
-    let itemWidth = Int(totalWidth) / itemsPerRow
-    let itemHeight = itemWidth + heightPadding
+private func layout(numberOfItems: Int, itemsPerRow: Int, itemSize: CGSize, rowHeight: CGFloat) -> [CGRect] {
     let range = [Int](0..<numberOfItems)
     
     return range.map { itemIndex in
-        let row = itemIndex / itemsPerRow
-        let column = itemIndex % itemsPerRow
-        let itemRect = CGRect(x: itemWidth * column,
-            y: itemHeight * row,
-            width: itemWidth,
-            height: itemHeight)
+        let row = CGFloat(itemIndex / itemsPerRow)
+        let column = CGFloat(itemIndex % itemsPerRow)
+        
+        let itemRect = CGRect(x: itemSize.width * column,
+            y: rowHeight * row,
+            width: itemSize.width,
+            height: itemSize.height)
         
         return itemRect
     }
@@ -104,7 +107,7 @@ private func zoomTransform(itemFrame: CGRect, screenSize: CGSize) -> CGAffineTra
     return transform
 }
 
-private func zoomLayout(itemFrames: [CGRect], transform: CGAffineTransform) -> [CGRect] {
+private func transformLayout(itemFrames: [CGRect], transform: CGAffineTransform) -> [CGRect] {
     return itemFrames.map { frame in
         CGRectApplyAffineTransform(frame, transform)
     }
