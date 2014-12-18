@@ -8,8 +8,9 @@
 
 import UIKit
 
-class FolderCollectionViewLayout: DroppableCollectionViewLayout {
+class FolderCollectionViewLayout: UICollectionViewLayout, DroppableCollectionViewLayout {
 
+    let itemsPerRow = 3
     var itemFrames: [CGRect] = []
     var previousItemFrames: [CGRect] = []
     var numberOfItems = 0
@@ -29,7 +30,7 @@ class FolderCollectionViewLayout: DroppableCollectionViewLayout {
         }
         
         previousItemFrames = itemFrames
-        itemsPerRow = 3
+        
         
         let myCollectionView = collectionView!
         numberOfItems = myCollectionView.numberOfItemsInSection(0)
@@ -111,5 +112,24 @@ class FolderCollectionViewLayout: DroppableCollectionViewLayout {
     
     override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
         return true
+    }
+    
+    func indexToMoveSourceIndexLeftOfDestIndex(sourceIndex: Int, destIndex: Int) -> Int {
+        let column = destIndex % itemsPerRow
+        var offset = 0
+        if sourceIndex < destIndex && column != 0 {
+            offset = -1
+        }
+        
+        return destIndex + offset
+    }
+    
+    func indexToMoveSourceIndexRightOfDestIndex(sourceIndex: Int, destIndex: Int) -> Int {
+        var offset = 1
+        if sourceIndex < destIndex {
+            offset = 0
+        }
+        
+        return destIndex + offset
     }
 }

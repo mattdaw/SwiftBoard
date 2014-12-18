@@ -8,25 +8,9 @@
 
 import Foundation
 
-class DroppableCollectionViewLayout: UICollectionViewLayout {
-    var itemsPerRow = 1
+@objc protocol DroppableCollectionViewLayout {
+    var itemsPerRow: Int { get }
     
-    func indexToMoveSourceIndexLeftOfDestIndex(sourceIndex: Int, destIndex: Int) -> Int {
-        let column = destIndex % itemsPerRow
-        var offset = 0
-        if sourceIndex < destIndex && column != 0 {
-            offset = -1
-        }
-        
-        return destIndex + offset
-    }
-    
-    func indexToMoveSourceIndexRightOfDestIndex(sourceIndex: Int, destIndex: Int) -> Int {
-        var offset = 1
-        if sourceIndex < destIndex {
-            offset = 0
-        }
-        
-        return destIndex + offset
-    }
+    func indexToMoveSourceIndexLeftOfDestIndex(sourceIndex: Int, destIndex: Int) -> Int
+    func indexToMoveSourceIndexRightOfDestIndex(sourceIndex: Int, destIndex: Int) -> Int
 }
