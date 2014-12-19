@@ -9,12 +9,27 @@
 import UIKit
 
 class CollectionViewLayout: UICollectionViewLayout, DroppableCollectionViewLayout {
-    let itemsPerRow = 4
-    let heightPadding = CGFloat(20)
+    let itemsPerRow: Int
+    let heightPadding: CGFloat
+    let zoomToIndex: Int?
     
-    var itemFrames: [CGRect] = []
-    var numberOfItems = 0
-    var zoomToIndex: Int?
+    private var itemFrames: [CGRect] = []
+    private var numberOfItems = 0
+    
+    init(itemsPerRow initItems: Int, heightPadding initPad: CGFloat, zoomToIndex initZoomIndex: Int?) {
+        itemsPerRow = initItems
+        heightPadding = initPad
+        zoomToIndex = initZoomIndex
+        
+        super.init()
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        itemsPerRow = 3
+        heightPadding = 20
+        
+        super.init(coder: aDecoder)
+    }
     
     override func collectionViewContentSize() -> CGSize {
         return collectionView?.bounds.size ?? CGSizeZero

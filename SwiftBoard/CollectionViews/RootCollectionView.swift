@@ -14,8 +14,11 @@ struct DragProxyState {
 }
 
 class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelegate, ListViewModelDelegate, RootViewModelDelegate {
+    let itemsPerRow = 4
+    let heightPadding: CGFloat = 20
+    
     private var listDataSource: ListViewModelDataSource?
-    private var regularLayout = CollectionViewLayout()
+    private var regularLayout: CollectionViewLayout!
     
     private var tapGestureRecognizer: UITapGestureRecognizer!
     private var longPressRecognizer: UILongPressGestureRecognizer!
@@ -58,6 +61,8 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
         
         backgroundColor = UIColor.clearColor()
         scrollEnabled = false
+        
+        regularLayout = CollectionViewLayout(itemsPerRow: itemsPerRow, heightPadding: heightPadding, zoomToIndex: nil)
         setCollectionViewLayout(regularLayout, animated: false)
         
         addGestureRecognizers()
@@ -407,10 +412,9 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
             if let cell = cellForItemAtIndexPath(index.toIndexPath()) as? FolderCollectionViewCell {
                 openFolderCollectionView = cell.collectionView
                 
-                let zoomedLayout = CollectionViewLayout()
-                zoomedLayout.zoomToIndex = index
-                
+                let zoomedLayout = CollectionViewLayout(itemsPerRow: 4, heightPadding: 20, zoomToIndex: index)
                 let op = SetLayoutOperation(collectionView: self, layout: zoomedLayout)
+                
                 if deferAnimations {
                     NSOperationQueue.mainQueue().addOperation(op)
                 } else {
