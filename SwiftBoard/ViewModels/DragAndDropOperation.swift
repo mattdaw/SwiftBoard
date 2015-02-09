@@ -8,12 +8,12 @@
 
 import Foundation
 
-@objc protocol DragOperation {
+protocol DragOperation {
     func dragStart()
     
 }
 
-@objc protocol DragAndDropOperation: DragOperation {
+protocol DragAndDropOperation: DragOperation {
     func dragCancel()
     func drop()
 }

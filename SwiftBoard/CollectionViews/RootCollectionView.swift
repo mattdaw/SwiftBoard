@@ -205,7 +205,7 @@ class RootCollectionView: ListViewModelCollectionView, UIGestureRecognizerDelega
                         return nil
                     }
                     
-                    let layout = cellHit.collectionViewHit.collectionView.collectionViewLayout as DroppableCollectionViewLayout
+                    let layout = cellHit.collectionViewHit.collectionView.collectionViewLayout as! DroppableCollectionViewLayout
                     var dropIndex = listViewModel.indexOfItem(cellHit.itemViewModel)
                     var newIndex: Int
                     

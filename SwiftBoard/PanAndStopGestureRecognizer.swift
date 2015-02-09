@@ -23,7 +23,7 @@ class PanAndStopGestureRecognizer: UIPanGestureRecognizer {
         super.init(target: target, action: action)
     }
     
-    override func touchesMoved(touches:NSSet, withEvent event:UIEvent) {
+    override func touchesMoved(touches:Set<NSObject>, withEvent event:UIEvent) {
         super.touchesMoved(touches, withEvent: event)
         stopTimer?.invalidate()
         
